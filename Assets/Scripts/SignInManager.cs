@@ -4,18 +4,12 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
-public class SignUpManager : MonoBehaviour
+public class SignInManager : MonoBehaviour
 {
     [Header("Username")]
     [SerializeField] private TMP_InputField usernameInput;
     [SerializeField] private TMP_Text usernameStatus;
     [SerializeField] private Image usernameIcon;
-
-    [Header("Email")]
-    [SerializeField] private GameObject emailManager;
-    [SerializeField] private TMP_InputField emailInput;
-    [SerializeField] private TMP_Text emailStatus;
-    [SerializeField] private Image emailIcon;
 
     [Header("Password")]
     [SerializeField] private GameObject passwordManager;
@@ -23,29 +17,21 @@ public class SignUpManager : MonoBehaviour
     [SerializeField] private TMP_Text passwordStatus;
     [SerializeField] private Image passwordIcon;
 
-    [Header("Confirm Password")]
-    [SerializeField] private GameObject confirmManager;
-    [SerializeField] private TMP_InputField confirmInput;
-    [SerializeField] private TMP_Text confirmStatus;
-    [SerializeField] private Image confirmIcon;
-
     [Header("Sprites")]
     [SerializeField] private Sprite checkSprite;
     [SerializeField] private Sprite crossSprite;
     [SerializeField] private Sprite showSprite;
     [SerializeField] private Sprite hideSprite;
     [SerializeField] private Image passwordShowHide;
-    [SerializeField] private Image confirmShowHide;
 
     [Header("Button")]
-    [SerializeField] private GameObject signUpButton;
+    [SerializeField] private GameObject signInButton;
 
     [Header("Managers")]
     [SerializeField] private GameObject signUpManager;
     [SerializeField] private GameObject signInManager;
     [SerializeField] private GameObject authentManager;
-    [SerializeField] private GameObject registrationManager;
-
+    [SerializeField] private GameObject logInManager;
 
 
     void Update()
@@ -55,10 +41,8 @@ public class SignUpManager : MonoBehaviour
 
     private void DisplayHideElements()
     {
-        emailManager.SetActive(ValidateUsername(usernameInput.text));
-        passwordManager.SetActive(ValidateUsername(usernameInput.text) && ValidateEmail(emailInput.text));
-        confirmManager.SetActive(ValidateUsername(usernameInput.text) && ValidateEmail(emailInput.text) && ValidatePassword(passwordInput.text));
-        signUpButton.SetActive(IsSignupFormValid());
+        passwordManager.SetActive(ValidateUsername(usernameInput.text));
+        signInButton.SetActive(IsSignupFormValid());
     }
 
     private bool ValidateUsername(string username)
@@ -84,26 +68,6 @@ public class SignUpManager : MonoBehaviour
         }
 
         SetStatus(usernameStatus, usernameIcon, "Username OK", true);
-        return true;
-    }
-
-    private bool ValidateEmail(string email)
-    {
-        email = email.Trim();
-
-        if (string.IsNullOrEmpty(email))
-        {
-            SetStatus(emailStatus, emailIcon, "Enter your email", false);
-            return false;
-        }
-
-        if (!Regex.IsMatch(email, @"^[^@\s]+@[^@\s]+\.[^@\s]+$"))
-        {
-            SetStatus(emailStatus, emailIcon, "Invalid email format", false);
-            return false;
-        }
-
-        SetStatus(emailStatus, emailIcon, "Email OK", true);
         return true;
     }
 
@@ -134,29 +98,6 @@ public class SignUpManager : MonoBehaviour
         return true;
     }
 
-    private bool ValidateConfirmPassword(string confirm, string original)
-    {
-        if (string.IsNullOrEmpty(confirm))
-        {
-            SetStatus(confirmStatus, confirmIcon, "Confirm your password", false);
-            return false;
-        }
-
-        if (confirm != original)
-        {
-            SetStatus(confirmStatus, confirmIcon, "Passwords do not match", false);
-            return false;
-        }
-
-        if (original.Length >= 8)
-        {
-            SetStatus(confirmStatus, confirmIcon, "Passwords match", true);
-            return true;
-        }
-
-        return false;
-    }
-
     private void SetStatus(TMP_Text text, Image icon, string message, bool valid)
     {
         text.text = message;
@@ -166,9 +107,7 @@ public class SignUpManager : MonoBehaviour
     private bool IsSignupFormValid()
     {
         return ValidateUsername(usernameInput.text) &&
-               ValidateEmail(emailInput.text) &&
-               ValidatePassword(passwordInput.text) &&
-               ValidateConfirmPassword(confirmInput.text, passwordInput.text);
+               ValidatePassword(passwordInput.text);
     }
 
     public void ShowHidePassword(TMP_InputField inputField)
@@ -180,35 +119,26 @@ public class SignUpManager : MonoBehaviour
         inputField.ActivateInputField();
         inputField.caretPosition = inputField.text.Length;
 
-        if (inputField == passwordInput)
-        {
-            passwordShowHide.sprite = wasPassword ? showSprite : hideSprite;
-        }
-        else if (inputField == confirmInput)
-        {
-            confirmShowHide.sprite = wasPassword ? showSprite : hideSprite;
-        }
+        passwordShowHide.sprite = wasPassword ? showSprite : hideSprite;
     }
 
-    public void DisplaySignInManager()
+    public void DisplaySignUpManager()
     {
-        signInManager.SetActive(true);
-        signUpManager.SetActive(false);
+        signUpManager.SetActive(true);
+        signInManager.SetActive(false);
         authentManager.SetActive(false);
+    }
+
+    public void OnSignInButtonClick()
+    {
+        logInManager.SetActive(true);
+        logInManager.GetComponent<LogInManager>().LaunchSignIn(usernameInput.text.Trim(), passwordInput.text.Trim());
+        signInManager.SetActive(false);
     }
 
     public void SkipAuthentification()
     {
         GameManager.isCompeting = false;
         SceneManager.LoadScene("GameScene");
-    }
-
-    public void OnSignUpButtonClicked()
-    {
-        registrationManager.SetActive(true);
-        registrationManager.GetComponent<RegistrationManager>().LaunchSignUp(usernameInput.text.Trim(), emailInput.text.Trim(), passwordInput.text);
-        signInManager.SetActive(false);
-        authentManager.SetActive(false);
-        signUpManager.SetActive(false);
     }
 }

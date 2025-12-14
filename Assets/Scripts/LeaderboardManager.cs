@@ -1,368 +1,222 @@
 using UnityEngine;
-using UnityEngine.Networking;
-using System.Collections;
-using UnityEngine.UI;
 using TMPro;
+using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 using System.Threading.Tasks;
-using UnityEditor;
+using UnityEngine.Networking;
 using System;
 
 public class LeaderboardManager : MonoBehaviour
 {
-    [SerializeField] private TMP_Text internetStatusText;
-    [SerializeField] private GameObject pseudoManager;
-    [SerializeField] private TMP_InputField pseudoInput;
-    [SerializeField] private TMP_Text pseudoStatusText;
-    [SerializeField] private Button pseudoSubmitButton;
-    [SerializeField] private GameObject scoreManager;
-    [SerializeField] private TMP_InputField scoreInput;
-    [SerializeField] private TMP_Text scoreStatusText;
-    [SerializeField] private GameObject rankManager;
-    [SerializeField] private TMP_Text rankText;
-    [SerializeField] private TMP_Text highestScoreText;
-    [SerializeField] private TMP_Text lastScoreText;
-    [SerializeField] private Image upAndDown;
-    [SerializeField] private Sprite up;
-    [SerializeField] private Sprite down;
-    [SerializeField] private Button refreshButton;
-    [SerializeField] private Button showLeaderboardButton;
-    private string publicIP = "https://darwinsgym.eu/";
-    private string url;
-    private bool internetIsConnected;
-    private bool userIsBeingProcessed;
-    private bool userIsCreated;
-    private bool scoreIsNotNull;
-    private bool rankIsUpdated;
-    private bool highestScoreIsUpdated;
-    private string playerPseudo;
-    private int localScore;
-    private int lastLocalRank;
+    [SerializeField] private TMP_Text leaderboardBody;
+    [SerializeField] private TMP_Text spanText;
+    [SerializeField] private Button ascDescButton;
+    [SerializeField] private GameObject asc;
+    [SerializeField] private GameObject desc;
+    [SerializeField] private GameObject showTop10;
+    [SerializeField] private GameObject hideTop10;
+    [SerializeField] private Button forwardButton;
+    [SerializeField] private Button backwardButton;
+    [SerializeField] private Button top10Button;
+    [SerializeField] private Button hideButton;
+    private string publicURL = "https://darwinsgym.eu/";
+    private string playerName;
+    private string sessionToken;
+    private int span = 0;
+    private int totalPages;
+    private bool isDesc = true;
+    private string formattedPage;
+    private int rank = 1;
 
-    void Awake()
+    void Start()
     {
-        DeleteLocalUser();
+        playerName = PlayerPrefs.GetString("PlayerName", "");
+        sessionToken = PlayerPrefs.GetString("SessionToken", "");
+        DisplaySpan();
+        GetTotalPages();
+        DisplayLeaderboard();
+    }
 
-        if (PlayerPrefs.HasKey("PlayerPseudo"))
+    public void OnAscDescClick()
+    {
+        isDesc = !isDesc;
+        asc.SetActive(!isDesc);
+        desc.SetActive(isDesc);
+        DisplayLeaderboard();
+    }
+
+    public void OnForwardButtonClick()
+    {
+        span++;
+        forwardButton.interactable = (span < totalPages - 1) ? true : false;
+        backwardButton.interactable = (span > 0) ? true : false;
+        DisplaySpan();
+        DisplayLeaderboard();
+    }
+
+    public void OnBackwardButtonClick()
+    {
+        span--;
+        forwardButton.interactable = (span < totalPages - 1) ? true : false;
+        backwardButton.interactable = (span > 0) ? true : false;
+        DisplaySpan();
+        DisplayLeaderboard();
+    }
+
+    private void DisplaySpan()
+    {
+        if (span == 0)
         {
-            playerPseudo = PlayerPrefs.GetString("PlayerPseudo");
-            userIsCreated = true;
+            spanText.text = "1\u201310";
+        }
+        else
+        {
+            spanText.text = $"{span}1\u2013{span + 1}0";
+        }
+    }
+
+    public async void OnShowTop10ButtonClick()
+    {
+        await GetTop10Task();
+        forwardButton.interactable = false;
+        backwardButton.interactable = false;
+        ascDescButton.interactable = false;
+        hideTop10.SetActive(true);
+        showTop10.SetActive(false);
+        spanText.text = "TOP 10";
+    }
+
+    public async void OnHideTop10ButtonClick()
+    {
+        await GetLeaderboardPage();
+        forwardButton.interactable = true;
+        backwardButton.interactable = true;
+        ascDescButton.interactable = true;
+        showTop10.SetActive(true);
+        hideTop10.SetActive(false);
+        DisplaySpan();
+    }
+
+    public async Task GetTop10Task()
+    {
+        string url = $"{publicURL}get_top10.php";
+        using var www = UnityWebRequest.Get(url);
+        www.timeout = 8;
+
+        await www.SendWebRequest();
+
+        if (www.result != UnityWebRequest.Result.Success)
+        {
+            leaderboardBody.text = "OFFLINE";
+            return;
         }
 
-        if (PlayerPrefs.HasKey("LocalScore"))
+        var response = JsonUtility.FromJson<LeaderboardResponse>(www.downloadHandler.text);
+        formattedPage = "";
+        rank = 1;
+
+        foreach (var player in response.players)
         {
-            localScore = PlayerPrefs.GetInt("LocalScore");
-            lastScoreText.text = localScore.ToString();
-            scoreIsNotNull = true;
-        }
-    }
-
-    async void Start()
-    {
-        pseudoManager.SetActive(false);
-        scoreManager.SetActive(false);
-        scoreStatusText.text = "Tape ton score";
-        await CheckInternet();
-    }
-
-    void Update()
-    {
-        UImanager();
-    }
-
-    private void UImanager()
-    {
-        if (internetIsConnected)
-        {
-            pseudoManager.SetActive(true);
-            if (!userIsCreated)
+            string line;
+            if (player.player_name == playerName)
             {
-                scoreManager.SetActive(false);
-                rankManager.SetActive(false);
-
-                if (!userIsBeingProcessed)
-                {
-                    if (pseudoInput.text.Trim().Length < 2)
-                    {
-                        pseudoStatusText.text = "Minimum 2 lettres";
-                        pseudoSubmitButton.interactable = false;
-                    }
-                    else
-                    {
-                        pseudoStatusText.text = "Entrée conforme";
-                        pseudoSubmitButton.interactable = true;
-                    }
-                }
+                line = $"<color=#ffdd92><b>{rank}.<pos=7%>{player.player_name}<pos=52%>{player.score}<pos=75%>{player.date}</b></color>\n\n";
             }
             else
             {
-                pseudoInput.interactable = false;
-                pseudoSubmitButton.interactable = false;
-                pseudoStatusText.text = $"Salut {playerPseudo}";
-                scoreManager.SetActive(true);
-
-                if (scoreIsNotNull)
-                {
-                    rankManager.SetActive(true);
-                    if (!rankIsUpdated) UpdateRank();
-                    if (!highestScoreIsUpdated) GetHighestScore();
-                }
-                else
-                {
-                    rankManager.SetActive(false);
-                }
+                line = $"<color=#ffffff>{rank}.<pos=7%>{player.player_name}<pos=52%>{player.score}<pos=75%>{player.date}</color>\n\n";
             }
+            formattedPage += line;
+            rank++;
         }
+        leaderboardBody.text = formattedPage;
     }
 
-    public void OnPseudoInputSelect()
+    public void OnHideButtonClick()
     {
-        userIsBeingProcessed = false;
+        StopAllCoroutines();
+        SceneManager.LoadScene("GameScene");
     }
 
-    private async Task CheckInternet()
+    private async void DisplayLeaderboard()
     {
-        internetStatusText.text = "Vérification de la connexion...";
+        await GetLeaderboardPage();
+    }
 
-        url = "www.google.com";
-
+    private async Task GetLeaderboardPage()
+    {
+        string url = $"{publicURL}get_page.php?page={span}&is_desc={isDesc.ToString().ToLower()}";
         using var www = UnityWebRequest.Get(url);
-        www.timeout = 10;
+        www.timeout = 8;
+
+        await www.SendWebRequest();
+
+        if (www.result != UnityWebRequest.Result.Success)
+        {
+            leaderboardBody.text = "OFFLINE";
+            return;
+        }
+
+        var response = JsonUtility.FromJson<LeaderboardResponse>(www.downloadHandler.text);
+        formattedPage = "";
+        rank = span * 10 + 1;
+
+        foreach (var player in response.players)
+        {
+            string line;
+            if (player.player_name == playerName)
+            {
+                line = $"<color=#ffdd92><b>{rank}.<pos=7%>{player.player_name}<pos=52%>{player.score}<pos=75%>{player.date}</b></color>\n\n";
+            }
+            else
+            {
+                line = $"<color=#ffffff>{rank}.<pos=7%>{player.player_name}<pos=52%>{player.score}<pos=75%>{player.date}</color>\n\n";
+            }
+            formattedPage += line;
+            rank++;
+        }
+        leaderboardBody.text = formattedPage;
+    }
+
+    private async void GetTotalPages()
+    {
+        await GetTotalPagesTask();
+        Debug.Log(totalPages);
+    }
+
+    private async Task GetTotalPagesTask()
+    {
+        string url = $"{publicURL}get_total_pages.php";
+        using var www = UnityWebRequest.Get(url);
+        www.timeout = 8;
 
         await www.SendWebRequest();
 
         if (www.result == UnityWebRequest.Result.Success)
         {
-            internetStatusText.text = "Connecté !";
-            internetIsConnected = true;
-        }
-        else
-        {
-            internetStatusText.text = "Pas de connexion internet";
+            var response = JsonUtility.FromJson<TotalPagesResponse>(www.downloadHandler.text);
+
+            totalPages = response.total_pages;
         }
     }
 
-    public async void OnPseudoSubmit()
+    [System.Serializable]
+    private class TotalPagesResponse
     {
-        userIsBeingProcessed = true;
-        await CreateUser(pseudoInput.text.Trim());
+        public int total_pages;
     }
 
-    private void CreateLocalUser(string input)
+    [System.Serializable]
+    private class LeaderboardResponse
     {
-        PlayerPrefs.SetString("PlayerPseudo", input);
-        PlayerPrefs.Save();
-        playerPseudo = PlayerPrefs.GetString("PlayerPseudo");
-        userIsCreated = true;
+        public PlayerData[] players;
     }
 
-    private void DeleteLocalUser()
+    [System.Serializable]
+    private class PlayerData
     {
-        PlayerPrefs.DeleteAll();
-        PlayerPrefs.Save();
-    }
-
-    private async Task CreateUser(string input)
-    {
-        userIsBeingProcessed = true;
-        url = $"{publicIP}create_user.php?pseudo={UnityWebRequest.EscapeURL(input)}";
-
-        using var www = UnityWebRequest.Get(url);
-        www.timeout = 5;
-
-        await www.SendWebRequest();
-        string reponse = www.downloadHandler.text.Trim();
-
-        if (www.result == UnityWebRequest.Result.Success || www.result == UnityWebRequest.Result.ProtocolError)
-        {
-            if (reponse == "CREATED")
-            {
-                pseudoStatusText.text = $"{input} est créé !";
-                CreateLocalUser(input);
-            }
-            else if (reponse == "TAKEN")
-            {
-                Debug.Log($"TAKEN");
-                pseudoStatusText.text = $"{input} n'est pas diponible";
-            }
-            else if (reponse == "INVALID")
-            {
-                pseudoStatusText.text = "Minimum 2 lettres";
-            }
-            else if (reponse == "ERROR")
-            {
-                pseudoStatusText.text = "Erreur inconnue";
-            }
-            else
-            {
-                pseudoStatusText.text = "Erreur serveur";
-            }
-        }
-        else
-        {
-            pseudoStatusText.text = "Pas de connexion";
-        }
-    }
-
-    public async void OnScoreSubmit()
-    {
-        int score = Convert.ToInt32(scoreInput.text.Trim());
-        await UpdateScore(score);
-        UpdateLocalScore(score);
-        UpdateRank();
-        highestScoreIsUpdated = false;
-    }
-
-    private async Task UpdateScore(int input)
-    {
-        url = $"{publicIP}update_score.php?pseudo={UnityWebRequest.EscapeURL(playerPseudo)}&score={input}";
-        using var www = UnityWebRequest.Get(url);
-        www.timeout = 5;
-        await www.SendWebRequest();
-        string reponse = www.downloadHandler.text.Trim();
-
-        if (www.result == UnityWebRequest.Result.Success || www.result == UnityWebRequest.Result.ProtocolError)
-        {
-            if (reponse == "INVALID")
-            {
-                scoreStatusText.text = $"Entrée non-valide !";
-            }
-            else if (reponse == "PSEUDONOTFOUND")
-            {
-                scoreStatusText.text = "Pseudo inconnu";
-            }
-            else if (reponse == "SCOREUPDATED")
-            {
-                scoreStatusText.text = "Score est mis à jour";
-                scoreIsNotNull = true;
-            }
-            else if (reponse == "SCORELOWER")
-            {
-                scoreStatusText.text = "Ancien score est supérieur";
-            }
-            else if (reponse == "ERROR")
-            {
-                scoreStatusText.text = "Pas de connexion";
-            }
-            else
-            {
-                scoreStatusText.text = "Erreur inconnue";
-            }
-        }
-        else
-        {
-            scoreStatusText.text = "Erreur serveur";
-        }
-    }
-
-    public async void UpdateRank()
-    {
-        await GetRankFromServerTask();
-        rankIsUpdated = true;
-    }
-
-    private async Task GetRankFromServerTask()
-    {
-        url = $"{publicIP}update_rank.php?pseudo={UnityWebRequest.EscapeURL(playerPseudo)}";
-        using var www = UnityWebRequest.Get(url);
-        www.timeout = 5;
-        await www.SendWebRequest();
-        string reponse = www.downloadHandler.text.Trim();
-        if (www.result == UnityWebRequest.Result.Success || www.result == UnityWebRequest.Result.ProtocolError)
-        {
-            if (reponse == "INVALID")
-            {
-                scoreStatusText.text = $"Entrée non-valide !";
-            }
-            else if (reponse == "PSEUDONOTFOUND")
-            {
-                scoreStatusText.text = "Pseudo inconnu";
-            }
-            else if (reponse == "ERROR")
-            {
-                scoreStatusText.text = "Pas de connexion";
-            }
-            else
-            {
-                rankText.text = reponse;
-                int newRank = Convert.ToInt32(reponse);
-                RankFluctuation(newRank);
-                lastLocalRank = newRank;
-            }
-        }
-        else
-        {
-            scoreStatusText.text = "Erreur serveur";
-        }
-    }
-
-    private void RankFluctuation(int newRank)
-    {
-        if (lastLocalRank > 0)
-        {
-            upAndDown.gameObject.SetActive(true);
-            if (newRank > lastLocalRank)
-            {
-                upAndDown.sprite =  down;
-            }
-            else if (newRank < lastLocalRank)
-            {
-                upAndDown.sprite =  up;
-            }
-            else
-            {
-                upAndDown.gameObject.SetActive(false);
-            }
-        }
-        else
-        {
-            upAndDown.gameObject.SetActive(false);
-        }
-    }
-
-    private async void GetHighestScore()
-    {
-        await GetHighestScoreTask();
-    }
-
-    private async Task GetHighestScoreTask()
-    {
-        url = $"{publicIP}get_score.php?pseudo={UnityWebRequest.EscapeURL(playerPseudo)}";
-        using var www = UnityWebRequest.Get(url);
-        www.timeout = 5;
-        await www.SendWebRequest();
-        string reponse = www.downloadHandler.text.Trim();
-        if (www.result == UnityWebRequest.Result.Success || www.result == UnityWebRequest.Result.ProtocolError)
-        {
-            Debug.Log("Requête est passée");
-            if (reponse == "INVALID")
-            {
-                scoreStatusText.text = $"Entrée non-valide !";
-            }
-            else if (reponse == "PSEUDONOTFOUND")
-            {
-                scoreStatusText.text = "Pseudo inconnu";
-            }
-            else if (reponse == "ERROR")
-            {
-                scoreStatusText.text = "Pas de connexion";
-            }
-            else
-            {
-                highestScoreText.text = reponse;
-                highestScoreIsUpdated = true;
-            }
-        }
-        else
-        {
-            scoreStatusText.text = "Erreur serveur";
-        }
-    }
-
-    public void UpdateLocalScore(int input)
-    {
-        PlayerPrefs.SetInt("LocalScore", input);
-        PlayerPrefs.Save();
-        localScore = PlayerPrefs.GetInt("LocalScore");
-        lastScoreText.text = localScore.ToString();
+        public string player_name;
+        public int score;
+        public string date;
     }
 }
