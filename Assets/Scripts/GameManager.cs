@@ -129,7 +129,7 @@ public class GameManager : MonoBehaviour
 
     private async Task GetHighestScoreTask()
     {
-        string url = $"{publicURL}highest_score.php?player_name={UnityWebRequest.EscapeURL(playerName)}&token={UnityWebRequest.EscapeURL(sessionToken)}";
+        string url = $"{publicURL}get_highest_score.php?player_name={UnityWebRequest.EscapeURL(playerName)}&token={UnityWebRequest.EscapeURL(sessionToken)}";
         using var www = UnityWebRequest.Get(url);
         www.timeout = 8;
 
@@ -161,9 +161,9 @@ public class GameManager : MonoBehaviour
 
     private async Task PostHighestScoreTask()
     {
-        NewScore data = new NewScore { player_name = playerName, score = sessionScore };
+        NewScore data = new NewScore { player_name = playerName, token = sessionToken, score = sessionScore };
         string json = JsonUtility.ToJson(data);
-        using var www = UnityWebRequest.Post("https://darwinsgym.eu/new_score.php", json, "application/json");
+        using var www = UnityWebRequest.Post("https://darwinsgym.eu/update_score.php", json, "application/json");
         await www.SendWebRequest();
     }
 
@@ -177,6 +177,7 @@ public class GameManager : MonoBehaviour
     private class NewScore
     {
         public string player_name;
+        public string token;
         public int score;
     }
 
