@@ -21,19 +21,19 @@ public class RegistrationManager : MonoBehaviour
         signInButton.SetActive(false);
     }
 
-    public void LaunchSignUp(string username, string email, string password)
+    public void LaunchSignUp(string player_name, string email, string password)
     {
-        StartCoroutine(SignUpAndWaitForVerification(username, email, password));
+        StartCoroutine(SignUpAndWaitForVerification(player_name, email, password));
     }
 
-    private IEnumerator SignUpAndWaitForVerification(string username, string email, string password)
+    private IEnumerator SignUpAndWaitForVerification(string player_name, string email, string password)
     {
         baseText = "Processing registration";
         var loadingAnimatedText = StartCoroutine(LoadingAnimation());
 
         RegisterData data = new RegisterData
         {
-            username = username,
+            player_name = player_name,
             email = email,
             password = password
         };
@@ -57,7 +57,7 @@ public class RegistrationManager : MonoBehaviour
                     {
                         yield return new WaitForSeconds(3f);
 
-                        using var check = UnityWebRequest.Get($"https://darwinsgym.eu/check_verified.php?username={UnityWebRequest.EscapeURL(username)}");
+                        using var check = UnityWebRequest.Get($"https://darwinsgym.eu/check_verified.php?username={UnityWebRequest.EscapeURL(player_name)}");
                         yield return check.SendWebRequest();
 
                         if (check.result == UnityWebRequest.Result.Success)
@@ -66,7 +66,7 @@ public class RegistrationManager : MonoBehaviour
                             if (verifResult.status == "verified")
                             {
                                 StopCoroutine(loadingAnimatedText);
-                                registrationStatus.text = $"Welcome {username}!\nAccount activated!\nSing in to play.";
+                                registrationStatus.text = $"Welcome {player_name}!\nAccount activated!\nSing in to play.";
                                 signInButton.SetActive(true);
                             }
                         }
@@ -117,7 +117,7 @@ public class RegistrationManager : MonoBehaviour
     [System.Serializable]
     private class RegisterData
     {
-        public string username;
+        public string player_name;
         public string email;
         public string password;
     }

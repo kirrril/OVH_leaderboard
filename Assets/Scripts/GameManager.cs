@@ -39,6 +39,8 @@ public class GameManager : MonoBehaviour
         CheckStatus();
         GetHighestScore();
         StartCoroutine(UpdateRank());
+
+        Debug.Log ($"{playerName}, {sessionToken}");
     }
 
     private void CheckStatus()
@@ -81,10 +83,18 @@ public class GameManager : MonoBehaviour
 
     private async Task GetRankTask()
     {
-        string url = $"{publicURL}get_rank.php?player_name={UnityWebRequest.EscapeURL(playerName)}&token={UnityWebRequest.EscapeURL(sessionToken)}";
-        using var www = UnityWebRequest.Get(url);
-        www.timeout = 8;
+        NameToken nameToken = new NameToken { player_name = playerName, token = sessionToken };
+        string json = JsonUtility.ToJson(nameToken);
+        // using var www = UnityWebRequest.Post("https://darwinsgym.eu/get_rank.php", json, "application/json");
+        // www.timeout = 8;
 
+        // await www.SendWebRequest();
+
+        using var www = new UnityWebRequest("https://darwinsgym.eu/register.php", "POST");
+        byte[] body = System.Text.Encoding.UTF8.GetBytes(json);
+        www.uploadHandler = new UploadHandlerRaw(body);
+        www.downloadHandler = new DownloadHandlerBuffer();
+        www.SetRequestHeader("Content-Type", "application/json");
         await www.SendWebRequest();
 
         if (www.result == UnityWebRequest.Result.Success)
@@ -129,10 +139,18 @@ public class GameManager : MonoBehaviour
 
     private async Task GetHighestScoreTask()
     {
-        string url = $"{publicURL}get_highest_score.php?player_name={UnityWebRequest.EscapeURL(playerName)}&token={UnityWebRequest.EscapeURL(sessionToken)}";
-        using var www = UnityWebRequest.Get(url);
-        www.timeout = 8;
+        NameToken nameToken = new NameToken { player_name = playerName, token = sessionToken };
+        string json = JsonUtility.ToJson(nameToken);
+        // using var www = UnityWebRequest.Post("https://darwinsgym.eu/get_score.php", json, "application/json");
+        // www.timeout = 8;
 
+        // await www.SendWebRequest();
+
+        using var www = new UnityWebRequest("https://darwinsgym.eu/get_score.php", "POST");
+        byte[] body = System.Text.Encoding.UTF8.GetBytes(json);
+        www.uploadHandler = new UploadHandlerRaw(body);
+        www.downloadHandler = new DownloadHandlerBuffer();
+        www.SetRequestHeader("Content-Type", "application/json");
         await www.SendWebRequest();
 
         if (www.result == UnityWebRequest.Result.Success)
@@ -163,7 +181,14 @@ public class GameManager : MonoBehaviour
     {
         NewScore data = new NewScore { player_name = playerName, token = sessionToken, score = sessionScore };
         string json = JsonUtility.ToJson(data);
-        using var www = UnityWebRequest.Post("https://darwinsgym.eu/update_score.php", json, "application/json");
+        // using var www = UnityWebRequest.Post("https://darwinsgym.eu/update_score.php", json, "application/json");
+        // await www.SendWebRequest();
+
+        using var www = new UnityWebRequest("https://darwinsgym.eu/update_score.php", "POST");
+        byte[] body = System.Text.Encoding.UTF8.GetBytes(json);
+        www.uploadHandler = new UploadHandlerRaw(body);
+        www.downloadHandler = new DownloadHandlerBuffer();
+        www.SetRequestHeader("Content-Type", "application/json");
         await www.SendWebRequest();
     }
 
@@ -179,6 +204,13 @@ public class GameManager : MonoBehaviour
         public string player_name;
         public string token;
         public int score;
+    }
+
+    [System.Serializable]
+    private class NameToken
+    {
+        public string player_name;
+        public string token;
     }
 
     [System.Serializable]

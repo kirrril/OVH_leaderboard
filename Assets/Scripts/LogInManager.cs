@@ -36,7 +36,7 @@ public class LogInManager : MonoBehaviour
 
         LogInData data = new LogInData
         {
-            username = username,
+            player_name = username,
             password = password
         };
 
@@ -54,7 +54,7 @@ public class LogInManager : MonoBehaviour
                 if (res.status == "success")
                 {
                     StopCoroutine(loadingAnimatedText);
-                    baseText = "Successfully logged in !";
+                    baseText = "Successfully logged in!";
 
                     PlayerPrefs.SetString("SessionToken", res.session_token);
                     PlayerPrefs.SetString("PlayerName", res.player_name);
@@ -107,7 +107,7 @@ public class LogInManager : MonoBehaviour
     [System.Serializable]
     private class LogInData
     {
-        public string username;
+        public string player_name;
         public string password;
     }
 

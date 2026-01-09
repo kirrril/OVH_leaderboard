@@ -12,7 +12,6 @@ public class ConnectionManager : MonoBehaviour
     [SerializeField] private GameObject signInManager;
     [SerializeField] private GameObject signInButton;
     [SerializeField] private GameObject connectionManager;
-    private string validateUrl = "https://darwinsgym.eu/validate_token.php?token=";
 
     private void Awake()
     {
@@ -28,9 +27,9 @@ public class ConnectionManager : MonoBehaviour
     {
         var loadingAnimatedText = StartCoroutine(LoadingAnimation("Connecting"));
 
-        string token = PlayerPrefs.GetString("SessionToken", "");
+        string sessionToken = PlayerPrefs.GetString("SessionToken", "");
 
-        if (string.IsNullOrEmpty(token))
+        if (string.IsNullOrEmpty(sessionToken))
         {
             StopCoroutine(loadingAnimatedText);
             authentificationManager.SetActive(true);
@@ -38,7 +37,9 @@ public class ConnectionManager : MonoBehaviour
             yield break;
         }
 
-        using var www = UnityWebRequest.Get(validateUrl + token);
+        TokenRequest tokenRequest = new TokenRequest { token = sessionToken };
+        string json = JsonUtility.ToJson(tokenRequest);
+        using var www = UnityWebRequest.Post("https://darwinsgym.eu/validate_token.php", json, "application/json");
         www.timeout = 8;
 
         yield return www.SendWebRequest();
@@ -98,6 +99,12 @@ public class ConnectionManager : MonoBehaviour
     {
         PlayerPrefs.DeleteAll();
         PlayerPrefs.Save();
+    }
+
+    [System.Serializable]
+    private class TokenRequest
+    {
+        public string token;
     }
 
     [System.Serializable]
