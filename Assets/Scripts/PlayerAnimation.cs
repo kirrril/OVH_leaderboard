@@ -11,5 +11,7 @@ public class PlayerAnimation : MonoBehaviour
         animator.SetFloat("MovementSpeed", walkingSpeed);
 
         animator.SetBool("isGaming", PlayerStates.isGaming);
+        animator.SetBool("isPullingRower", PlayerStates.isRowing);
+        animator.SetBool("isBoxJumping", PlayerStates.isBoxJumping);
     }
 }

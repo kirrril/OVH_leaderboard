@@ -103,13 +103,76 @@ public class PlayerController : MonoBehaviour
             PlayerStates.isWalking = false;
             PlayerStates.isGaming = true;
             rb.isKinematic = true;
-            Transform desk = other.transform.Find("PlayerPos");
-            transform.position = desk.position;
-            transform.rotation = desk.rotation;
+            Transform gaming = other.transform.Find("GamingPos");
+            transform.position = gaming.position;
+            transform.rotation = gaming.rotation;
             Vector3 target = new Vector3(0, 1.04f, 1f);
             Vector3 place = new Vector3(-1f, 1.5f, 0.5f);
             SetCamera(target, place);
             PlaceCameraLookingAtSreen();
+        }
+
+        if (other.CompareTag("Rower"))
+        {
+            PlayerStates.isWalking = false;
+            PlayerStates.isGaming = false;
+            PlayerStates.isRowing = true;
+            PlayerStates.isBoxJumping = false;
+            rb.isKinematic = true;
+            Transform training = other.transform.Find("TrainingPos");
+            transform.position = training.position;
+            transform.rotation = training.rotation;
+            Vector3 target = new Vector3(0, 1.04f, 1f);
+            Vector3 place = new Vector3(-1f, 1.5f, 0.5f);
+            SetCamera(target, place);
+        }
+
+        if (other.CompareTag("JumpBox"))
+        {
+            PlayerStates.isWalking = false;
+            PlayerStates.isGaming = false;
+            PlayerStates.isRowing = false;
+            PlayerStates.isBoxJumping = true;
+            rb.isKinematic = true;
+            Transform training = other.transform.Find("TrainingPos");
+            transform.position = training.position;
+            transform.rotation = training.rotation;
+            Vector3 target = new Vector3(0, 1.3f, 1f);
+            Vector3 place = new Vector3(0f, 2f, 2f);
+            SetCamera(target, place);
+        }
+    }
+
+    void OnTriggerExit(Collider other)
+    {
+        if (other.CompareTag("Rower"))
+        {
+            PlayerStates.isWalking = true;
+            PlayerStates.isGaming = false;
+            PlayerStates.isRowing = false;
+            PlayerStates.isBoxJumping = false;
+            rb.isKinematic = false;
+            Transform exit = other.transform.Find("ExitPos");
+            transform.position = exit.position;
+            transform.rotation = exit.rotation;
+            Vector3 target = new Vector3(0, 1.5f, 0.6f);
+            Vector3 place = new Vector3(-1f, 2.1f, -1.2f);
+            SetCamera(target, place);
+        }
+
+        if (other.CompareTag("JumpBox"))
+        {
+            PlayerStates.isWalking = true;
+            PlayerStates.isGaming = false;
+            PlayerStates.isRowing = false;
+            PlayerStates.isBoxJumping = false;
+            rb.isKinematic = false;
+            Transform exit = other.transform.Find("ExitPos");
+            transform.position = exit.position;
+            transform.rotation = exit.rotation;
+            Vector3 target = new Vector3(0, 1.5f, 0.6f);
+            Vector3 place = new Vector3(-1f, 2.1f, -1.2f);
+            SetCamera(target, place);
         }
     }
 
