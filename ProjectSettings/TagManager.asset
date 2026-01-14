@@ -9,6 +9,11 @@ TagManager:
   - JumpBox
   - Treadmill
   - Bike
+  - Barbell
+  - Dips
+  - BarbellStand
+  - ChestMachine2
+  - ChestMachine1
   layers:
   - Default
   - TransparentFX
