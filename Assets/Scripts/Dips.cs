@@ -6,13 +6,13 @@ public class Dips : MonoBehaviour
 
     void OnTriggerEnter(Collider other)
     {
-        if (!other.CompareTag("Player")) return;
+        if (other.CompareTag("Girl")) return;
         isAvailable = false;
     }
 
     void OnTriggerExit(Collider other)
     {
-        if (!other.CompareTag("Player")) return;
+        if (other.CompareTag("Girl")) return;
         isAvailable = true;
     }
 }

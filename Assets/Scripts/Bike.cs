@@ -6,13 +6,13 @@ public class Bike : MonoBehaviour
 
     void OnTriggerEnter(Collider other)
     {
-        if (!other.CompareTag("Player")) return;
+        // if (!other.CompareTag("Player")) return;
         isAvailable = false;
     }
 
     void OnTriggerExit(Collider other)
     {
-        if (!other.CompareTag("Player")) return;
+        // if (!other.CompareTag("Player")) return;
         isAvailable = true;
     }
 }

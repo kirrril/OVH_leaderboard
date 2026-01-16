@@ -8,14 +8,14 @@ public class ChestMachine2 : MonoBehaviour
 
     void OnTriggerEnter(Collider other)
     {
-        if (!other.CompareTag("Player")) return;
+        if (other.CompareTag("Girl")) return;
         isAvailable = false;
         animator.SetBool("chestMachine2IsMoving", true);
     }
 
     void OnTriggerExit(Collider other)
     {
-        if (!other.CompareTag("Player")) return;
+        if (other.CompareTag("Girl")) return;
         isAvailable = true;
         animator.SetBool("chestMachine2IsMoving", false);
     }

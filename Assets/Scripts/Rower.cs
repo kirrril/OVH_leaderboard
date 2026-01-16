@@ -8,14 +8,14 @@ public class Rower : MonoBehaviour
 
     void OnTriggerEnter(Collider other)
     {
-        if (!other.CompareTag("Player")) return;
+        if (other.CompareTag("Man")) return;
         isAvailable = false;
         animator.SetBool("RowerIsMoving", true);
     }
 
     void OnTriggerExit(Collider other)
     {
-        if (!other.CompareTag("Player")) return;
+        if (other.CompareTag("Man")) return;
         isAvailable = true;
         animator.SetBool("RowerIsMoving", false);
     }
