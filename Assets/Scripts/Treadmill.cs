@@ -2,17 +2,15 @@ using UnityEngine;
 
 public class Treadmill : MonoBehaviour
 {
-    public bool isAvailable = true;
+    public bool isAvailable;
 
-    void OnTriggerEnter(Collider other)
+    void Start()
     {
-        // if (!other.CompareTag("Player")) return;
-        isAvailable = false;
+        isAvailable = true;
     }
 
     void OnTriggerExit(Collider other)
     {
-        // if (!other.CompareTag("Player")) return;
         isAvailable = true;
     }
 }

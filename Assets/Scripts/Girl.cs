@@ -9,65 +9,90 @@ public class Girl : MonoBehaviour
     private Transform player;
     [SerializeField]
     private Animator animator;
-
     [SerializeField]
     private Transform[] trainingSpots;
+    int lastSpotIndex = -1;
 
     void Start()
     {
         SetNewDestination();
     }
 
-    private void SetNewDestination()
+    void Update()
     {
-        int targetIndex = Random.Range(0, trainingSpots.Length);
-        Transform target = trainingSpots[targetIndex];
-        agent.SetDestination(target.position);
+        UpdateWalkingSpeed();
     }
 
-    private async void Train(GameObject trainingSpot, string scriptName, string trainingName, int trainingDuration)
+    void UpdateWalkingSpeed()
     {
-        var controllerScript = trainingSpot.GetComponent(scriptName);
-        if (controllerScript != null && !(bool)controllerScript.GetType().GetField("isAvailable").GetValue(controllerScript))
-        {
-            SetNewDestination();
-            return;
-        }
+        if (!agent.enabled) return;
+        float speed = new Vector3(agent.velocity.x, 0, agent.velocity.z).magnitude;
+        float animationSpeed = speed > 0.005f ? 1.9f : 0f;
+        animator.SetFloat("MovementSpeed", animationSpeed);
+    }
 
-        Transform training = trainingSpot.transform.Find("TrainingPos");
-        Transform exit = trainingSpot.transform.Find("ExitPos");
+    private void SetNewDestination()
+    {
+        int targetIndex;
+        do
+        {
+            targetIndex = Random.Range(0, trainingSpots.Length);
+        } while (targetIndex == lastSpotIndex);
+
+        lastSpotIndex = targetIndex;
+        agent.enabled = true;
+        agent.isStopped = false;
+        agent.SetDestination(trainingSpots[targetIndex].position);
+    }
+
+    private async void Train(GameObject wall, Transform training, Transform exit, string animationBool, int trainingDuration)
+    {
         transform.position = training.position;
         transform.rotation = training.rotation;
-        animator.SetBool(trainingName, true);
+        wall.SetActive(true);
+        animator.SetBool(animationBool, true);
         await Awaitable.WaitForSecondsAsync(trainingDuration);
         transform.position = exit.position;
         transform.rotation = exit.rotation;
-        animator.SetBool(trainingName, false);
+        wall.SetActive(false);
+        animator.SetBool(animationBool, false);
         SetNewDestination();
     }
 
     private void OnTriggerEnter(Collider other)
     {
-        agent.ResetPath();
         GameObject trainingSpot = other.gameObject;
+        Transform training = trainingSpot.transform.Find("TrainingPos");
+        Transform exit = trainingSpot.transform.Find("ExitPos");
+        GameObject wall = trainingSpot.transform.Find("Wall")?.gameObject;
         string tag = other.tag;
+
+        string scriptName = "";
+        string animationBool = "";
+        int duration = 0;
 
         switch (tag)
         {
-            case "Girl":
-                break;
-            case "Treadmill":
-                Train(trainingSpot, "Treadmill", "isJogging", 5);
-                break;
-
-            case "Bike":
-                Train(trainingSpot, "Treadmill", "isCycling", 5);
-                break;
-
-            case "JumpBox":
-                Train(trainingSpot, "Treadmill", "isBoxJumping", 5);
-                break;
-
+            case "Treadmill": scriptName = "Treadmill"; animationBool = "isJogging"; duration = 8; break;
+            case "Bike": scriptName = "Bike"; animationBool = "isCycling"; duration = 10; break;
+            case "JumpBox": scriptName = "JumpBox"; animationBool = "isBoxJumping"; duration = 7; break;
+            default: return;
         }
+
+        var controllerScript = trainingSpot.GetComponent(scriptName);
+        if (controllerScript == null || !(bool)controllerScript.GetType().GetField("isAvailable").GetValue(controllerScript))
+        {
+            transform.position = exit.position;
+            transform.rotation = exit.rotation;
+            SetNewDestination();
+            return;
+        }
+
+        controllerScript.GetType().GetField("isAvailable").SetValue(controllerScript, false);
+        agent.ResetPath();
+        agent.isStopped = true;
+        agent.enabled = false;
+
+        Train(wall, training, exit, animationBool, duration);
     }
 }
