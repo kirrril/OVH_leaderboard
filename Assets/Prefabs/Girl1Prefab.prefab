@@ -9,9 +9,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7626204495602610553}
+  - component: {fileID: 1765336813301184825}
   - component: {fileID: 8951132866494659077}
   - component: {fileID: 8712754540535881930}
-  - component: {fileID: 1765336813301184825}
   - component: {fileID: 1237906904204333367}
   m_Layer: 0
   m_Name: Girl1Prefab
@@ -36,6 +36,32 @@ Transform:
   - {fileID: 6740423437518196512}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1765336813301184825
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9186059866667798038}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 89b958f0879bdd9459f3ee0577d3678c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  agent: {fileID: 1237906904204333367}
+  player: {fileID: 0}
+  animator: {fileID: 7510589141316643165}
+  trainingSpots:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
 --- !u!54 &8951132866494659077
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -86,32 +112,6 @@ CapsuleCollider:
   m_Height: 1.6
   m_Direction: 1
   m_Center: {x: 0, y: 0.8, z: 0}
---- !u!114 &1765336813301184825
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 9186059866667798038}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 89b958f0879bdd9459f3ee0577d3678c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  agent: {fileID: 1237906904204333367}
-  player: {fileID: 0}
-  animator: {fileID: 7510589141316643165}
-  trainingSpots:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
 --- !u!195 &1237906904204333367
 NavMeshAgent:
   m_ObjectHideFlags: 0

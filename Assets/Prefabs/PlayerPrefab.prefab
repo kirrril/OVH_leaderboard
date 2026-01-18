@@ -75,7 +75,6 @@ GameObject:
   - component: {fileID: 775626146835990690}
   - component: {fileID: 1825947116902778187}
   - component: {fileID: 8948382738235279479}
-  - component: {fileID: 3796200969043202514}
   m_Layer: 0
   m_Name: PlayerPrefab
   m_TagString: Player
@@ -228,6 +227,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   rb: {fileID: 1825947116902778187}
+  animator: {fileID: 9003915965803049799}
   cameraTarget: {fileID: 3726884547586270123}
   cameraPlace: {fileID: 4445936120259145543}
 --- !u!54 &1825947116902778187
@@ -280,19 +280,6 @@ CapsuleCollider:
   m_Height: 2
   m_Direction: 1
   m_Center: {x: 0, y: 1, z: 0}
---- !u!114 &3796200969043202514
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8118313448260642084}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3860527e503193743a2bc590e4010ca8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  animator: {fileID: 9003915965803049799}
 --- !u!1001 &3965066235772134792
 PrefabInstance:
   m_ObjectHideFlags: 0
