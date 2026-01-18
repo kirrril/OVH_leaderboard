@@ -12,50 +12,50 @@ public class Man : MonoBehaviour
     [SerializeField]
     private Transform[] trainingSpots;
     int lastSpotIndex = -1;
-    private float fleeDistance = 3f;
+    // private float fleeDistance = 3f;
     private float chaseDistance = 5f;
-
-    void Start()
-    {
-        SetNewDestination();
-    }
+    private bool isBusy;
 
     void Update()
     {
         if (!agent.enabled) return;
         UpdateWalkingSpeed();
-        ChasePlayer();
+        // if (FleePlayer()) return;
+        if (ChasePlayer()) return;
+
+        if (!isBusy) SetNewDestination();
     }
 
     void UpdateWalkingSpeed()
     {
         float speed = new Vector3(agent.velocity.x, 0, agent.velocity.z).magnitude;
-        float animationSpeed = speed > 0.005f ? 1.9f : 0f;
+        float animationSpeed = speed > 0.05f ? 1.9f : 0f;
         animator.SetFloat("MovementSpeed", animationSpeed);
     }
 
-    private void FleePlayer()
-    {
-        float distance = Vector3.Distance(transform.position, player.position);
-        if (distance < fleeDistance)
-        {
-            Vector3 fleeDir = (transform.position - player.position).normalized;
-            NavMeshHit hit;
-            if (NavMesh.SamplePosition(transform.position + fleeDir * 5f, out hit, 5f, NavMesh.AllAreas))
-            {
-                agent.SetDestination(hit.position);
-            }
-        }
-    }
+    // private bool FleePlayer()
+    // {
 
-    private void ChasePlayer()
+    // }
+
+    private bool ChasePlayer()
     {
         float distance = Vector3.Distance(transform.position, player.position);
-        if (distance < chaseDistance) agent.SetDestination(player.position);
+        if (distance < chaseDistance)
+        {
+            agent.SetDestination(player.position);
+            isBusy = true;
+        }
+        else
+        {
+            isBusy = false;
+        }
+        return isBusy;
     }
 
     private void SetNewDestination()
     {
+        isBusy = true;
         int targetIndex;
         do
         {
@@ -63,8 +63,6 @@ public class Man : MonoBehaviour
         } while (targetIndex == lastSpotIndex);
 
         lastSpotIndex = targetIndex;
-        agent.enabled = true;
-        agent.isStopped = false;
         agent.SetDestination(trainingSpots[targetIndex].position);
     }
 
@@ -75,17 +73,22 @@ public class Man : MonoBehaviour
         wall.SetActive(true);
         animator.SetBool(animationBool, true);
         await Awaitable.WaitForSecondsAsync(trainingDuration);
-        transform.position = exit.position;
-        transform.rotation = exit.rotation;
         wall.SetActive(false);
         animator.SetBool(animationBool, false);
-        SetNewDestination();
+        transform.position = exit.position;
+        transform.rotation = exit.rotation;
+        agent.enabled = true;
+        agent.isStopped = false;
+        isBusy = false;
     }
 
 
 
     private void OnTriggerEnter(Collider other)
     {
+        agent.ResetPath();
+        agent.isStopped = true;
+        agent.enabled = false;
         GameObject trainingSpot = other.gameObject;
         Transform training = trainingSpot.transform.Find("TrainingPos");
         Transform exit = trainingSpot.transform.Find("ExitPos");
@@ -109,14 +112,13 @@ public class Man : MonoBehaviour
         {
             transform.position = exit.position;
             transform.rotation = exit.rotation;
-            SetNewDestination();
+            agent.enabled = true;
+            agent.isStopped = false;
+            isBusy = false;
             return;
         }
 
         controllerScript.GetType().GetField("isAvailable").SetValue(controllerScript, false);
-        agent.ResetPath();
-        agent.isStopped = true;
-        agent.enabled = false;
 
         Train(wall, training, exit, animationBool, duration);
     }
