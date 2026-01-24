@@ -20,7 +20,7 @@ public class Girl : MonoBehaviour
     {
         if (!agent.enabled) return;
         UpdateWalkingSpeed();
-        if (FleePlayer()) return;
+        // if (FleePlayer()) return;
 
         if (!isBusy) SetNewDestination();
     }
@@ -32,21 +32,21 @@ public class Girl : MonoBehaviour
         animator.SetFloat("MovementSpeed", animationSpeed);
     }
 
-    private bool FleePlayer()
-    {
-        float distance = Vector3.Distance(transform.position, player.position);
-        if (distance >= fleeDistance) return false;
+    // private bool FleePlayer()
+    // {
+    //     float distance = Vector3.Distance(transform.position, player.position);
+    //     if (distance >= fleeDistance) return false;
 
-        isBusy = true;
-        Vector3 fleeDir = (transform.position - player.position).normalized;
-        NavMeshHit hit;
-        if (NavMesh.SamplePosition(transform.position + fleeDir * 5f, out hit, 5f, NavMesh.AllAreas))
-        {
-            agent.SetDestination(hit.position);
-        }
-        isBusy = false;
-        return true;
-    }
+    //     isBusy = true;
+    //     Vector3 fleeDir = (transform.position - player.position).normalized;
+    //     NavMeshHit hit;
+    //     if (NavMesh.SamplePosition(transform.position + fleeDir * 5f, out hit, 5f, NavMesh.AllAreas))
+    //     {
+    //         agent.SetDestination(hit.position);
+    //     }
+    //     isBusy = false;
+    //     return true;
+    // }
 
     // private void ChasePlayer()
     // {
