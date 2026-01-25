@@ -75,6 +75,7 @@ GameObject:
   - component: {fileID: 775626146835990690}
   - component: {fileID: 1825947116902778187}
   - component: {fileID: 8948382738235279479}
+  - component: {fileID: 5285521948088944947}
   m_Layer: 0
   m_Name: PlayerPrefab
   m_TagString: Player
@@ -230,6 +231,7 @@ MonoBehaviour:
   animator: {fileID: 9003915965803049799}
   cameraTarget: {fileID: 3726884547586270123}
   cameraPlace: {fileID: 4445936120259145543}
+  score: 10
 --- !u!54 &1825947116902778187
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -280,6 +282,27 @@ CapsuleCollider:
   m_Height: 2
   m_Direction: 1
   m_Center: {x: 0, y: 1, z: 0}
+--- !u!135 &5285521948088944947
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8118313448260642084}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Radius: 1
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1001 &3965066235772134792
 PrefabInstance:
   m_ObjectHideFlags: 0

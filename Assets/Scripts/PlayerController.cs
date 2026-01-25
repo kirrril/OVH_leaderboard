@@ -20,6 +20,8 @@ public class PlayerController : MonoBehaviour
     private bool playerAttack;
     private bool playerInteract;
     private bool playerJump;
+    public int score = 80;
+
 
     void FixedUpdate()
     {
