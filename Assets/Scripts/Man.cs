@@ -1,125 +1,223 @@
 using UnityEngine;
 using UnityEngine.AI;
+using System.Collections;
 
 public class Man : MonoBehaviour
 {
-    [SerializeField]
-    private NavMeshAgent agent;
-    [SerializeField]
-    private Transform player;
-    [SerializeField]
-    private Animator animator;
-    [SerializeField]
-    private Transform[] trainingSpots;
-    int lastSpotIndex = -1;
-    // private float fleeDistance = 3f;
-    private float chaseDistance = 5f;
-    private bool isBusy;
+    [SerializeField] private NavMeshAgent agent;
+    [SerializeField] private Transform player;
+    [SerializeField] private PlayerController playerController;
+    [SerializeField] private Animator animator;
+    [SerializeField] private Transform[] trainingSpots;
+
+    private int lastSpotIndex = -1;
+    private float chaseFleeDistance = 3f;
+    private float interactionDistance = 2.5f;
+    private float chaseStopDistance = 6f;
+    private float fleeStopDistance = 8f;
+    private bool hasInteracted;
+
+    private enum State { MovingToTarget, Training, FleeingChasing, Interacting }
+    private State currentState = State.MovingToTarget;
 
     void Update()
     {
-        if (!agent.enabled) return;
-        UpdateWalkingSpeed();
-        // if (FleePlayer()) return;
-        if (ChasePlayer()) return;
+        UpdateWalkingAnimation();
 
-        if (!isBusy) SetNewDestination();
-    }
-
-    void UpdateWalkingSpeed()
-    {
-        float speed = new Vector3(agent.velocity.x, 0, agent.velocity.z).magnitude;
-        float animationSpeed = speed > 0.05f ? 1.9f : 0f;
-        animator.SetFloat("MovementSpeed", animationSpeed);
-    }
-
-    // private bool FleePlayer()
-    // {
-
-    // }
-
-    private bool ChasePlayer()
-    {
-        float distance = Vector3.Distance(transform.position, player.position);
-        if (distance < chaseDistance)
+        switch (currentState)
         {
-            agent.SetDestination(player.position);
-            isBusy = true;
+            case State.MovingToTarget:
+                HandleMovingToTarget();
+                break;
+
+            case State.FleeingChasing:
+                HandleFleeingChasing();
+                break;
+
+            case State.Interacting:
+                HandleInteracting();
+                break;
+
+            case State.Training:
+                break;
         }
-        else
-        {
-            isBusy = false;
-        }
-        return isBusy;
     }
 
-    private void SetNewDestination()
+    private void UpdateWalkingAnimation()
     {
-        isBusy = true;
-        int targetIndex;
-        do
-        {
-            targetIndex = Random.Range(0, trainingSpots.Length);
-        } while (targetIndex == lastSpotIndex);
-
-        lastSpotIndex = targetIndex;
-        agent.SetDestination(trainingSpots[targetIndex].position);
+        float speed = agent.velocity.magnitude;
+        animator.SetFloat("MovementSpeed", speed > 0.1f ? 1.9f : 0f);
     }
 
-    private async void Train(GameObject wall, Transform training, Transform exit, string animationBool, int trainingDuration)
+    private void HandleMovingToTarget()
     {
-        transform.position = training.position;
-        transform.rotation = training.rotation;
-        wall.SetActive(true);
-        animator.SetBool(animationBool, true);
-        await Awaitable.WaitForSecondsAsync(trainingDuration);
-        wall.SetActive(false);
-        animator.SetBool(animationBool, false);
-        transform.position = exit.position;
-        transform.rotation = exit.rotation;
-        agent.enabled = true;
-        agent.isStopped = false;
-        isBusy = false;
-    }
+        float distanceToPlayer = Vector3.Distance(transform.position, player.position);
 
-
-
-    private void OnTriggerEnter(Collider other)
-    {
-        agent.ResetPath();
-        agent.isStopped = true;
-        agent.enabled = false;
-        GameObject trainingSpot = other.gameObject;
-        Transform training = trainingSpot.transform.Find("TrainingPos");
-        Transform exit = trainingSpot.transform.Find("ExitPos");
-        GameObject wall = trainingSpot.transform.Find("Wall")?.gameObject;
-        string tag = other.tag;
-
-        string scriptName = "";
-        string animationBool = "";
-        int duration = 0;
-
-        switch (tag)
+        if (distanceToPlayer < chaseFleeDistance && !hasInteracted)
         {
-            case "Treadmill": scriptName = "Treadmill"; animationBool = "isJogging"; duration = 8; break;
-            case "Bike": scriptName = "Bike"; animationBool = "isCycling"; duration = 10; break;
-            case "JumpBox": scriptName = "JumpBox"; animationBool = "isBoxJumping"; duration = 7; break;
-            default: return;
-        }
-
-        var controllerScript = trainingSpot.GetComponent(scriptName);
-        if (controllerScript == null || !(bool)controllerScript.GetType().GetField("isAvailable").GetValue(controllerScript))
-        {
-            transform.position = exit.position;
-            transform.rotation = exit.rotation;
-            agent.enabled = true;
-            agent.isStopped = false;
-            isBusy = false;
+            currentState = State.FleeingChasing;
             return;
         }
 
-        controllerScript.GetType().GetField("isAvailable").SetValue(controllerScript, false);
+        if (!agent.hasPath || agent.remainingDistance < 0.5f)
+        {
+            SetNewTarget();
+        }
+    }
 
-        Train(wall, training, exit, animationBool, duration);
+    private void HandleFleeingChasing()
+    {
+        if (playerController.score > 50)
+        {
+            Flee();
+        }
+        else
+        {
+            Chase();
+        }
+    }
+
+    private void Flee()
+    {
+        float distanceToPlayer = Vector3.Distance(transform.position, player.position);
+        if (distanceToPlayer < interactionDistance) currentState = State.Interacting;
+        if (distanceToPlayer > fleeStopDistance)
+        {
+            currentState = State.MovingToTarget;
+            return;
+        }
+
+        Vector3 dirAway = (transform.position - player.position).normalized;
+        Vector3 target = transform.position + dirAway * 6f;
+
+        if (NavMesh.SamplePosition(target, out NavMeshHit hit, 8f, NavMesh.AllAreas))
+        {
+            agent.SetDestination(hit.position);
+        }
+    }
+
+    private void Chase()
+    {
+        float distanceToPlayer = Vector3.Distance(transform.position, player.position);
+        if (distanceToPlayer < interactionDistance)
+        {
+            currentState = State.Interacting;
+            return;
+        }
+
+        if (distanceToPlayer > chaseStopDistance)
+        {
+            currentState = State.MovingToTarget;
+            agent.ResetPath();
+            return;
+        }
+
+        agent.SetDestination(player.position);
+    }
+
+    private void HandleInteracting()
+    {
+        float distanceToPlayer = Vector3.Distance(transform.position, player.position);
+
+        if (hasInteracted) return;
+
+        hasInteracted = true;
+
+        if (playerController.score < 50)
+        {
+            StartCoroutine(DoInteract("You little nerd!", -1));
+        }
+        else
+        {
+            StartCoroutine(DoInteract("Hi bro!", +1));
+        }
+    }
+
+    private void SetNewTarget()
+    {
+        int newSpotIndex;
+        do
+        {
+            newSpotIndex = Random.Range(0, trainingSpots.Length);
+        } while (newSpotIndex == lastSpotIndex);
+
+        lastSpotIndex = newSpotIndex;
+        agent.SetDestination(trainingSpots[newSpotIndex].position);
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (currentState == State.Training) return;
+
+        string tag = other.tag;
+
+        Transform spot = other.transform;
+        Transform trainingPos = spot.Find("TrainingPos");
+        Transform exitPos = spot.Find("ExitPos");
+        GameObject wall = spot.Find("Wall")?.gameObject;
+
+        string animBool = "";
+        int duration = 0;
+        string scriptName = tag;
+
+        switch (tag)
+        {
+            case "Treadmill": animBool = "isJogging"; duration = 8; break;
+            case "Bike": animBool = "isCycling"; duration = 10; break;
+            case "JumpBox": animBool = "isBoxJumping"; duration = 7; break;
+            default: return;
+        }
+
+        var spotController = spot.GetComponent(scriptName);
+
+        var isAvailableField = spotController.GetType().GetField("isAvailable");
+        if (!(bool)isAvailableField.GetValue(spotController))
+        {
+            agent.ResetPath();
+            SetNewTarget();
+            return;
+        }
+
+        currentState = State.Training;
+        agent.ResetPath();
+        agent.isStopped = true;
+        agent.enabled = false;
+
+        isAvailableField.SetValue(spotController, false);
+
+        StartCoroutine(DoTraining(wall, trainingPos, exitPos, animBool, duration));
+    }
+
+    private IEnumerator DoTraining(GameObject wall, Transform trainingPos, Transform exitPos, string animBool, int duration)
+    {
+        transform.position = trainingPos.position;
+        transform.rotation = trainingPos.rotation;
+
+        if (wall) wall.SetActive(true);
+        animator.SetBool(animBool, true);
+
+        hasInteracted = false;
+
+        yield return new WaitForSeconds(duration);
+
+        if (wall) wall.SetActive(false);
+        animator.SetBool(animBool, false);
+
+        transform.position = exitPos.position;
+        transform.rotation = exitPos.rotation;
+
+        agent.enabled = true;
+        agent.isStopped = false;
+
+        currentState = State.MovingToTarget;
+    }
+
+    private IEnumerator DoInteract(string message, int scoreDelta)
+    {
+        Debug.Log(message);
+        playerController.score += scoreDelta;
+        yield return new WaitForSeconds(0.1f);
+        agent.ResetPath();
+        currentState = State.MovingToTarget;
     }
 }
