@@ -67,33 +67,7 @@ public class Man : MonoBehaviour
 
     private void HandleFleeingChasing()
     {
-        if (playerController.score > 50)
-        {
-            Flee();
-        }
-        else
-        {
-            Chase();
-        }
-    }
-
-    private void Flee()
-    {
-        float distanceToPlayer = Vector3.Distance(transform.position, player.position);
-        if (distanceToPlayer < interactionDistance) currentState = State.Interacting;
-        if (distanceToPlayer > fleeStopDistance)
-        {
-            currentState = State.MovingToTarget;
-            return;
-        }
-
-        Vector3 dirAway = (transform.position - player.position).normalized;
-        Vector3 target = transform.position + dirAway * 6f;
-
-        if (NavMesh.SamplePosition(target, out NavMeshHit hit, 8f, NavMesh.AllAreas))
-        {
-            agent.SetDestination(hit.position);
-        }
+        Chase();
     }
 
     private void Chase()
@@ -123,14 +97,7 @@ public class Man : MonoBehaviour
 
         hasInteracted = true;
 
-        if (playerController.score < 50)
-        {
-            StartCoroutine(DoInteract("You little nerd!", -1));
-        }
-        else
-        {
-            StartCoroutine(DoInteract("Hi bro!", +1));
-        }
+        StartCoroutine(DoInteract("You little nerd!", -1));
     }
 
     private void SetNewTarget()
