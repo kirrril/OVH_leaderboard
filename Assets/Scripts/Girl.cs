@@ -51,11 +51,9 @@ public class Girl : MonoBehaviour
 
     private void HandleMovingToTarget()
     {
-        hasInteracted = false;
-
         float distanceToPlayer = Vector3.Distance(transform.position, player.position);
 
-        if (distanceToPlayer < chaseFleeDistance)
+        if (distanceToPlayer < chaseFleeDistance && !hasInteracted)
         {
             currentState = State.FleeingChasing;
             return;
@@ -100,22 +98,30 @@ public class Girl : MonoBehaviour
 
     private void Chase()
     {
-        agent.SetDestination(player.position);
-
         float distanceToPlayer = Vector3.Distance(transform.position, player.position);
-        if (distanceToPlayer < interactionDistance) currentState = State.Interacting;
+        if (distanceToPlayer < interactionDistance)
+        {
+            currentState = State.Interacting;
+            return;
+        }
+        
         if (distanceToPlayer > chaseStopDistance)
         {
             currentState = State.MovingToTarget;
+            agent.ResetPath();
+            return;
         }
+
+        agent.SetDestination(player.position);
     }
 
     private void HandleInteracting()
     {
         float distanceToPlayer = Vector3.Distance(transform.position, player.position);
-        if (distanceToPlayer > interactionDistance) currentState = State.FleeingChasing;
 
         if (hasInteracted) return;
+
+        hasInteracted = true;
 
         if (playerController.score < 50)
         {
@@ -190,6 +196,8 @@ public class Girl : MonoBehaviour
         if (wall) wall.SetActive(true);
         animator.SetBool(animBool, true);
 
+        hasInteracted = false;
+
         yield return new WaitForSeconds(duration);
 
         if (wall) wall.SetActive(false);
@@ -208,8 +216,8 @@ public class Girl : MonoBehaviour
     {
         Debug.Log(message);
         playerController.score += scoreDelta;
-        hasInteracted = true;
-        yield return new WaitForSeconds(1f);
+        yield return new WaitForSeconds(0.1f);
+        agent.ResetPath();
         currentState = State.MovingToTarget;
     }
 }
