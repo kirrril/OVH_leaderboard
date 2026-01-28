@@ -14,7 +14,9 @@ public class PlayerController : MonoBehaviour
     [SerializeField]
     private Transform cameraPlace;
     private Vector2 playerMovement;
-    private Vector2 playerRotation;
+    private Vector2 mouseDelta;
+    // float yaw;
+    // float pitch;
     private bool isWalking = true;
     private bool isTraining;
     private bool playerAttack;
@@ -22,6 +24,11 @@ public class PlayerController : MonoBehaviour
     private bool playerJump;
     public int score = 80;
 
+    void Start()
+    {
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
+    }
 
     void FixedUpdate()
     {
@@ -29,7 +36,7 @@ public class PlayerController : MonoBehaviour
         {
             MovePlayer();
             RotatePlayer();
-            LiftCameraTarget();
+            MoveCameraTarget();
             CheckIfMoving();
         }
         else
@@ -50,18 +57,19 @@ public class PlayerController : MonoBehaviour
     {
         if (!isWalking) return;
 
-        float rotationY = playerRotation.normalized.x * 1.7f;
-        rb.angularVelocity = new Vector3(0, rotationY, 0);
+        float yawDelta = mouseDelta.normalized.x * 4f;
+        rb.angularVelocity = new Vector3(0, yawDelta, 0);
     }
 
-    void LiftCameraTarget()
+    void MoveCameraTarget()
     {
-        if (isTraining) return;
+        if (!isWalking) return;
 
-        float delta = playerRotation.y * 0.25f * Time.fixedDeltaTime;
-        float newY = cameraTarget.localPosition.y + delta;
-        newY = Mathf.Clamp(newY, 1.5f, 2.5f);
-        cameraTarget.localPosition = new Vector3(0, newY, 0);
+        float pitchDelta = mouseDelta.normalized.y * 1.5f;
+        pitchDelta = Mathf.Clamp(pitchDelta, -1f, 2f);
+        float pitch = cameraTarget.localPosition.y + pitchDelta * 2 * Time.fixedDeltaTime;
+
+        cameraTarget.localPosition = new Vector3(0, pitch, 0);
     }
 
     void CheckIfMoving()
@@ -83,7 +91,7 @@ public class PlayerController : MonoBehaviour
 
     public void OnLook(InputAction.CallbackContext ctx)
     {
-        playerRotation = ctx.ReadValue<Vector2>();
+        mouseDelta = ctx.ReadValue<Vector2>();
     }
 
     public void OnAttack(InputAction.CallbackContext ctx)

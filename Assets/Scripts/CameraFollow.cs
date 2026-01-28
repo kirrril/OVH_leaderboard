@@ -7,7 +7,7 @@ public class CameraFollow : MonoBehaviour
     private Transform cameraPlace;
     [SerializeField]
     private Transform cameraTarget;
-    private float smoothSpeed = 0.125f;
+    private float smoothSpeed = 0.04f;
 
     void FixedUpdate()
     {
@@ -19,6 +19,6 @@ public class CameraFollow : MonoBehaviour
     {
         Vector3 direction = cameraTarget.position - transform.position;
         Quaternion targetRot = Quaternion.LookRotation(direction);
-        transform.rotation = Quaternion.Slerp(transform.rotation, targetRot, 2.5f * Time.deltaTime);
+        transform.rotation = Quaternion.Slerp(transform.rotation, targetRot, 3f * Time.deltaTime);
     }
 }

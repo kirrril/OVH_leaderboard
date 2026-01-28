@@ -14,7 +14,6 @@ public class Man : MonoBehaviour
     private float chaseFleeDistance = 3f;
     private float interactionDistance = 2.5f;
     private float chaseStopDistance = 6f;
-    private float fleeStopDistance = 8f;
     private bool hasInteracted;
 
     private enum State { MovingToTarget, Training, FleeingChasing, Interacting }
