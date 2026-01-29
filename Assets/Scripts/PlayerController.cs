@@ -1,5 +1,5 @@
 using System.Threading.Tasks;
-using Unity.Cinemachine;
+using Cinemachine;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -15,8 +15,9 @@ public class PlayerController : MonoBehaviour
     private Transform cameraPlace;
     private Vector2 playerMovement;
     private Vector2 mouseDelta;
-    // float yaw;
-    // float pitch;
+    private Vector3 reinitCameraPlace = new Vector3(0f, 1.9f, -1f);
+    private Vector3 reinitCameraTarget = new Vector3(0f, 1.7f, 0f);
+
     private bool isWalking = true;
     private bool isTraining;
     private bool playerAttack;
@@ -26,7 +27,7 @@ public class PlayerController : MonoBehaviour
 
     void Start()
     {
-        Cursor.lockState = CursorLockMode.Locked;
+        // Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
     }
 
@@ -57,7 +58,7 @@ public class PlayerController : MonoBehaviour
     {
         if (!isWalking) return;
 
-        float yawDelta = mouseDelta.normalized.x * 4f;
+        float yawDelta = mouseDelta.normalized.x * 3f;
         rb.angularVelocity = new Vector3(0, yawDelta, 0);
     }
 
@@ -65,7 +66,7 @@ public class PlayerController : MonoBehaviour
     {
         if (!isWalking) return;
 
-        float pitchDelta = mouseDelta.normalized.y * 1.5f;
+        float pitchDelta = mouseDelta.normalized.y * 1.2f;
         pitchDelta = Mathf.Clamp(pitchDelta, -1f, 2f);
         float pitch = cameraTarget.localPosition.y + pitchDelta * 2 * Time.fixedDeltaTime;
 
@@ -111,135 +112,45 @@ public class PlayerController : MonoBehaviour
 
     void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("Desk"))
+        string tag = other.tag;
+
+        Transform spot = other.transform;
+        Transform trainingPos = spot.Find("TrainingPos");
+        Transform exitPos = spot.Find("ExitPos"); ///////////////////////////
+        GameObject wall = spot.Find("Wall")?.gameObject;
+
+        string animBool = "";
+        string scriptName = tag;
+        Vector3 cameraPlacePosition;
+        Vector3 cameraTargetPosition;
+
+        switch (tag)
         {
-            isWalking = false;
-            rb.isKinematic = true;
-            Transform gaming = other.transform.Find("GamingPos");
-            transform.position = gaming.position;
-            transform.rotation = gaming.rotation;
-            animator.SetBool("isGaming", true);
-            Vector3 target = new Vector3(0, 1.04f, 1f);
-            Vector3 place = new Vector3(-1f, 1.5f, 0.5f);
-            SetCamera(target, place);
+            case "Desk": animBool = "isGaming"; cameraPlacePosition = new Vector3(-1f, 1.5f, 0.5f); cameraTargetPosition = new Vector3(0, 1.04f, 1f); break;
+            case "Treadmill": animBool = "isJogging"; cameraPlacePosition = new Vector3(0.8f, 1.8f, -1.6f); cameraTargetPosition = new Vector3(0, 1.3f, 1f); break;
+            case "Bike": animBool = "isCycling"; cameraPlacePosition = new Vector3(-0.8f, 1.8f, 1.6f); cameraTargetPosition = new Vector3(0, 1.3f, 1f); break;
+            case "JumpBox": animBool = "isBoxJumping"; cameraPlacePosition = new Vector3(0f, 2f, 2f); cameraTargetPosition = new Vector3(0, 1.3f, 1f); break;
+            case "Rower": animBool = "isPullingRower"; cameraPlacePosition = new Vector3(-1f, 1.5f, 0.5f); cameraTargetPosition = new Vector3(0, 1.04f, 1f); break;
+            case "Dips": animBool = "isMakingDips"; cameraPlacePosition = new Vector3(0.8f, 1.8f, -1.6f); cameraTargetPosition = new Vector3(0, 1.3f, 1f); break;
+            case "Barbell": animBool = "isPushingBarbell"; cameraPlacePosition = new Vector3(0f, 2f, 0f); cameraTargetPosition = new Vector3(0, 0.5f, -0.7f); break;
+            case "ChestMachine1": animBool = "isTrainingChest_1"; cameraPlacePosition = new Vector3(0f, 1.8f, 1.6f); cameraTargetPosition = new Vector3(0, 1.3f, 1f); break;
+            case "ChestMachine2": animBool = "isTrainingChest_2"; cameraPlacePosition = new Vector3(0f, 1.8f, 2f); cameraTargetPosition = new Vector3(0, 1.3f, 1f); break;
+            default: return;
+        }
+
+        if (tag == "Desk")
+        {
             PlaceCameraLookingAtSreen();
+            return;
         }
-
-        if (other.CompareTag("Rower"))
-        {
-            isWalking = false;
-            isTraining = true;
-            rb.isKinematic = true;
-            Transform training = other.transform.Find("TrainingPos");
-            transform.position = training.position;
-            transform.rotation = training.rotation;
-            animator.SetBool("isPullingRower", true);
-            Vector3 target = new Vector3(0, 1.04f, 1f);
-            Vector3 place = new Vector3(-1f, 1.5f, 0.5f);
-            SetCamera(target, place);
-        }
-
-        if (other.CompareTag("JumpBox"))
-        {
-            isWalking = false;
-            isTraining = true;
-            rb.isKinematic = true;
-            Transform training = other.transform.Find("TrainingPos");
-            transform.position = training.position;
-            transform.rotation = training.rotation;
-            animator.SetBool("isBoxJumping", true);
-            Vector3 target = new Vector3(0, 1.3f, 1f);
-            Vector3 place = new Vector3(0f, 2f, 2f);
-            SetCamera(target, place);
-        }
-
-        if (other.CompareTag("Bike"))
-        {
-            isWalking = false;
-            isTraining = true;
-            rb.isKinematic = true;
-            Transform training = other.transform.Find("TrainingPos");
-            transform.position = training.position;
-            transform.rotation = training.rotation;
-            animator.SetBool("isCycling", true);
-            Vector3 target = new Vector3(0, 1.3f, 1f);
-            Vector3 place = new Vector3(-0.8f, 1.8f, 1.6f);
-            SetCamera(target, place);
-        }
-
-        if (other.CompareTag("Treadmill"))
-        {
-            isWalking = false;
-            isTraining = true;
-            rb.isKinematic = true;
-            Transform training = other.transform.Find("TrainingPos");
-            transform.position = training.position;
-            transform.rotation = training.rotation;
-            animator.SetBool("isJogging", true);
-            Vector3 target = new Vector3(0, 1.3f, 1f);
-            Vector3 place = new Vector3(0.8f, 1.8f, -1.6f);
-            SetCamera(target, place);
-        }
-
-        if (other.CompareTag("Dips"))
-        {
-            isWalking = false;
-            isTraining = true;
-            rb.isKinematic = true;
-            Transform training = other.transform.Find("TrainingPos");
-            transform.position = training.position;
-            transform.rotation = training.rotation;
-            animator.SetBool("isMakingDips", true);
-            Vector3 target = new Vector3(0, 1.3f, 1f);
-            Vector3 place = new Vector3(0.8f, 1.8f, -1.6f);
-            SetCamera(target, place);
-        }
-
-        if (other.CompareTag("Barbell"))
-        {
-            isWalking = false;
-            isTraining = true;
-            rb.isKinematic = true;
-            Transform training = other.transform.Find("TrainingPos");
-            transform.position = training.position;
-            transform.rotation = training.rotation;
-            animator.SetBool("isPushingBarbell", true);
-            Vector3 target = new Vector3(0, 0.5f, -0.7f);
-            Vector3 place = new Vector3(0f, 2f, 0f);
-            SetCamera(target, place);
-        }
-
-        if (other.CompareTag("ChestMachine1"))
-        {
-            isWalking = false;
-            isTraining = true;
-            rb.isKinematic = true;
-            Transform training = other.transform.Find("TrainingPos");
-            transform.position = training.position;
-            transform.rotation = training.rotation;
-            animator.SetBool("isTrainingChest_1", true);
-            Vector3 target = new Vector3(0, 1.3f, 1f);
-            Vector3 place = new Vector3(0f, 1.8f, 1.6f);
-            SetCamera(target, place);
-        }
-
-        if (other.CompareTag("ChestMachine2"))
-        {
-            isWalking = false;
-            isTraining = true;
-            rb.isKinematic = true;
-            Transform training = other.transform.Find("TrainingPos");
-            transform.position = training.position;
-            transform.rotation = training.rotation;
-            animator.SetBool("isTrainingChest_2", true);
-            Vector3 target = new Vector3(0, 1.3f, 1f);
-            Vector3 place = new Vector3(0f, 1.8f, 2f);
-            SetCamera(target, place);
-        }
+        
+        Train(spot, trainingPos, scriptName, animBool, cameraTargetPosition, cameraPlacePosition, wall);
     }
 
     void OnTriggerExit(Collider other)
     {
+        string tag = other.tag;
+
         if (other.CompareTag("Rower"))
         {
             animator.SetBool("isPullingRower", false);
@@ -351,6 +262,38 @@ public class PlayerController : MonoBehaviour
             Vector3 place = new Vector3(-1f, 2.1f, -1.2f);
             SetCamera(target, place);
         }
+    }
+
+    void Train(Transform spot, Transform trainingPos, string scriptName, string animationBool, Vector3 cameraTargetPosition, Vector3 cameraPlacePosition, GameObject wall)
+    {
+        isWalking = false;
+        isTraining = true;
+        rb.isKinematic = true;
+        transform.position = trainingPos.position;
+        transform.rotation = trainingPos.rotation;
+        animator.SetBool(animationBool, true);
+        SetCamera(cameraTargetPosition, cameraPlacePosition);
+        if (wall != null) wall.SetActive(true);
+        var spotController = spot.GetComponent(scriptName);
+        if (spotController == null) return;
+        var isAvailableField = spotController.GetType().GetField("isAvailable");
+        isAvailableField.SetValue(spotController, false);
+    }
+
+    void StopTraining(Transform spot, Transform exitPos, string scriptName, string animationBool, GameObject wall)
+    {
+        animator.SetBool(animationBool, false);
+        isTraining = false;
+        isWalking = true;
+        rb.isKinematic = false;
+        transform.position = exitPos.position;
+        transform.rotation = exitPos.rotation;
+        SetCamera(reinitCameraTarget, reinitCameraPlace);
+        if (wall != null) wall.SetActive(false);
+        var spotController = spot.GetComponent(scriptName);
+        if (spotController == null) return;
+        var isAvailableField = spotController.GetType().GetField("isAvailable");
+        isAvailableField.SetValue(spotController, true);
     }
 
     void SetCamera(Vector3 target, Vector3 place)
