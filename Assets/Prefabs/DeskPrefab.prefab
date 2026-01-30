@@ -131,8 +131,8 @@ GameObject:
   m_Component:
   - component: {fileID: 1244205801647499386}
   m_Layer: 0
-  m_Name: PlayerPos
-  m_TagString: Untagged
+  m_Name: TrainingPos
+  m_TagString: Desk
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -164,7 +164,7 @@ GameObject:
   - component: {fileID: 5393831414950159796}
   - component: {fileID: 8990555620686741109}
   m_Layer: 0
-  m_Name: DeskAndChairPrefab
+  m_Name: DeskPrefab
   m_TagString: Desk
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -400,6 +400,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Desk
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 9bbd81e093384e54b8acac00a6ac2320, type: 3}
+      propertyPath: m_TagString
+      value: Desk
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -461,6 +465,10 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: 2d89624f6ff448f4a9a5c8288a4d3356, type: 3}
       propertyPath: m_Name
       value: Chair
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 2d89624f6ff448f4a9a5c8288a4d3356, type: 3}
+      propertyPath: m_TagString
+      value: Desk
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
