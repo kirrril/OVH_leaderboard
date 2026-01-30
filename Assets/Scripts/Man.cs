@@ -28,15 +28,12 @@ public class Man : MonoBehaviour
             case State.MovingToTarget:
                 HandleMovingToTarget();
                 break;
-
             case State.FleeingChasing:
                 HandleFleeingChasing();
                 break;
-
             case State.Interacting:
                 HandleInteracting();
                 break;
-
             case State.Training:
                 break;
         }

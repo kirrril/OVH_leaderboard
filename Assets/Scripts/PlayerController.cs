@@ -26,35 +26,90 @@ public class PlayerController : MonoBehaviour
     string scriptName;
     string animationBool = "";
 
-
-    private bool isWalking = true;
-    private bool isTraining;
     private bool playerAttack;
     private bool playerInteract;
     private bool playerJump;
     public int score = 80;
 
-    void Start()
+    private enum State { Walking, Training, Fighting, Jumping, PushingTheDoor, ClimbingThePole, MakingDoubleSelfie };
+    private State currentState = State.Walking;
+
+
+    void FixedUpdate()
     {
+        switch (currentState)
+        {
+            case State.Walking:
+                HandleWalking();
+                break;
+            case State.Training:
+                HandleTraining();
+                break;
+            case State.Fighting:
+                HandleFighting();
+                break;
+            case State.Jumping:
+                HandleJumping();
+                break;
+            case State.PushingTheDoor:
+                HandlePushingTheDoor();
+                break;
+            case State.ClimbingThePole:
+                HandleClimbingThePole();
+                break;
+            case State.MakingDoubleSelfie:
+                HandleMakingDoubleSelfie();
+                break;
+        }
+
+
+    }
+
+    private void HandleWalking()
+    {
+        MovePlayer();
+        RotatePlayer();
+        MoveCameraTarget();
+        CheckIfMoving();
         // Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
         stopTrainingButton.SetActive(false);
     }
 
-    void FixedUpdate()
+    private void HandleTraining()
     {
-        if (isWalking)
-        {
-            MovePlayer();
-            RotatePlayer();
-            MoveCameraTarget();
-            CheckIfMoving();
-        }
+        // Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = true;
+        stopTrainingButton.SetActive(true);
+    }
+
+    private void HandleFighting()
+    {
+
+    }
+
+    private void HandleJumping()
+    {
+
+    }
+
+    private void HandlePushingTheDoor()
+    {
+
+    }
+
+    private void HandleClimbingThePole()
+    {
+
+    }
+
+    private void HandleMakingDoubleSelfie()
+    {
+
     }
 
     private void MovePlayer()
     {
-        if (!isWalking) return;
         Vector2 movementInput = playerMovement.normalized;
         Vector3 targetVelocity = transform.forward * movementInput.y * 1.5f + transform.right * movementInput.x * 1.5f;
         rb.linearVelocity = targetVelocity;
@@ -62,16 +117,12 @@ public class PlayerController : MonoBehaviour
 
     private void RotatePlayer()
     {
-        if (!isWalking) return;
-
         float yawDelta = mouseDelta.normalized.x * 3f;
         rb.angularVelocity = new Vector3(0, yawDelta, 0);
     }
 
     private void MoveCameraTarget()
     {
-        if (!isWalking) return;
-
         float pitchDelta = mouseDelta.normalized.y * 1.2f;
         pitchDelta = Mathf.Clamp(pitchDelta, -1f, 2f);
         float pitch = cameraTarget.localPosition.y + pitchDelta * 2 * Time.fixedDeltaTime;
@@ -118,8 +169,8 @@ public class PlayerController : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
+        currentState = State.Training;
         string tag = other.tag;
-
         trainingSpot = other.transform;
         trainingPos = trainingSpot.Find("TrainingPos");
         exitPos = trainingSpot.Find("ExitPos");
@@ -149,8 +200,6 @@ public class PlayerController : MonoBehaviour
 
     private void Train(Vector3 cameraTargetPosition, Vector3 cameraPlacePosition)
     {
-        isWalking = false;
-        isTraining = true;
         rb.isKinematic = true;
         transform.position = trainingPos.position;
         transform.rotation = trainingPos.rotation;
@@ -171,8 +220,6 @@ public class PlayerController : MonoBehaviour
         Cursor.visible = false;
         animator.SetBool(animationBool, false);
         animationBool = "";
-        isTraining = false;
-        isWalking = true;
         rb.isKinematic = false;
         transform.position = exitPos.position;
         transform.rotation = exitPos.rotation;
@@ -182,6 +229,7 @@ public class PlayerController : MonoBehaviour
         var isAvailableField = spotController.GetType().GetField("isAvailable");
         if (isAvailableField == null) return;
         isAvailableField.SetValue(spotController, true);
+        currentState = State.Walking;
     }
 
     private void SetCamera(Vector3 target, Vector3 place)
