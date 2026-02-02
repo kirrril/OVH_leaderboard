@@ -2,22 +2,29 @@ using UnityEngine;
 using UnityEngine.AI;
 using System.Collections;
 
-public class Man : MonoBehaviour
+public class ManController : MonoBehaviour
 {
     [SerializeField] private NavMeshAgent agent;
-    [SerializeField] private Transform player;
-    [SerializeField] private PlayerController playerController;
+    private Transform player;
+    private PlayerController playerController;
     [SerializeField] private Animator animator;
     [SerializeField] private Transform[] trainingSpots;
+    [SerializeField] private GameObject fightZone;
 
     private int lastSpotIndex = -1;
     private float chaseFleeDistance = 3f;
-    private float interactionDistance = 2.5f;
+    private float interactionDistance = 0.8f;
     private float chaseStopDistance = 6f;
-    private bool hasInteracted;
+    public bool hasInteracted;
 
-    private enum State { MovingToTarget, Training, FleeingChasing, Interacting }
-    private State currentState = State.MovingToTarget;
+    public enum State { MovingToTarget, Training, FleeingChasing, Interacting }
+    public State currentState = State.MovingToTarget;
+
+    void Awake()
+    {
+        player = GameObject.Find("PlayerPrefab").transform;
+        playerController = player.gameObject.GetComponent<PlayerController>();
+    }
 
     void Update()
     {
@@ -49,7 +56,7 @@ public class Man : MonoBehaviour
     {
         float distanceToPlayer = Vector3.Distance(transform.position, player.position);
 
-        if (distanceToPlayer < chaseFleeDistance && !hasInteracted)
+        if (distanceToPlayer < chaseFleeDistance && !hasInteracted && !playerController.isBeingAttacked)
         {
             currentState = State.FleeingChasing;
             return;
@@ -87,13 +94,19 @@ public class Man : MonoBehaviour
 
     private void HandleInteracting()
     {
-        float distanceToPlayer = Vector3.Distance(transform.position, player.position);
-
         if (hasInteracted) return;
 
         hasInteracted = true;
 
-        StartCoroutine(DoInteract("You little nerd!", -1));
+        switch (playerController.score <= 50)
+        {
+            case true:
+                StartCoroutine(DoInsult());
+                break;
+            case false:
+                StartCoroutine(DoAttack());
+                break;
+        }
     }
 
     private void SetNewTarget()
@@ -175,12 +188,28 @@ public class Man : MonoBehaviour
         currentState = State.MovingToTarget;
     }
 
-    private IEnumerator DoInteract(string message, int scoreDelta)
+    private IEnumerator DoInsult()
     {
-        Debug.Log(message);
-        playerController.score += scoreDelta;
+        Debug.Log("You little nerd!");
+        playerController.score -= 1;
         yield return new WaitForSeconds(0.1f);
         agent.ResetPath();
         currentState = State.MovingToTarget;
+    }
+
+    private IEnumerator DoAttack()
+    {
+        if (playerController.isBeingAttacked)
+        {
+            agent.ResetPath();
+            currentState = State.MovingToTarget;
+            yield break;
+        }
+        playerController.isBeingAttacked = true;
+        agent.ResetPath();
+        agent.isStopped = true;
+        agent.enabled = false;
+        transform.LookAt(player);
+        fightZone.SetActive(true);
     }
 }

@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Threading.Tasks;
 using Cinemachine;
 using UnityEngine;
@@ -5,16 +6,12 @@ using UnityEngine.InputSystem;
 
 public class PlayerController : MonoBehaviour
 {
-    [SerializeField]
-    private Rigidbody rb;
-    [SerializeField]
-    private Animator animator;
-    [SerializeField]
-    private Transform cameraTarget;
-    [SerializeField]
-    private Transform cameraPlace;
-    [SerializeField]
-    GameObject stopTrainingButton;
+    public Rigidbody rb;
+    [SerializeField] private Animator animator;
+    [SerializeField] private Transform cameraTarget;
+    public Transform cameraPlace;
+    [SerializeField] private GameObject stopTrainingButton;
+    public Transform entryPoint;
     private Vector2 playerMovement;
     private Vector2 mouseDelta;
     private Vector3 reinitCameraPlace = new Vector3(0f, 1.9f, -1f);
@@ -26,13 +23,17 @@ public class PlayerController : MonoBehaviour
     string scriptName;
     string animationBool = "";
 
-    private bool playerAttack;
+    public bool isBeingAttacked;
+    private Transform enemy;
+
+    public bool playerAttack;
     private bool playerInteract;
     private bool playerJump;
     public int score = 80;
+    public int health = 5;
 
-    private enum State { Walking, Training, Fighting, Jumping, PushingTheDoor, ClimbingThePole, MakingDoubleSelfie };
-    private State currentState = State.Walking;
+    public enum State { Walking, Training, Fighting, BeingSubmissed, Jumping, PushingTheDoor, ClimbingThePole, Dying, MakingDoubleSelfie };
+    public State currentState = State.Walking;
 
 
     void FixedUpdate()
@@ -56,6 +57,12 @@ public class PlayerController : MonoBehaviour
                 break;
             case State.ClimbingThePole:
                 HandleClimbingThePole();
+                break;
+            case State.BeingSubmissed:
+                HandleBeingSubmissed();
+                break;
+            case State.Dying:
+                HandleDying();
                 break;
             case State.MakingDoubleSelfie:
                 HandleMakingDoubleSelfie();
@@ -85,7 +92,8 @@ public class PlayerController : MonoBehaviour
 
     private void HandleFighting()
     {
-
+        RotatePlayer();
+        MoveCameraTarget();
     }
 
     private void HandleJumping()
@@ -101,6 +109,20 @@ public class PlayerController : MonoBehaviour
     private void HandleClimbingThePole()
     {
 
+    }
+
+    private void HandleBeingSubmissed()
+    {
+        rb.angularVelocity = Vector3.zero;
+    }
+
+    private void HandleDying()
+    {
+        health -= 1;
+        transform.position = entryPoint.position;
+        transform.rotation = entryPoint.rotation;
+        SetCamera(reinitCameraTarget, reinitCameraPlace);
+        currentState = State.Walking;
     }
 
     private void HandleMakingDoubleSelfie()
@@ -169,8 +191,9 @@ public class PlayerController : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        currentState = State.Training;
         string tag = other.tag;
+
+        currentState = State.Training;
         trainingSpot = other.transform;
         trainingPos = trainingSpot.Find("TrainingPos");
         exitPos = trainingSpot.Find("ExitPos");
@@ -243,5 +266,28 @@ public class PlayerController : MonoBehaviour
         Vector3 targetPosition = new Vector3(0, 1.04f, 0.6f);
         await Awaitable.WaitForSecondsAsync(3);
         cameraPlace.localPosition = targetPosition;
+    }
+
+    public void Push()
+    {
+        StartCoroutine(DoPush());
+    }
+
+    private IEnumerator DoPush()
+    {
+        animator.SetBool("isPushing", true);
+        animator.SetFloat("PushingState", 0.5f);
+        yield return new WaitForSeconds(0.3f);
+        animator.SetFloat("PushingState", 1.9f);
+        yield return new WaitForSeconds(0.3f);
+        animator.SetFloat("PushingState", 0.1f);
+        animator.SetBool("isPushing", false);
+    }
+
+    public void SufferSubmission()
+    {
+        currentState = State.BeingSubmissed;
+        SetCamera(new Vector3(0, 0, 0), new Vector3(0, 2, 1));
+        animator.SetBool("isSubmissed", true);
     }
 }

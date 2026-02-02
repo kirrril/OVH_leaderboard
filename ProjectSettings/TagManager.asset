@@ -16,14 +16,15 @@ TagManager:
   - ChestMachine1
   - Girl
   - Man
+  - Interactor
   layers:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - 
+  - Interactor
   - Water
   - UI
-  - 
+  - Player
   - 
   - 
   - 
