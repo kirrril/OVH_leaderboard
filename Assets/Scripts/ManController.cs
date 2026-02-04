@@ -1,24 +1,26 @@
 using UnityEngine;
 using UnityEngine.AI;
-using System.Collections;
 
 public class ManController : MonoBehaviour
 {
-    [SerializeField] private NavMeshAgent agent;
+    public NavMeshAgent agent;
     private Transform player;
-    private PlayerController playerController;
-    [SerializeField] private Animator animator;
-    [SerializeField] private Transform[] trainingSpots;
-    [SerializeField] private GameObject fightZone;
+    public PlayerController playerController;
+    public Animator animator;
+    public Transform[] trainingSpots;
+    public GameObject fightZone;
+
+    Transform spot;
+    Transform trainingPos;
+    Transform exitPos;
+    GameObject wall;
+    private string animBool = "";
+    public float duration;
+    private string scriptName;
 
     private int lastSpotIndex = -1;
-    private float chaseFleeDistance = 3f;
-    private float interactionDistance = 0.8f;
-    private float chaseStopDistance = 6f;
     public bool hasInteracted;
-
-    public enum State { MovingToTarget, Training, FleeingChasing, Interacting }
-    public State currentState = State.MovingToTarget;
+    public bool isAvailable;
 
     void Awake()
     {
@@ -29,87 +31,29 @@ public class ManController : MonoBehaviour
     void Update()
     {
         UpdateWalkingAnimation();
-
-        switch (currentState)
-        {
-            case State.MovingToTarget:
-                HandleMovingToTarget();
-                break;
-            case State.FleeingChasing:
-                HandleFleeingChasing();
-                break;
-            case State.Interacting:
-                HandleInteracting();
-                break;
-            case State.Training:
-                break;
-        }
     }
 
     private void UpdateWalkingAnimation()
     {
         float speed = agent.velocity.magnitude;
-        animator.SetFloat("MovementSpeed", speed > 0.1f ? 1.9f : 0f);
+        // animator.SetFloat("MovementSpeed", speed > 0.1f ? 1.9f : 0f);
+
     }
 
-    private void HandleMovingToTarget()
+    public void MoveToTarget()
     {
-        float distanceToPlayer = Vector3.Distance(transform.position, player.position);
-
-        if (distanceToPlayer < chaseFleeDistance && !hasInteracted && !playerController.isBeingAttacked)
-        {
-            currentState = State.FleeingChasing;
-            return;
-        }
-
         if (!agent.hasPath || agent.remainingDistance < 0.5f)
         {
-            SetNewTarget();
+            SetNewTrainingSpot();
         }
     }
 
-    private void HandleFleeingChasing()
+    public void Chase()
     {
-        Chase();
-    }
-
-    private void Chase()
-    {
-        float distanceToPlayer = Vector3.Distance(transform.position, player.position);
-        if (distanceToPlayer < interactionDistance)
-        {
-            currentState = State.Interacting;
-            return;
-        }
-
-        if (distanceToPlayer > chaseStopDistance)
-        {
-            currentState = State.MovingToTarget;
-            agent.ResetPath();
-            return;
-        }
-
         agent.SetDestination(player.position);
     }
 
-    private void HandleInteracting()
-    {
-        if (hasInteracted) return;
-
-        hasInteracted = true;
-
-        switch (playerController.score <= 50)
-        {
-            case true:
-                StartCoroutine(DoInsult());
-                break;
-            case false:
-                StartCoroutine(DoAttack());
-                break;
-        }
-    }
-
-    private void SetNewTarget()
+    private void SetNewTrainingSpot()
     {
         int newSpotIndex;
         do
@@ -123,49 +67,40 @@ public class ManController : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (currentState == State.Training) return;
+        scriptName = other.tag;
+        agent.ResetPath();
 
-        string tag = other.tag;
+        spot = other.transform;
+        trainingPos = spot.Find("TrainingPos");
+        exitPos = spot.Find("ExitPos");
+        wall = spot.Find("Wall")?.gameObject;
 
-        Transform spot = other.transform;
-        Transform trainingPos = spot.Find("TrainingPos");
-        Transform exitPos = spot.Find("ExitPos");
-        GameObject wall = spot.Find("Wall")?.gameObject;
-
-        string animBool = "";
-        int duration = 0;
-        string scriptName = tag;
-
-        switch (tag)
+        switch (scriptName)
         {
-            case "Treadmill": animBool = "isJogging"; duration = 8; break;
-            case "Bike": animBool = "isCycling"; duration = 10; break;
-            case "JumpBox": animBool = "isBoxJumping"; duration = 7; break;
+            case "Treadmill": animBool = "isJogging"; duration = 8f; break;
+            case "Bike": animBool = "isCycling"; duration = 10f; break;
+            case "JumpBox": animBool = "isBoxJumping"; duration = 7f; break;
             default: return;
         }
 
         var spotController = spot.GetComponent(scriptName);
-
         var isAvailableField = spotController.GetType().GetField("isAvailable");
         if (!(bool)isAvailableField.GetValue(spotController))
         {
-            agent.ResetPath();
-            SetNewTarget();
-            return;
+            isAvailable = true;
         }
+        else
+        {
+            isAvailableField.SetValue(spotController, false);
+            isAvailable = false;
+        }
+    }
 
-        currentState = State.Training;
+    public void StartTraining()
+    {
         agent.ResetPath();
         agent.isStopped = true;
         agent.enabled = false;
-
-        isAvailableField.SetValue(spotController, false);
-
-        StartCoroutine(DoTraining(wall, trainingPos, exitPos, animBool, duration));
-    }
-
-    private IEnumerator DoTraining(GameObject wall, Transform trainingPos, Transform exitPos, string animBool, int duration)
-    {
         transform.position = trainingPos.position;
         transform.rotation = trainingPos.rotation;
 
@@ -173,9 +108,10 @@ public class ManController : MonoBehaviour
         animator.SetBool(animBool, true);
 
         hasInteracted = false;
+    }
 
-        yield return new WaitForSeconds(duration);
-
+    public void StopTraining()
+    {
         if (wall) wall.SetActive(false);
         animator.SetBool(animBool, false);
 
@@ -184,27 +120,16 @@ public class ManController : MonoBehaviour
 
         agent.enabled = true;
         agent.isStopped = false;
-
-        currentState = State.MovingToTarget;
     }
 
-    private IEnumerator DoInsult()
+    public void DoInsult()
     {
         Debug.Log("You little nerd!");
         playerController.score -= 1;
-        yield return new WaitForSeconds(0.1f);
-        agent.ResetPath();
-        currentState = State.MovingToTarget;
     }
 
-    private IEnumerator DoAttack()
+    public void DoAttack()
     {
-        if (playerController.isBeingAttacked)
-        {
-            agent.ResetPath();
-            currentState = State.MovingToTarget;
-            yield break;
-        }
         playerController.isBeingAttacked = true;
         agent.ResetPath();
         agent.isStopped = true;
