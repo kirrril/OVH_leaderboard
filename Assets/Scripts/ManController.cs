@@ -1,13 +1,20 @@
+using System.Collections;
+using System.Collections.Generic;
+using NodeCanvas.Framework;
 using UnityEngine;
 using UnityEngine.AI;
 
 public class ManController : MonoBehaviour
 {
+    public Blackboard blackboard;
     public NavMeshAgent agent;
     private Transform player;
     public PlayerController playerController;
     public Animator animator;
-    public Transform[] trainingSpots;
+    private int level = 1;
+    private GameObject patrolPoints;
+    Transform[] trainingSpotsTransforms;
+    int lastSpotIndex = -1;
     public GameObject fightZone;
 
     Transform spot;
@@ -18,58 +25,65 @@ public class ManController : MonoBehaviour
     public float duration;
     private string scriptName;
 
-    private int lastSpotIndex = -1;
-    public bool hasInteracted;
-    public bool isAvailable;
-
     void Awake()
     {
         player = GameObject.Find("PlayerPrefab").transform;
         playerController = player.gameObject.GetComponent<PlayerController>();
+
+        switch (level)
+        {
+            case 1:
+                patrolPoints = GameObject.Find("Spots_man1");
+                break;
+            case 2:
+                patrolPoints = GameObject.Find("Spots_man2");
+                break;
+            case 3:
+                patrolPoints = GameObject.Find("Spots_man3");
+                break;
+        }
+
+        trainingSpotsTransforms = patrolPoints.GetComponentsInChildren<Transform>();
+
+        blackboard.SetVariableValue("player", player.gameObject);
     }
 
     void Update()
     {
         UpdateWalkingAnimation();
+        blackboard.SetVariableValue("playerScore", playerController.score);
     }
 
     private void UpdateWalkingAnimation()
     {
         float speed = agent.velocity.magnitude;
-        // animator.SetFloat("MovementSpeed", speed > 0.1f ? 1.9f : 0f);
+        animator.SetFloat("SpeedMagnitude", speed > 0.1f ? 1.9f : 0f);
 
     }
 
-    public void MoveToTarget()
-    {
-        if (!agent.hasPath || agent.remainingDistance < 0.5f)
-        {
-            SetNewTrainingSpot();
-        }
-    }
-
-    public void Chase()
-    {
-        agent.SetDestination(player.position);
-    }
-
-    private void SetNewTrainingSpot()
+    private int ChoseNewTrainingSpot()
     {
         int newSpotIndex;
         do
         {
-            newSpotIndex = Random.Range(0, trainingSpots.Length);
+            newSpotIndex = Random.Range(0, trainingSpotsTransforms.Length);
         } while (newSpotIndex == lastSpotIndex);
 
         lastSpotIndex = newSpotIndex;
-        agent.SetDestination(trainingSpots[newSpotIndex].position);
+        return newSpotIndex;
+    }
+
+    public void MoveToSpot()
+    {
+        if (!agent.hasPath || agent.remainingDistance < 0.1f)
+        {
+            agent.SetDestination(trainingSpotsTransforms[ChoseNewTrainingSpot()].position);
+        }
     }
 
     private void OnTriggerEnter(Collider other)
     {
         scriptName = other.tag;
-        agent.ResetPath();
-
         spot = other.transform;
         trainingPos = spot.Find("TrainingPos");
         exitPos = spot.Find("ExitPos");
@@ -85,39 +99,38 @@ public class ManController : MonoBehaviour
 
         var spotController = spot.GetComponent(scriptName);
         var isAvailableField = spotController.GetType().GetField("isAvailable");
-        if (!(bool)isAvailableField.GetValue(spotController))
+        if ((bool)isAvailableField.GetValue(spotController))
         {
-            isAvailable = true;
-        }
-        else
-        {
+            agent.ResetPath();
+            blackboard.SetVariableValue("isTraining", true);
+            blackboard.SetVariableValue("trainingDuration", duration);
             isAvailableField.SetValue(spotController, false);
-            isAvailable = false;
         }
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        blackboard.SetVariableValue("isTraining", false);
+        var spotController = spot.GetComponent(scriptName);
+        var isAvailableField = spotController.GetType().GetField("isAvailable");
+        isAvailableField.SetValue(spotController, true);
     }
 
     public void StartTraining()
     {
-        agent.ResetPath();
         agent.isStopped = true;
         agent.enabled = false;
         transform.position = trainingPos.position;
         transform.rotation = trainingPos.rotation;
-
         if (wall) wall.SetActive(true);
         animator.SetBool(animBool, true);
-
-        hasInteracted = false;
     }
-
     public void StopTraining()
     {
         if (wall) wall.SetActive(false);
         animator.SetBool(animBool, false);
-
         transform.position = exitPos.position;
         transform.rotation = exitPos.rotation;
-
         agent.enabled = true;
         agent.isStopped = false;
     }
