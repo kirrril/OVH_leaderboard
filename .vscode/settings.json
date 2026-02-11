@@ -66,5 +66,5 @@
     "explorer.fileNesting.patterns": {
         "*.sln": "*.csproj"
     },
-    "dotnet.defaultSolution": "OVH_leaderboard.sln"
+    "dotnet.defaultSolution": "OVH_leaderboard.slnx"
 }
