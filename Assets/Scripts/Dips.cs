@@ -7,7 +7,7 @@ public class Dips : MonoBehaviour
     void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Girl")) return;
-        isAvailable = false;
+        // isAvailable = false;
     }
 
     void OnTriggerExit(Collider other)

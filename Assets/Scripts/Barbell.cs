@@ -9,7 +9,7 @@ public class Barbell : MonoBehaviour
     void OnTriggerEnter(Collider other)
     {
         // if (!other.CompareTag("Player")) return;
-        isAvailable = false;
+        // isAvailable = false;
         animator.SetBool("barbellisMoving", true);
     }
 

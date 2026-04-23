@@ -8,7 +8,8 @@ public class ManController : MonoBehaviour
 {
     public Blackboard blackboard;
     public NavMeshAgent agent;
-    private Transform player;
+    private GameObject player;
+    private GameObject agents;
     public PlayerController playerController;
     public Animator animator;
     private int level = 1;
@@ -27,25 +28,27 @@ public class ManController : MonoBehaviour
 
     void Awake()
     {
-        player = GameObject.Find("PlayerPrefab").transform;
-        playerController = player.gameObject.GetComponent<PlayerController>();
+        player = GameObject.Find("Player");
+        playerController = player.transform.Find("PlayerPrefab").GetComponent<PlayerController>();
+
+        agents = GameObject.Find("Agents");
 
         switch (level)
         {
             case 1:
-                patrolPoints = GameObject.Find("Spots_man1");
+                patrolPoints = agents.transform.Find("Spots_man_legs").gameObject;
                 break;
             case 2:
-                patrolPoints = GameObject.Find("Spots_man2");
+                patrolPoints = agents.transform.Find("Spots_man_chest").gameObject;
                 break;
             case 3:
-                patrolPoints = GameObject.Find("Spots_man3");
+                patrolPoints = agents.transform.Find("Spots_man_back").gameObject;
                 break;
         }
 
         trainingSpotsTransforms = patrolPoints.GetComponentsInChildren<Transform>();
 
-        blackboard.SetVariableValue("player", player.gameObject);
+        blackboard.SetVariableValue("player", playerController.gameObject);
     }
 
     void Update()
@@ -70,6 +73,9 @@ public class ManController : MonoBehaviour
         } while (newSpotIndex == lastSpotIndex);
 
         lastSpotIndex = newSpotIndex;
+
+        Debug.Log(newSpotIndex);
+
         return newSpotIndex;
     }
 
@@ -83,36 +89,76 @@ public class ManController : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        scriptName = other.tag;
-        spot = other.transform;
-        trainingPos = spot.Find("TrainingPos");
-        exitPos = spot.Find("ExitPos");
-        wall = spot.Find("Wall")?.gameObject;
+        string enteringTag = other.tag;
 
-        switch (scriptName)
+        switch (enteringTag)
         {
-            case "Treadmill": animBool = "isJogging"; duration = 8f; break;
-            case "Bike": animBool = "isCycling"; duration = 10f; break;
-            case "JumpBox": animBool = "isBoxJumping"; duration = 7f; break;
-            default: return;
+            case "Treadmill":
+                animBool = "isJogging";
+                duration = 8f;
+                break;
+
+            case "Bike":
+                animBool = "isCycling";
+                duration = 10f;
+                break;
+
+            case "JumpBox":
+                animBool = "isBoxJumping";
+                duration = 7f;
+                break;
+
+            default:
+                return;
         }
 
-        var spotController = spot.GetComponent(scriptName);
+        Transform enteringSpot = other.transform;
+        Transform enteringTrainingPos = enteringSpot.Find("TrainingPos");
+        Transform enteringExitPos = enteringSpot.Find("ExitPos");
+        GameObject enteringWall = enteringSpot.Find("Wall")?.gameObject;
+
+        var spotController = other.GetComponent(enteringTag);
+        if (spotController == null) return;
+
         var isAvailableField = spotController.GetType().GetField("isAvailable");
-        if ((bool)isAvailableField.GetValue(spotController))
-        {
-            agent.ResetPath();
-            blackboard.SetVariableValue("isTraining", true);
-            blackboard.SetVariableValue("trainingDuration", duration);
-            isAvailableField.SetValue(spotController, false);
-        }
+        if (isAvailableField == null) return;
+
+        if (!(bool)isAvailableField.GetValue(spotController)) return;
+
+        spot = enteringSpot;
+        trainingPos = enteringTrainingPos;
+        exitPos = enteringExitPos;
+        wall = enteringWall;
+        scriptName = enteringTag;
+
+        agent.ResetPath();
+        blackboard.SetVariableValue("isTraining", true);
+        blackboard.SetVariableValue("trainingDuration", duration);
+        isAvailableField.SetValue(spotController, false);
     }
+
+
 
     private void OnTriggerExit(Collider other)
     {
-        blackboard.SetVariableValue("isTraining", false);
-        var spotController = spot.GetComponent(scriptName);
+        string exitingTag = other.tag;
+
+        switch (exitingTag)
+        {
+            case "Treadmill":
+            case "Bike":
+            case "JumpBox":
+                break;
+            default:
+                return;
+        }
+
+        var spotController = other.GetComponent(exitingTag);
+        if (spotController == null) return;
+
         var isAvailableField = spotController.GetType().GetField("isAvailable");
+        if (isAvailableField == null) return;
+
         isAvailableField.SetValue(spotController, true);
     }
 
@@ -125,6 +171,7 @@ public class ManController : MonoBehaviour
         if (wall) wall.SetActive(true);
         animator.SetBool(animBool, true);
     }
+
     public void StopTraining()
     {
         if (wall) wall.SetActive(false);
@@ -133,6 +180,7 @@ public class ManController : MonoBehaviour
         transform.rotation = exitPos.rotation;
         agent.enabled = true;
         agent.isStopped = false;
+        blackboard.SetVariableValue("isTraining", false);
     }
 
     public void DoInsult()
@@ -147,7 +195,7 @@ public class ManController : MonoBehaviour
         agent.ResetPath();
         agent.isStopped = true;
         agent.enabled = false;
-        transform.LookAt(player);
+        transform.LookAt(playerController.transform);
         fightZone.SetActive(true);
     }
 }

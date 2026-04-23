@@ -193,7 +193,10 @@ public class PlayerController : MonoBehaviour
     {
         string tag = other.tag;
 
-        currentState = State.Training;
+        if (tag == "Water") return;
+        if (tag == "Protein") return;
+        if (tag == "Level") return;
+
         trainingSpot = other.transform;
         trainingPos = trainingSpot.Find("TrainingPos");
         exitPos = trainingSpot.Find("ExitPos");
@@ -215,6 +218,8 @@ public class PlayerController : MonoBehaviour
             case "ChestMachine2": animationBool = "isTrainingChest_2"; cameraPlacePosition = new Vector3(0f, 1.8f, 2f); cameraTargetPosition = new Vector3(0, 1.3f, 1f); break;
             default: return;
         }
+
+        currentState = State.Training;
 
         Train(cameraTargetPosition, cameraPlacePosition);
 

@@ -17,9 +17,9 @@ public class FightController : MonoBehaviour
 
     void OnEnable()
     {
-        player = GameObject.Find("PlayerPrefab");
-        playerController = player.GetComponent<PlayerController>();
-        playerAnimator = player.GetComponentInChildren<Animator>();
+        player = GameObject.Find("Player");
+        playerController = player.GetComponentInChildren<PlayerController>();
+        playerAnimator = playerController.transform.GetComponentInChildren<Animator>();
         playerController.currentState = PlayerController.State.Fighting;
         playerController.isBeingAttacked = true;
         StartCoroutine(DoFighting());
@@ -66,6 +66,7 @@ public class FightController : MonoBehaviour
         playerAnimator.SetBool("isSubmissed", false);
         playerController.currentState = PlayerController.State.Dying;
         manAnimator.SetBool("isAttacking", false);
+        fightLight.SetActive(false);
         agent.enabled = true;
         agent.isStopped = false;
         gameObject.SetActive(false);
@@ -73,8 +74,8 @@ public class FightController : MonoBehaviour
 
     bool IsFacingEnemy()
     {
-        Vector3 directionToEnemy = (manTransform.position - player.transform.position).normalized;
-        float angle = Vector3.Angle(player.transform.forward, directionToEnemy);
+        Vector3 directionToEnemy = (manTransform.position - playerController.transform.position).normalized;
+        float angle = Vector3.Angle(playerController.transform.forward, directionToEnemy);
         return angle <= 20f;
     }
 }
