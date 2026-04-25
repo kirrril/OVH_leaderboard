@@ -8,8 +8,7 @@ public class ManController : MonoBehaviour
 {
     public Blackboard blackboard;
     public NavMeshAgent agent;
-    private GameObject player;
-    private GameObject agents;
+    [SerializeField] private GameObject agents;
     public PlayerController playerController;
     public Animator animator;
     private int level = 1;
@@ -28,21 +27,16 @@ public class ManController : MonoBehaviour
 
     void Awake()
     {
-        player = GameObject.Find("Player");
-        playerController = player.transform.Find("PlayerPrefab").GetComponent<PlayerController>();
-
-        agents = GameObject.Find("Agents");
-
         switch (level)
         {
             case 1:
-                patrolPoints = agents.transform.Find("Spots_man_legs").gameObject;
+                patrolPoints = agents.transform.Find("Spots_man_legs")?.gameObject;
                 break;
             case 2:
-                patrolPoints = agents.transform.Find("Spots_man_chest").gameObject;
+                patrolPoints = agents.transform.Find("Spots_man_chest")?.gameObject;
                 break;
             case 3:
-                patrolPoints = agents.transform.Find("Spots_man_back").gameObject;
+                patrolPoints = agents.transform.Find("Spots_man_back")?.gameObject;
                 break;
         }
 
@@ -83,7 +77,9 @@ public class ManController : MonoBehaviour
     {
         if (!agent.hasPath || agent.remainingDistance < 0.1f)
         {
-            agent.SetDestination(trainingSpotsTransforms[ChoseNewTrainingSpot()].position);
+            int spotIndex = ChoseNewTrainingSpot();
+            if (spotIndex < 0) return;
+            agent.SetDestination(trainingSpotsTransforms[spotIndex].position);
         }
     }
 
@@ -186,7 +182,7 @@ public class ManController : MonoBehaviour
     public void DoInsult()
     {
         Debug.Log("You little nerd!");
-        playerController.score -= 1;
+        playerController.ModifyScore(-1);
     }
 
     public void DoAttack()

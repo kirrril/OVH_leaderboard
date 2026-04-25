@@ -29,7 +29,7 @@ public class PlayerController : MonoBehaviour
     public bool playerAttack;
     private bool playerInteract;
     private bool playerJump;
-    public int score = 80;
+    public int score = 0;
     public int health = 5;
 
     public enum State { Walking, Training, Fighting, BeingSubmissed, Jumping, PushingTheDoor, ClimbingThePole, Dying, MakingDoubleSelfie };
@@ -187,6 +187,11 @@ public class PlayerController : MonoBehaviour
     public void OnJump(InputAction.CallbackContext ctx)
     {
         playerJump = ctx.ReadValueAsButton();
+    }
+
+    public void ModifyScore(int delta)
+    {
+        score = Mathf.Max(0, score + delta);
     }
 
     private void OnTriggerEnter(Collider other)

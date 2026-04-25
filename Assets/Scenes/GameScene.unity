@@ -1796,7 +1796,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   blackboard: {fileID: 220743339}
   agent: {fileID: 220743340}
-  playerController: {fileID: 0}
+  agents: {fileID: 1524743005}
+  playerController: {fileID: 437535149}
   animator: {fileID: 1571275620}
   fightZone: {fileID: 1094137193}
   duration: 0
@@ -3302,7 +3303,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   blackboard: {fileID: 354147498}
   agent: {fileID: 354147499}
-  playerController: {fileID: 0}
+  agents: {fileID: 1524743005}
+  playerController: {fileID: 437535149}
   animator: {fileID: 2094668750}
   fightZone: {fileID: 674365995}
   duration: 0
@@ -6058,7 +6060,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   blackboard: {fileID: 817557659}
   agent: {fileID: 817557660}
-  playerController: {fileID: 0}
+  agents: {fileID: 1524743005}
+  playerController: {fileID: 437535149}
   animator: {fileID: 1874345799}
   fightZone: {fileID: 2080810637}
   duration: 0
@@ -6269,7 +6272,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   blackboard: {fileID: 824439005}
   agent: {fileID: 824439006}
-  playerController: {fileID: 0}
+  agents: {fileID: 1524743005}
+  playerController: {fileID: 437535149}
   animator: {fileID: 2095401760}
   fightZone: {fileID: 9349909}
   duration: 0
@@ -7270,7 +7274,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 775626146835990690, guid: f379125323592f34395f41efe94744f5, type: 3}
       propertyPath: score
-      value: 80
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 775626146835990690, guid: f379125323592f34395f41efe94744f5, type: 3}
       propertyPath: entryPoint
@@ -10875,7 +10879,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   blackboard: {fileID: 1397807812}
   agent: {fileID: 1397807813}
-  playerController: {fileID: 0}
+  agents: {fileID: 1524743005}
+  playerController: {fileID: 437535149}
   animator: {fileID: 977357277}
   fightZone: {fileID: 666322669}
   duration: 0
@@ -18134,7 +18139,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   blackboard: {fileID: 7112564823727529278}
   agent: {fileID: 5785699264276500744}
-  playerController: {fileID: 0}
+  agents: {fileID: 1524743005}
+  playerController: {fileID: 437535149}
   animator: {fileID: 943044358549231800}
   fightZone: {fileID: 7962898486442913360}
   duration: 0
