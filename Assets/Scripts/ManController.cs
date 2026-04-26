@@ -11,7 +11,7 @@ public class ManController : MonoBehaviour
     [SerializeField] private GameObject agents;
     public PlayerController playerController;
     public Animator animator;
-    public Transform targetSpot;
+    private Transform targetSpot;
     private int level = 1;
     [SerializeField] private Transform[] spotsManLegs;
     [SerializeField] private Transform[] spotsManChest;
