@@ -19,8 +19,8 @@ public class GirlController : MonoBehaviour
     private int lastSpotIndex = -1;
     private float awarenessDistance = 3f;
     private float interactionDistance = 2.5f;
-    private float fleeStopDistance = 8f;
-    private float welcomingStopDistance = 6f;
+    private float fleeStopDistance = 4f;
+    private float welcomingStopDistance = 4f;
     private bool hasInteracted;
     private bool isPerformingInteraction;
 
@@ -51,6 +51,8 @@ public class GirlController : MonoBehaviour
         {
             player = playerController.transform;
         }
+
+        agent.avoidancePriority = Random.Range(0, 44);
     }
 
     void Update()

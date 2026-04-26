@@ -11,9 +11,12 @@ public class ManController : MonoBehaviour
     [SerializeField] private GameObject agents;
     public PlayerController playerController;
     public Animator animator;
+    public Transform targetSpot;
     private int level = 1;
-    private GameObject patrolPoints;
-    Transform[] trainingSpotsTransforms;
+    [SerializeField] private Transform[] spotsManLegs;
+    [SerializeField] private Transform[] spotsManChest;
+    [SerializeField] private Transform[] spotsManBack;
+    Transform[] trainingSpots;
     int lastSpotIndex = -1;
     public GameObject fightZone;
 
@@ -30,19 +33,18 @@ public class ManController : MonoBehaviour
         switch (level)
         {
             case 1:
-                patrolPoints = agents.transform.Find("Spots_man_legs")?.gameObject;
+                trainingSpots = spotsManLegs;
                 break;
             case 2:
-                patrolPoints = agents.transform.Find("Spots_man_chest")?.gameObject;
+                trainingSpots = spotsManChest;
                 break;
             case 3:
-                patrolPoints = agents.transform.Find("Spots_man_back")?.gameObject;
+                trainingSpots = spotsManBack;
                 break;
         }
-
-        trainingSpotsTransforms = patrolPoints.GetComponentsInChildren<Transform>();
-
         blackboard.SetVariableValue("player", playerController.gameObject);
+
+        agent.avoidancePriority = Random.Range(45, 99);
     }
 
     void Update()
@@ -63,23 +65,45 @@ public class ManController : MonoBehaviour
         int newSpotIndex;
         do
         {
-            newSpotIndex = Random.Range(0, trainingSpotsTransforms.Length);
+            newSpotIndex = Random.Range(0, trainingSpots.Length);
         } while (newSpotIndex == lastSpotIndex);
 
         lastSpotIndex = newSpotIndex;
 
-        Debug.Log(newSpotIndex);
-
         return newSpotIndex;
+    }
+
+    public bool CheckIfAvailable(Transform spot)
+    {
+        var spotController = spot.GetComponent(spot.tag);
+        if (spotController == null) return false;
+
+        var isAvailableField = spotController.GetType().GetField("isAvailable");
+        if (isAvailableField == null) return false;
+
+        return (bool)isAvailableField.GetValue(spotController);
     }
 
     public void MoveToSpot()
     {
-        if (!agent.hasPath || agent.remainingDistance < 0.1f)
+        if (!agent.hasPath)
         {
             int spotIndex = ChoseNewTrainingSpot();
             if (spotIndex < 0) return;
-            agent.SetDestination(trainingSpotsTransforms[spotIndex].position);
+
+            targetSpot = trainingSpots[spotIndex];
+
+            agent.SetDestination(targetSpot.position);
+        }
+
+        if (agent.remainingDistance < 0.2f)
+        {
+            if (!CheckIfAvailable(targetSpot))
+            {
+                agent.ResetPath();
+                targetSpot = null;
+                return;
+            }
         }
     }
 
@@ -119,7 +143,12 @@ public class ManController : MonoBehaviour
         var isAvailableField = spotController.GetType().GetField("isAvailable");
         if (isAvailableField == null) return;
 
-        if (!(bool)isAvailableField.GetValue(spotController)) return;
+        if (!(bool)isAvailableField.GetValue(spotController))
+        {
+            agent.ResetPath();
+            MoveToSpot();
+            return;
+        }
 
         spot = enteringSpot;
         trainingPos = enteringTrainingPos;
@@ -132,8 +161,6 @@ public class ManController : MonoBehaviour
         blackboard.SetVariableValue("trainingDuration", duration);
         isAvailableField.SetValue(spotController, false);
     }
-
-
 
     private void OnTriggerExit(Collider other)
     {

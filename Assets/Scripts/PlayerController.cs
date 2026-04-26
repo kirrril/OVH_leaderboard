@@ -139,15 +139,15 @@ public class PlayerController : MonoBehaviour
 
     private void RotatePlayer()
     {
-        float yawDelta = mouseDelta.normalized.x * 3f;
+        float yawDelta = mouseDelta.x * 0.3f;
         rb.angularVelocity = new Vector3(0, yawDelta, 0);
     }
 
     private void MoveCameraTarget()
     {
-        float pitchDelta = mouseDelta.normalized.y * 1.2f;
-        pitchDelta = Mathf.Clamp(pitchDelta, -1f, 2f);
-        float pitch = cameraTarget.localPosition.y + pitchDelta * 2 * Time.fixedDeltaTime;
+        float pitchDelta = mouseDelta.y * 0.5f;
+        pitchDelta = Mathf.Clamp(pitchDelta, -1f, 1.5f);
+        float pitch = cameraTarget.localPosition.y + pitchDelta * 1.5f * Time.fixedDeltaTime;
 
         cameraTarget.localPosition = new Vector3(0, pitch, 0);
     }
