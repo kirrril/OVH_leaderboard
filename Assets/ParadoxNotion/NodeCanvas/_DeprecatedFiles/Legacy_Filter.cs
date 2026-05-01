@@ -63,7 +63,7 @@ namespace NodeCanvas.BehaviourTrees
 
                     status = decoratedConnection.Execute(agent, blackboard);
                     if ( status == Status.Success || status == Status.Failure ) {
-                        StartCoroutine(Cooldown());
+                        StartSyncedCoroutine(Cooldown());
                     }
                     break;
 

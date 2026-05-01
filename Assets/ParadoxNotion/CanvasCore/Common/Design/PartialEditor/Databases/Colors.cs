@@ -20,9 +20,6 @@ namespace ParadoxNotion.Design
             prefabOverrideColor = new Color(0.05f, 0.5f, 0.75f, 1f);
         }
 
-        public const string HEX_LIGHT = "#d2d2d2";
-        public const string HEX_DARK = "#333333";
-
         public static Color lightOrange { get; private set; }
         public static Color lightBlue { get; private set; }
         public static Color lightRed { get; private set; }
@@ -31,21 +28,15 @@ namespace ParadoxNotion.Design
         ///----------------------------------------------------------------------------------------------
 
         ///<summary>A greyscale color</summary>
-        public static Color Grey(float value) {
-            return new Color(value, value, value);
-        }
+        public static Color Grey(float value) => new Color(value, value, value);
 
         ///----------------------------------------------------------------------------------------------
 
         ///<summary>Return a color for a type.</summary>
-        public static Color GetTypeColor(System.Type type) {
-            return TypePrefs.GetTypeColor(type);
-        }
+        public static Color GetTypeColor(System.Type type) => TypePrefs.GetTypeColor(type);
 
         ///<summary>Return a string hex color for a type.</summary>
-        public static string GetTypeHexColor(System.Type type) {
-            return TypePrefs.GetTypeHexColor(type);
-        }
+        public static string GetTypeHexColor(System.Type type) => TypePrefs.GetTypeHexColor(type);
 
     }
 }

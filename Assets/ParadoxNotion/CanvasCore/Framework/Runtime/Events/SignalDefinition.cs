@@ -30,9 +30,12 @@ namespace NodeCanvas.Framework
 
         ///<summary>Invoke the Signal</summary>
         public void Invoke(Transform sender, Transform receiver, bool isGlobal, params object[] args) {
-            if ( onInvoke != null ) {
-                onInvoke(sender, receiver, isGlobal, args);
-            }
+            onInvoke?.Invoke(sender, receiver, isGlobal, args);
+        }
+
+        ///<summary>Invoke the Signal; globaly without a specific traget receiver.</summary>
+        public void Invoke(Transform sender, params object[] args) {
+            onInvoke?.Invoke(sender, null, false, args);
         }
 
         //...

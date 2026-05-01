@@ -14,9 +14,7 @@ namespace NodeCanvas.Tasks.Actions
         [RequiredField]
         public BBParameter<BehaviourTree> behaviourTree;
 
-        protected override string info {
-            get { return string.Format("Switch Behaviour {0}", behaviourTree); }
-        }
+        protected override string info => string.Format("Switch Behaviour {0}", behaviourTree);
 
         protected override void OnExecute() {
             agent.SwitchBehaviour(behaviourTree.value);
@@ -32,9 +30,7 @@ namespace NodeCanvas.Tasks.Actions
         [RequiredField]
         public BBParameter<FSM> fsm;
 
-        protected override string info {
-            get { return string.Format("Switch FSM {0}", fsm); }
-        }
+        protected override string info => string.Format("Switch FSM {0}", fsm);
 
         protected override void OnExecute() {
             agent.SwitchBehaviour(fsm.value);

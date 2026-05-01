@@ -10,16 +10,16 @@ namespace NodeCanvas.StateMachines
     public abstract class FSMNode : Node
     {
 
-        public override bool allowAsPrime { get { return false; } }
-        public override bool canSelfConnect { get { return false; } }
-        public override int maxInConnections { get { return -1; } }
-        public override int maxOutConnections { get { return -1; } }
-        sealed public override System.Type outConnectionType { get { return typeof(FSMConnection); } }
-        sealed public override Alignment2x2 commentsAlignment { get { return Alignment2x2.Bottom; } }
-        sealed public override Alignment2x2 iconAlignment { get { return Alignment2x2.Bottom; } }
+        public override bool allowAsPrime => false;
+        public override bool canSelfConnect => false;
+        public override int maxInConnections => -1;
+        public override int maxOutConnections => -1;
+        sealed public override System.Type outConnectionType => typeof(FSMConnection);
+        sealed public override Alignment2x2 commentsAlignment => Alignment2x2.Bottom;
+        sealed public override Alignment2x2 iconAlignment => Alignment2x2.Bottom;
 
         ///<summary>The FSM this state belongs to</summary>
-        public FSM FSM { get { return (FSM)graph; } }
+        public FSM FSM => (FSM)graph;
 
 
         ///----------------------------------------------------------------------------------------------
@@ -164,66 +164,24 @@ namespace NodeCanvas.StateMachines
             var sourcePos = connection.sourceNode.rect.center;
             var thisPos = rect.center;
 
-            var style = 0;
-
-            if ( style == 0 ) {
-                if ( sourcePos.x <= thisPos.x ) {
-                    if ( sourcePos.y <= thisPos.y ) {
-                        return new Vector2(rect.center.x - 15, rect.yMin - ( this == graph.primeNode ? 20 : 0 ));
-                    } else {
-                        return new Vector2(rect.center.x - 15, rect.yMax + 2);
-                    }
-                }
-
-                if ( sourcePos.x > thisPos.x ) {
-                    if ( sourcePos.y <= thisPos.y ) {
-                        return new Vector2(rect.center.x + 15, rect.yMin - ( this == graph.primeNode ? 20 : 0 ));
-                    } else {
-                        return new Vector2(rect.center.x + 15, rect.yMax + 2);
-                    }
+            if ( sourcePos.x <= thisPos.x ) {
+                if ( sourcePos.y <= thisPos.y ) {
+                    return new Vector2(rect.center.x - 15, rect.yMin - ( this == graph.primeNode ? 20 : 0 ));
+                } else {
+                    return new Vector2(rect.center.x - 15, rect.yMax + 2);
                 }
             }
 
-            // //Another idea
-            // if (style == 1){
-            // 	if (sourcePos.x <= thisPos.x){
-            // 		if (sourcePos.y >= thisPos.y){
-            // 			return new Vector2(rect.xMin - 3, rect.yMax - 10);
-            // 		} else {
-            // 			return new Vector2(rect.xMin - 3, rect.yMin + 10);
-            // 		}
-            // 	}
-            // 	if (sourcePos.x > thisPos.x){
-            // 		if (sourcePos.y >= thisPos.y){
-            // 			return new Vector2(rect.center.x, rect.yMax + 2);
-            // 		} else {
-            // 			return new Vector2(rect.center.x, rect.yMin - (this == graph.primeNode? 20 : 0 ));
-            // 		}
-            // 	}
-            // }
-
-            // //YET Another idea
-            // if (style >= 2){
-            // 	if (sourcePos.x <= thisPos.x){
-            // 		if (sourcePos.y >= thisPos.y){
-            // 			return new Vector2(rect.xMin - 3, rect.yMax - 10);
-            // 		} else {
-            // 			return new Vector2(rect.xMin - 3, rect.yMin + 10);
-            // 		}
-            // 	}
-            // 	if (sourcePos.x > thisPos.x){
-            // 		if (sourcePos.y >= thisPos.y){
-            // 			return new Vector2(rect.xMax + 3, rect.yMax - 10);
-            // 		} else {
-            // 			return new Vector2(rect.xMax + 3, rect.yMin + 10);
-            // 		}
-            // 	}
-            // }
+            if ( sourcePos.x > thisPos.x ) {
+                if ( sourcePos.y <= thisPos.y ) {
+                    return new Vector2(rect.center.x + 15, rect.yMin - ( this == graph.primeNode ? 20 : 0 ));
+                } else {
+                    return new Vector2(rect.center.x + 15, rect.yMax + 2);
+                }
+            }
 
             return thisPos;
         }
-
-
 #endif
 
     }

@@ -13,9 +13,7 @@ namespace NodeCanvas.Tasks.Actions
         [BlackboardOnly]
         public BBParameter<T> saveAs;
 
-        protected override string info {
-            get { return string.Format("Get {0} as {1}", typeof(T).Name, saveAs.ToString()); }
-        }
+        protected override string info => string.Format("{0} Get {1}", agentInfo, typeof(T).Name);
 
         protected override void OnExecute() {
             var o = agent.GetComponent<T>();

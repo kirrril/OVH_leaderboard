@@ -13,8 +13,7 @@ namespace NodeCanvas.DialogueTrees
     [GraphInfo(
         packageName = "NodeCanvas",
         docsURL = "https://nodecanvas.paradoxnotion.com/documentation/",
-        resourcesURL = "https://nodecanvas.paradoxnotion.com/downloads/",
-        forumsURL = "https://nodecanvas.paradoxnotion.com/forums-page/"
+        resourcesURL = "https://nodecanvas.paradoxnotion.com/downloads/"
         )]
     [CreateAssetMenu(menuName = "ParadoxNotion/NodeCanvas/Dialogue Tree Asset")]
     public class DialogueTree : Graph
@@ -82,7 +81,7 @@ namespace NodeCanvas.DialogueTrees
                 this.actor = actor;
             }
 
-            public override string ToString() { return name; }
+            public override string ToString() => name;
         }
 
         ///----------------------------------------------------------------------------------------------
@@ -151,8 +150,8 @@ namespace NodeCanvas.DialogueTrees
             if ( paramName == INSTIGATOR_NAME ) {
 
                 //return it directly if it implements IDialogueActor
-                if ( agent is IDialogueActor ) {
-                    return (IDialogueActor)agent;
+                if ( agent is IDialogueActor actor ) {
+                    return actor;
                 }
 
                 //Otherwise use the default actor and set name and transform from agent
@@ -235,9 +234,7 @@ namespace NodeCanvas.DialogueTrees
             currentDialogue = this;
 
             Logger.Log(string.Format("Dialogue Started '{0}'", this.name), "Dialogue Tree", this);
-            if ( OnDialogueStarted != null ) {
-                OnDialogueStarted(this);
-            }
+            OnDialogueStarted?.Invoke(this);
 
             if ( !( agent is IDialogueActor ) ) {
                 Logger.Log("Agent used in DialogueTree does not implement IDialogueActor. A dummy actor will be used.", "Dialogue Tree", this);
@@ -253,8 +250,8 @@ namespace NodeCanvas.DialogueTrees
                 EnterNode(currentNode != null ? currentNode : (DTNode)primeNode);
             }
 
-            if ( currentNode is IUpdatable ) {
-                ( currentNode as IUpdatable ).Update();
+            if ( currentNode is IUpdatable updatable ) {
+                updatable.Update();
             }
         }
 
@@ -264,25 +261,19 @@ namespace NodeCanvas.DialogueTrees
             currentNode = null;
 
             Logger.Log(string.Format("Dialogue Finished '{0}'", this.name), "Dialogue Tree", this);
-            if ( OnDialogueFinished != null ) {
-                OnDialogueFinished(this);
-            }
+            OnDialogueFinished?.Invoke(this);
         }
 
         protected override void OnGraphPaused() {
             Logger.Log(string.Format("Dialogue Paused '{0}'", this.name), "Dialogue Tree", this);
-            if ( OnDialoguePaused != null ) {
-                OnDialoguePaused(this);
-            }
+            OnDialoguePaused?.Invoke(this);
         }
 
         protected override void OnGraphUnpaused() {
             EnterNode(currentNode != null ? currentNode : (DTNode)primeNode);
 
             Logger.Log(string.Format("Dialogue Resumed '{0}'", this.name), "Dialogue Tree", this);
-            if ( OnDialogueStarted != null ) {
-                OnDialogueStarted(this);
-            }
+            OnDialogueStarted?.Invoke(this);
         }
 
         ///----------------------------------------------------------------------------------------------

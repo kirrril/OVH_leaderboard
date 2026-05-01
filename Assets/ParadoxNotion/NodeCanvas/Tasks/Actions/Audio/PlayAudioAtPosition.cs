@@ -16,19 +16,20 @@ namespace NodeCanvas.Tasks.Actions
         public float volume = 1;
         public bool waitActionFinish;
 
-        protected override string info {
-            get { return "PlayAudio " + audioClip.ToString(); }
-        }
+        protected override string info => "Play " + audioClip.ToString();
+        public override float length => !audioClip.isNull && waitActionFinish ? audioClip.value.length : 0;
 
         protected override void OnExecute() {
             AudioSource.PlayClipAtPoint(audioClip.value, agent.position, volume);
-            if ( !waitActionFinish )
+            if ( !waitActionFinish ) {
                 EndAction();
+            }
         }
 
         protected override void OnUpdate() {
-            if ( elapsedTime >= audioClip.value.length )
+            if ( elapsedTime >= audioClip.value.length ) {
                 EndAction();
+            }
         }
     }
 }

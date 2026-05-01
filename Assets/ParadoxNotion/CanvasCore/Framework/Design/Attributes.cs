@@ -9,15 +9,14 @@ namespace NodeCanvas.Framework
         public string packageName;
         public string docsURL;
         public string resourcesURL;
-        public string forumsURL;
     }
 
     ///<summary>Used on top of IGraphAssignable nodes to specify the target type for DragDrop operations It can be used on top of other node types if the graph checks for that (see GraphEditorUtility.GetDropedReferenceNodeTypes)</summary>
-    [System.AttributeUsage(System.AttributeTargets.Class)]
-    public class DropReferenceType : System.Attribute
+    [System.AttributeUsage(AttributeTargets.Class)]
+    public class DropReferenceType : Attribute
     {
-        public readonly System.Type type;
-        public DropReferenceType(System.Type type) { this.type = type; }
+        public readonly Type type;
+        public DropReferenceType(Type type) { this.type = type; }
     }
 
     ///<summary>Marks the BBParameter possible to only pick values from a blackboard.</summary>

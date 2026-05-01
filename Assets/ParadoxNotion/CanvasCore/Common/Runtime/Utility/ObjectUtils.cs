@@ -29,14 +29,17 @@ namespace ParadoxNotion
             return list;
         }
 
-        ///<summary>Quick way to check "is" and get a casted result</summary>
-        public static bool Is<T>(this object o, out T result) {
-            if ( o is T ) {
-                result = (T)o;
-                return true;
+        ///<summary>Resize list</summary>
+        public static void Resize<T>(this List<T> list, int size, T element = default) {
+            int count = list.Count;
+            if ( size < count ) {
+                list.RemoveRange(size, count - size);
+            } else if ( size > count ) {
+                if ( size > list.Capacity ) {
+                    list.Capacity = size;
+                }
+                list.AddRange(Enumerable.Repeat(element, size - count));
             }
-            result = default(T);
-            return false;
         }
 
         ///<summary>Gets component or adds it of it doesnt exist</summary>

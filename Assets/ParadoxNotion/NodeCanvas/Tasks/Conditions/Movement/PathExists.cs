@@ -4,11 +4,9 @@ using NodeCanvas.Framework;
 using ParadoxNotion.Design;
 using UnityEngine;
 
-#if UNITY_5_5_OR_NEWER
 using NavMeshAgent = UnityEngine.AI.NavMeshAgent;
 using NavMeshPath = UnityEngine.AI.NavMeshPath;
 using NavMeshPathStatus = UnityEngine.AI.NavMeshPathStatus;
-#endif
 
 namespace NodeCanvas.Tasks.Conditions
 {

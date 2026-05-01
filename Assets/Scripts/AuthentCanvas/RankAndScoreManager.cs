@@ -4,11 +4,10 @@ using System.Collections;
 using UnityEngine.UI;
 using TMPro;
 using System.Threading.Tasks;
-using UnityEditor;
 using System;
 using UnityEngine.SceneManagement;
 
-public class GameManager : MonoBehaviour
+public class RankAndScoreManager : MonoBehaviour
 {
     [SerializeField] private GameObject scoreManager;
     [SerializeField] private TMP_InputField scoreInput;

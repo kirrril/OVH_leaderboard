@@ -12,9 +12,7 @@ namespace NodeCanvas.Tasks.Actions
         public BBParameter<T> valueA;
         public BBParameter<T> valueB;
 
-        protected override string info {
-            get { return valueA + " = " + valueB; }
-        }
+        protected override string info => valueA + " = " + valueB;
 
         protected override void OnExecute() {
             valueA.value = valueB.value;

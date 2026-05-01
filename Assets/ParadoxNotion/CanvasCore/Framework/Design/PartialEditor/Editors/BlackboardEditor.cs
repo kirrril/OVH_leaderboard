@@ -235,7 +235,7 @@ namespace NodeCanvas.Editor
                 var typeName = data.propertyPath.Substring(0, idx);
                 var memberName = data.propertyPath.Substring(idx + 1);
                 GUI.color = new Color(0.8f, 0.8f, 1);
-                var suf = data.debugBoundValue && Application.isPlaying ? data.value.ToStringAdvanced() : typeName.Split('.').Last();
+                var suf = data.debugBoundValue && Application.isPlaying ? "=" + data.value.ToStringAdvanced() : typeName.Split('.').Last();
                 GUILayout.Label(string.Format(".{0} ({1}) {2}", memberName, suf, data.debugBoundValue ? "*" : string.Empty), Styles.leftLabel, LAYOUT);
                 GUI.color = Color.white;
                 return;
@@ -311,7 +311,7 @@ namespace NodeCanvas.Editor
 
         ///<summary>Get a menu for variable</summary>
         GenericMenu GetVariableMenu(Variable data, int index) {
-             var menu = new GenericMenu();
+            var menu = new GenericMenu();
             if ( data.varType == typeof(VariableSeperator) ) {
                 menu.AddItem(new GUIContent("Rename"), false, () => { ( data.value as VariableSeperator ).isEditingName = true; });
                 if ( isPrefab ) {

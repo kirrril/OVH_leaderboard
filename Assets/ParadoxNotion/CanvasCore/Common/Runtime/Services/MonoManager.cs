@@ -43,10 +43,8 @@ namespace ParadoxNotion.Services
             }
         }
 
-#if UNITY_2019_3_OR_NEWER
         [UnityEngine.RuntimeInitializeOnLoadMethod(UnityEngine.RuntimeInitializeLoadType.SubsystemRegistration)]
         static void Purge() { isQuiting = false; }
-#endif
 
         ///<summary>Creates the MonoManager singleton</summary>
         public static void Create() { _current = current; }
@@ -83,32 +81,28 @@ namespace ParadoxNotion.Services
 
         protected void OnApplicationQuit() {
             isQuiting = true;
-            if ( onApplicationQuit != null ) {
-                onApplicationQuit();
-            }
+            onApplicationQuit?.Invoke();
         }
 
         protected void OnApplicationPause(bool isPause) {
-            if ( onApplicationPause != null ) {
-                onApplicationPause(isPause);
-            }
+            onApplicationPause?.Invoke(isPause);
         }
 
         protected void Update() {
-            if ( onUpdate != null ) { onUpdate(); }
+            onUpdate?.Invoke();
         }
 
         protected void LateUpdate() {
-            if ( onLateUpdate != null ) { onLateUpdate(); }
+            onLateUpdate?.Invoke();
         }
 
         protected void FixedUpdate() {
-            if ( onFixedUpdate != null ) { onFixedUpdate(); }
+            onFixedUpdate?.Invoke();
         }
 
 #if UNITY_EDITOR
         protected void OnGUI() {
-            if ( onGUI != null ) { onGUI(); }
+            onGUI?.Invoke();
         }
 #endif
 

@@ -14,9 +14,7 @@ namespace NodeCanvas.Tasks.Actions
         [BlackboardOnly]
         public BBParameter<bool> variable;
 
-        protected override string info {
-            get { return string.Format("Trigger {0}", variable); }
-        }
+        protected override string info => string.Format("Trigger {0}", variable);
 
         protected override void OnExecute() {
             if ( variable.value == false ) {

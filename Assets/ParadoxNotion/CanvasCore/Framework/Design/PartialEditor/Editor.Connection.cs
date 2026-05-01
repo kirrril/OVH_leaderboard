@@ -101,7 +101,7 @@ namespace NodeCanvas.Framework
                 toTangent = toTangent.normalized * 120;
             }
 
-            centerRect.center = ParadoxNotion.CurveUtils.GetPosAlongCurve(fromPos, toPos, fromTangent, toTangent, 0.55f);
+            centerRect.center = CurveUtils.GetPosAlongCurve(fromPos, toPos, fromTangent, toTangent, 0.55f);
 
             HandleEvents(fromPos, toPos);
             DrawConnection(fromPos, toPos);

@@ -36,7 +36,7 @@ namespace ParadoxNotion.Serialization
 
         //operator
         public static implicit operator Type(SerializedTypeInfo value) {
-            return value != null ? value._type : null;
+            return value?._type;
         }
     }
 }

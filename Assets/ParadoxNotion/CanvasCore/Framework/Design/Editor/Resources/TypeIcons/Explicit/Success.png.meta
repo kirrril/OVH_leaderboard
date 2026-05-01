@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 2dd9e154d3e956a428b15abcf8a32246
+guid: bf1fd75da9f726a4399201b851f07ea2
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -70,7 +70,7 @@ TextureImporter:
     maxTextureSize: 2048
     resizeAlgorithm: 0
     textureFormat: -1
-    textureCompression: 0
+    textureCompression: 1
     compressionQuality: 50
     crunchedCompression: 0
     allowsAlphaSplitting: 0
@@ -113,6 +113,6 @@ AssetOrigin:
   serializedVersion: 1
   productId: 14914
   packageName: NodeCanvas
-  packageVersion: 3.3.3
+  packageVersion: 3.4.1
   assetPath: Assets/ParadoxNotion/CanvasCore/Framework/Design/Editor/Resources/TypeIcons/Explicit/Success.png
-  uploadId: 754282
+  uploadId: 866614

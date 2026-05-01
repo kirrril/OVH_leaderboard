@@ -28,11 +28,9 @@ namespace ParadoxNotion.Serialization
             fsMetaType.FlushMem();
         }
 
-#if UNITY_2019_3_OR_NEWER
         //for "no domain reload"
         [UnityEngine.RuntimeInitializeOnLoadMethod(UnityEngine.RuntimeInitializeLoadType.SubsystemRegistration)]
         static void __FlushDataCache() { dataCache = new Dictionary<string, fsData>(); }
-#endif
 
         ///----------------------------------------------------------------------------------------------
 

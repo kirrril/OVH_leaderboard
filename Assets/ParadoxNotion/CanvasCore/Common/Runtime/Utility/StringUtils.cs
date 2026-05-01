@@ -20,8 +20,7 @@ namespace ParadoxNotion
         public static string SplitCamelCase(this string s) {
             if ( string.IsNullOrEmpty(s) ) { return s; }
 
-            string result;
-            if ( splitCaseCache.TryGetValue(s, out result) ) {
+            if ( splitCaseCache.TryGetValue(s, out string result) ) {
                 return result;
             }
 
@@ -53,7 +52,7 @@ namespace ParadoxNotion
             if ( string.IsNullOrEmpty(s) ) {
                 return string.Empty;
             }
-            var result = "";
+            var result = string.Empty;
             foreach ( var c in s ) {
                 if ( char.IsUpper(c) ) {
                     result += c.ToString();
@@ -167,8 +166,8 @@ namespace ParadoxNotion
             if ( categoryName == null ) { categoryName = string.Empty; }
 
             if ( leafName.Length <= 1 && input.Length <= 2 ) {
-                string alias = null; //usually only operator like searches are less than 2
-                if ( ReflectionTools.op_CSharpAliases.TryGetValue(input, out alias) ) {
+                //usually only operator like searches are less than 2
+                if ( ReflectionTools.op_CSharpAliases.TryGetValue(input, out string alias) ) {
                     return alias == leafName;
                 }
             }
@@ -218,20 +217,46 @@ namespace ParadoxNotion
                 return "NULL";
             }
 
-            if ( o is string ) {
-                return string.Format("\"{0}\"", (string)o);
+            if ( o is string s ) {
+                return string.Format("\"{0}\"", s);
             }
 
-            if ( o is UnityEngine.Object ) {
-                return ( o as UnityEngine.Object ).name;
+            if ( o is UnityEngine.Object uo ) {
+                return uo.name;
             }
 
             var t = o.GetType();
             if ( t.RTIsSubclassOf(typeof(System.Enum)) ) {
                 if ( t.RTIsDefined<System.FlagsAttribute>(true) ) {
-                    if ( o.ToString() == "0" ) { return "Nothing"; }
-                    if ( o.ToString() == "-1" ) { return "Everything"; }
-                    if ( o.ToString().Contains(',') ) { return "Mixed..."; }
+
+                    var list = System.Enum.GetValues(t);
+
+                    // calculate the sum of all flags in the enumeration.
+                    var all = 0;
+                    for ( var i = 0; i < list.Length; i++ ) {
+                        all |= Convert.ToInt32(list.GetValue(i));
+                    }
+
+                    var oval = Convert.ToInt32(o);
+
+                    // no matching bits.
+                    if ( ( oval & all ) == 0 ) { return "Nothing"; }
+
+                    // all bits are matching.
+                    if ( ( oval & all ) == all ) { return "Everything"; }
+
+                    for ( var i = 0; i < list.Length; i++ ) {
+                        var e = list.GetValue(i);
+                        var eval = Convert.ToInt32(e);
+
+                        // skip zero entries.
+                        if ( eval == 0 ) { continue; }
+
+                        // check if it is an exact match.
+                        if ( ( oval & eval ) == oval ) { return e.ToString(); }
+                    }
+
+                    return "Mixed...";
                 }
             }
 

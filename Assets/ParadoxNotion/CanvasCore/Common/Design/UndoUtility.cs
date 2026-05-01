@@ -38,20 +38,6 @@ namespace ParadoxNotion.Design
 #endif
         }
 
-        [Conditional("UNITY_EDITOR")]
-        public static void RecordObject(Object target, string name, System.Action operation) {
-            RecordObject(target, name);
-            operation();
-            SetDirty(target);
-        }
-
-        [Conditional("UNITY_EDITOR")]
-        public static void RecordObjectComplete(Object target, string name, System.Action operation) {
-            RecordObjectComplete(target, name);
-            operation();
-            SetDirty(target);
-        }
-
         ///<summary>Shortcut to return the last undo operation name or the one provided</summary>
         public static string GetLastOperationNameOr(string operation) {
             return string.IsNullOrEmpty(lastOperationName) ? operation : lastOperationName;

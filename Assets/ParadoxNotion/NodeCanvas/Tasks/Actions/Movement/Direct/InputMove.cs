@@ -34,9 +34,7 @@ namespace NodeCanvas.Tasks.Actions
             var upMovement = agent.up * up.value * moveSpeed.value * Time.deltaTime;
             agent.position += strafeMovement + forwardMovement + upMovement;
 
-            if ( !repeat ) {
-                EndAction();
-            }
+            if ( !repeat ) { EndAction(); }
         }
     }
 }

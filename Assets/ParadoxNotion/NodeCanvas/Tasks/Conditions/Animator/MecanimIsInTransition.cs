@@ -13,12 +13,9 @@ namespace NodeCanvas.Tasks.Conditions
 
         public BBParameter<int> layerIndex;
 
-        protected override string info {
-            get { return "Mec.Is In Transition"; }
-        }
+        protected override string info => "Mec.Is In Transition";
 
         protected override bool OnCheck() {
-
             return agent.IsInTransition(layerIndex.value);
         }
     }

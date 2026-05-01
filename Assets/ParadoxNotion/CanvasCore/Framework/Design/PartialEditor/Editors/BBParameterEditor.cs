@@ -26,7 +26,7 @@ namespace NodeCanvas.Editor
         }
 
         ///<summary>An editor for BBParameter type to let user choose either a constant value or link to a Blackboard Variable.</summary>
-        public static BBParameter ParameterField(GUIContent content, BBParameter bbParam, bool blackboardOnly = false, bool required = false, InspectedFieldInfo info = default(InspectedFieldInfo)) {
+        public static BBParameter ParameterField(GUIContent content, BBParameter bbParam, bool blackboardOnly = false, bool required = false, InspectedFieldInfo info = default) {
 
             if ( bbParam == null ) {
                 EditorGUILayout.LabelField(content, EditorUtils.GetTempContent("BBParameter is null"));
@@ -54,7 +54,7 @@ namespace NodeCanvas.Editor
                         info.wrapperInstanceContext = info.parentInstanceContext;
                         info.parentInstanceContext = bbParam;
                         if ( info.attributes != null ) {
-                            info.attributes = info.attributes.Where(a => !( a is DrawerAttribute ) || !( (DrawerAttribute)a ).isDecorator).ToArray();
+                            info.attributes = info.attributes.Where(a => !( a is DrawerAttribute attribute ) || !attribute.isDecorator).ToArray();
                         }
                         GUILayout.BeginVertical();
                         bbParam.value = EditorUtils.ReflectedFieldInspector(content, bbParam.value, bbParam.varType, info);

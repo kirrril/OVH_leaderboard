@@ -50,8 +50,7 @@ namespace NodeCanvas.Tasks.Actions
                 wanderPos = ( Random.insideUnitSphere * max ) + agent.transform.position;
             }
 
-            NavMeshHit hit;
-            if ( NavMesh.SamplePosition(wanderPos, out hit, agent.height * 2, NavMesh.AllAreas) ) {
+            if ( NavMesh.SamplePosition(wanderPos, out NavMeshHit hit, agent.height * 2, NavMesh.AllAreas) ) {
                 agent.SetDestination(hit.position);
             }
         }

@@ -31,8 +31,7 @@ namespace ParadoxNotion
             }
 #endif
 
-            string result;
-            if ( colorHexCache.TryGetValue(color, out result) ) {
+            if ( colorHexCache.TryGetValue(color, out string result) ) {
                 return result;
             }
             result = ( "#" + color.r.ToString("X2") + color.g.ToString("X2") + color.b.ToString("X2") ).ToUpper();
@@ -42,8 +41,7 @@ namespace ParadoxNotion
         ///<summary>Convert Hex to Color.</summary>
         private static Dictionary<string, Color> hexColorCache = new Dictionary<string, Color>(System.StringComparer.OrdinalIgnoreCase);
         public static Color HexToColor(string hex) {
-            Color result;
-            if ( hexColorCache.TryGetValue(hex, out result) ) {
+            if ( hexColorCache.TryGetValue(hex, out Color result) ) {
                 return result;
             }
             if ( hex.Length != 6 ) {

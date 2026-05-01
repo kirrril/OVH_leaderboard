@@ -13,9 +13,7 @@ namespace NodeCanvas.Tasks.Actions
         [BlackboardOnly] public BBParameter<float> saveAs;
         public bool repeat = false;
 
-        protected override string info {
-            get { return "Get Scroll Delta as " + saveAs; }
-        }
+        protected override string info => "Get Scroll Delta as " + saveAs;
 
         protected override void OnExecute() { Do(); }
         protected override void OnUpdate() { Do(); }

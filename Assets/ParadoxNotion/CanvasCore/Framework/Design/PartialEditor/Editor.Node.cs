@@ -67,7 +67,10 @@ namespace NodeCanvas.Framework
 
         ///<summary>EDITOR! This is to be able to work with rects which is easier in many cases. Size is temporary to the node since it's auto adjusted thus no need to serialize it</summary>
         public Rect rect {
-            get { return new Rect(_position.x, _position.y, size.x, size.y); }
+            get
+            {
+                return new Rect(_position.x, _position.y, size.x, size.y);
+            }
             private set
             {
                 _position = new Vector2(value.x, value.y);
@@ -130,10 +133,10 @@ namespace NodeCanvas.Framework
         }
 
         ///<summary>EDITOR! is the node selected or part of the multi selection?</summary>
-        public bool isSelected { get { return GraphEditorUtility.activeElement == this || GraphEditorUtility.activeElements.Contains(this); } }
+        public bool isSelected => GraphEditorUtility.activeElement == this || GraphEditorUtility.activeElements.Contains(this);
 
         ///<summary>EDITOR! Node has an icon?</summary>
-        private bool hasIcon { get { return icon != null; } }
+        private bool hasIcon => icon != null;
 
         ///<summary>EDITOR! cached GUIContent for node header name</summary>
         private GUIContent cachedHeaderContent {
@@ -141,7 +144,7 @@ namespace NodeCanvas.Framework
             {
                 if ( _cachedHeaderContent == null || _nameCache != name ) {
                     string hex;
-                    if ( nodeColor != default(Color) ) {
+                    if ( nodeColor != default ) {
                         hex = nodeColor.grayscale > 0.6f ? DEFAULT_HEX_COLOR_DARK : DEFAULT_HEX_COLOR_LIGHT;
                     } else {
                         hex = EditorGUIUtility.isProSkin ? hexColor : DEFAULT_HEX_COLOR_DARK;
@@ -162,7 +165,7 @@ namespace NodeCanvas.Framework
                 if ( _icon == null ) {
                     if ( this is ITaskAssignable ) {
                         var assignable = this as ITaskAssignable;
-                        _icon = assignable.task != null ? assignable.task.icon : null;
+                        _icon = assignable.task?.icon;
                     }
                     if ( _icon == null ) {
                         var iconAtt = this.GetType().RTGetAttribute<ParadoxNotion.Design.IconAttribute>(true);
@@ -183,18 +186,18 @@ namespace NodeCanvas.Framework
                 if ( !colorLoaded ) {
                     colorLoaded = true;
                     hasColorAttribute = false;
-                    colorAttributeColor = default(Color);
+                    colorAttributeColor = default;
                     hexColor = DEFAULT_HEX_COLOR_LIGHT;
                     var cAtt = this.GetType().RTGetAttribute<ColorAttribute>(true);
                     if ( cAtt != null ) {
                         hasColorAttribute = true;
                         colorAttributeColor = ColorUtils.HexToColor(cAtt.hexColor);
                         hexColor = cAtt.hexColor;
-                        _color = default(Color);
+                        _color = default;
                     }
                 }
 
-                if ( !hasColorAttribute && customColor != default(Color) ) {
+                if ( !hasColorAttribute && customColor != default ) {
                     return customColor;
                 }
 
@@ -205,7 +208,7 @@ namespace NodeCanvas.Framework
                 if ( customColor != value ) {
                     _cachedHeaderContent = null; //flush content
                     if ( value.a <= 0.2f ) {
-                        customColor = default(Color);
+                        customColor = default;
                         hexColor = DEFAULT_HEX_COLOR_LIGHT;
                         return;
                     }
@@ -329,7 +332,7 @@ namespace NodeCanvas.Framework
                     EditorGUIUtility.SetIconSize(new Vector2(16, 16));
                     //Remark: CalcHeight does not take into account SetIconSize. CalcSize does.
                     var headerHeight = StyleSheet.windowTitle.CalcSize(node.cachedHeaderContent).y;
-                    if ( node.nodeColor != default(Color) ) {
+                    if ( node.nodeColor != default ) {
                         GUI.color = node.nodeColor;
                         if ( node.rect.height <= 35 ) { headerHeight = 35; }
                         Styles.Draw(new Rect(0, 0, node.rect.width, headerHeight), StyleSheet.windowHeader);
@@ -349,9 +352,8 @@ namespace NodeCanvas.Framework
                 GUI.color = node.nodeColor.a > 0.2f ? node.nodeColor : Color.white;
                 //TODO: can be expensive for the light theme -> handle somehow else
                 if ( !EditorGUIUtility.isProSkin ) {
-                    var assignable = node as ITaskAssignable;
                     ParadoxNotion.Design.IconAttribute att = null;
-                    if ( assignable != null && assignable.task != null ) { att = assignable.task.GetType().RTGetAttribute<ParadoxNotion.Design.IconAttribute>(true); }
+                    if ( node is ITaskAssignable assignable && assignable.task != null ) { att = assignable.task.GetType().RTGetAttribute<ParadoxNotion.Design.IconAttribute>(true); }
                     if ( att == null ) { att = node.GetType().RTGetAttribute<ParadoxNotion.Design.IconAttribute>(true); }
                     if ( att != null && att.fixedColor == false ) { GUI.color = Color.black.WithAlpha(0.7f); }
                 }
@@ -484,8 +486,7 @@ namespace NodeCanvas.Framework
 
         //...
         static void GraphAssignableNodeGUI(Node node) {
-            if ( node is IGraphAssignable ) {
-                var assignable = (IGraphAssignable)node;
+            if ( node is IGraphAssignable assignable ) {
                 if ( assignable.subGraphParameter != null ) {
                     GUILayout.BeginVertical(Styles.roundedBox);
                     GUILayout.Label(string.Format("Sub{0}\n{1}", assignable.subGraphParameter.varType.Name, assignable.subGraphParameter.ToString()));
@@ -539,7 +540,7 @@ namespace NodeCanvas.Framework
             menu = graph.CallbackOnNodesContextMenu(menu, GraphEditorUtility.activeElements.OfType<Node>().ToArray());
 
             menu.AddSeparator("/");
-            menu.AddItem(new GUIContent("Delete Selected Nodes"), false, () => { foreach ( Node n in GraphEditorUtility.activeElements.ToArray() ) graph.RemoveNode(n); });
+            menu.AddItem(new GUIContent("Delete Selected Nodes"), false, () => { foreach ( Node n in GraphEditorUtility.activeElements.ToArray() ) { graph.RemoveNode(n); } });
             return menu;
         }
 
@@ -623,7 +624,7 @@ namespace NodeCanvas.Framework
                     var hierarchicalMove = Prefs.hierarchicalMove != e.shift;
                     //snap to grid
                     if ( !hierarchicalMove && Prefs.snapToGrid && GraphEditorUtility.activeElements.Count == 0 ) {
-                        node.position = new Vector2(Mathf.Round(node.position.x / 20) * 20, Mathf.Round(node.position.y / 20) * 20);
+                        node.position = new Vector2(Mathf.Round(node.position.x / Prefs.GRID_SIZE) * Prefs.GRID_SIZE, Mathf.Round(node.position.y / Prefs.GRID_SIZE) * Prefs.GRID_SIZE);
                     }
 
                     //recursive drag
@@ -659,11 +660,11 @@ namespace NodeCanvas.Framework
                 commentsRect = new Rect(node.rect.x, node.rect.yMax + 5, node.rect.width, size.y);
             }
             if ( node.commentsAlignment == Alignment2x2.Left ) {
-                var width = Mathf.Min(size.x, node.rect.width * 2);
+                var width = Mathf.Min(size.x, MIN_SIZE.x * 2);
                 commentsRect = new Rect(node.rect.xMin - width, node.rect.yMin, width, node.rect.height);
             }
             if ( node.commentsAlignment == Alignment2x2.Right ) {
-                commentsRect = new Rect(node.rect.xMax + 5, node.rect.yMin, Mathf.Min(size.x, node.rect.width * 2), node.rect.height);
+                commentsRect = new Rect(node.rect.xMax + 5, node.rect.yMin, Mathf.Min(size.x, MIN_SIZE.x * 2), node.rect.height);
             }
 
             GUI.color = new Color(1, 1, 1, 0.6f);
@@ -872,8 +873,7 @@ namespace NodeCanvas.Framework
                     var oldIndeces = node.outConnections.Select(x => original.IndexOf(x)).ToArray();
                     foreach ( var field in node.GetType().RTGetFields() ) {
                         if ( field.RTIsDefined<AutoSortWithChildrenConnections>(true) ) {
-                            var list = field.GetValue(node) as System.Collections.IList;
-                            if ( list != null ) {
+                            if ( field.GetValue(node) is System.Collections.IList list ) {
                                 var temp = new object[list.Count];
                                 for ( var i = 0; i < list.Count; i++ ) { temp[i] = list[i]; }
                                 for ( var i = 0; i < oldIndeces.Length; i++ ) { list[i] = temp[oldIndeces[i]]; }
@@ -934,12 +934,11 @@ namespace NodeCanvas.Framework
                         var pos = e.mousePosition;
                         clickedPort = null;
 
-                        System.Action<System.Type> Selected = delegate (System.Type type)
-                        {
+                        void Selected(System.Type type) {
                             var newNode = graph.AddNode(type, pos);
                             graph.ConnectNodes(source, newNode, index);
                             GraphEditorUtility.activeElement = newNode;
-                        };
+                        }
 
                         var menu = EditorUtils.GetTypeSelectionMenu(graph.baseNodeType, Selected);
                         if ( zoomFactor == 1 ) {
@@ -997,9 +996,7 @@ namespace NodeCanvas.Framework
 
             //draw the new drag&drop connection line
             if ( clickedPort != null && clickedPort.parent == this ) {
-                var tangA = default(Vector2);
-                var tangB = default(Vector2);
-                ParadoxNotion.CurveUtils.ResolveTangents(clickedPort.pos, e.mousePosition, Prefs.connectionsMLT, graph.flowDirection, out tangA, out tangB);
+                CurveUtils.ResolveTangents(clickedPort.pos, e.mousePosition, Prefs.connectionsMLT, graph.flowDirection, out Vector2 tangA, out Vector2 tangB);
                 Handles.DrawBezier(clickedPort.pos, e.mousePosition, clickedPort.pos + tangA, e.mousePosition + tangB, StyleSheet.GetStatusColor(Status.Resting).WithAlpha(0.8f), StyleSheet.bezierTexture, 3);
             }
 

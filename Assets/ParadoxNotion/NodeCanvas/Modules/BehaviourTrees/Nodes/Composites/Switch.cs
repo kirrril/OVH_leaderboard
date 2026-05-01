@@ -10,7 +10,7 @@ namespace NodeCanvas.BehaviourTrees
 
     [Category("Composites")]
     [Description("Executes one child based on the provided int or enum case and returns its status. This is a useful node to create state-like behaviours.")]
-    [ParadoxNotion.Design.Icon("IndexSwitcher")]
+    [ParadoxNotion.Design.Icon("Index")]
     [Color("b3ff7f")]
     public class Switch : BTComposite
     {

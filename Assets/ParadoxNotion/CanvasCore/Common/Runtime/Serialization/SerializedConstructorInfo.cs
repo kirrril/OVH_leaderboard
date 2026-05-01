@@ -82,7 +82,7 @@ namespace ParadoxNotion.Serialization
 
         //operator
         public static implicit operator ConstructorInfo(SerializedConstructorInfo value) {
-            return value != null ? value._constructor : null;
+            return value?._constructor;
         }
 
     }

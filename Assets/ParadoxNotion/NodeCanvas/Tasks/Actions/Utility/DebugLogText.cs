@@ -36,9 +36,8 @@ namespace NodeCanvas.Tasks.Actions
         public LogMode logMode;
         public BooleanStatus finishStatus = BooleanStatus.Success;
 
-        protected override string info {
-            get { return "Log " + log.ToString() + ( secondsToRun > 0 ? " for " + secondsToRun + " sec." : "" ); }
-        }
+        protected override string info => "Log " + log.ToString() + ( secondsToRun > 0 ? " for " + secondsToRun + " sec." : "" );
+        public override float length => secondsToRun;
 
         protected override void OnExecute() {
             if ( verboseMode == VerboseMode.LogAndDisplayLabel || verboseMode == VerboseMode.LogOnly ) {
@@ -70,7 +69,7 @@ namespace NodeCanvas.Tasks.Actions
 
         protected override void OnUpdate() {
             if ( elapsedTime >= secondsToRun ) {
-                EndAction(finishStatus == BooleanStatus.Success ? true : false);
+                EndAction(finishStatus == BooleanStatus.Success);
             }
         }
 

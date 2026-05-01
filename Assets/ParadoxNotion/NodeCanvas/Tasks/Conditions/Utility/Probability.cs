@@ -16,9 +16,7 @@ namespace NodeCanvas.Tasks.Conditions
 
         private bool success;
 
-        protected override string info {
-            get { return ( probability.value / maxValue.value * 100 ) + "%"; }
-        }
+        protected override string info => ( probability.value / maxValue.value * 100 ) + "%";
 
         protected override void OnEnable() {
             success = Random.Range(0f, maxValue.value) <= probability.value;

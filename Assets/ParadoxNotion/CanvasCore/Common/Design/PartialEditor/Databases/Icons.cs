@@ -62,9 +62,7 @@ namespace ParadoxNotion.Design
         ///----------------------------------------------------------------------------------------------
 
         ///<summary>Returns a type icon</summary>
-        public static Texture GetTypeIcon(System.Type type) {
-            return TypePrefs.GetTypeIcon(type);
-        }
+        public static Texture GetTypeIcon(System.Type type) => TypePrefs.GetTypeIcon(type);
     }
 }
 

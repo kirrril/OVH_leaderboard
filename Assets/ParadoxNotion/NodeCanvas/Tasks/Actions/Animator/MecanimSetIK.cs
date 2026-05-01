@@ -16,9 +16,7 @@ namespace NodeCanvas.Tasks.Actions
         public BBParameter<GameObject> goal;
         public BBParameter<float> weight;
 
-        protected override string info {
-            get { return "Set '" + IKGoal + "' " + goal; }
-        }
+        protected override string info => "Set '" + IKGoal + "' " + goal;
 
         protected override void OnExecute() {
             router.onAnimatorIK += OnAnimatorIK;

@@ -119,7 +119,7 @@ namespace NodeCanvas.Framework
 
                 if ( string.IsNullOrEmpty(_nameCache) ) {
                     var nameAtt = this.GetType().RTGetAttribute<NameAttribute>(true);
-                    _nameCache = ( nameAtt != null ? nameAtt.name : GetType().FriendlyName().SplitCamelCase() );
+                    _nameCache = nameAtt != null ? nameAtt.name : GetType().FriendlyName().SplitCamelCase();
                 }
                 return _nameCache;
             }
@@ -178,13 +178,13 @@ namespace NodeCanvas.Framework
         }
 
         ///<summary>The current agent.</summary>
-        public Component graphAgent => ( graph != null ? graph.agent : null );
+        public Component graphAgent => graph?.agent;
 
         ///<summary>The current blackboard.</summary>
-        public IBlackboard graphBlackboard => ( graph != null ? graph.blackboard : null );
+        public IBlackboard graphBlackboard => graph?.blackboard;
 
         ///<summary>The time in seconds the node has been Status.Running after a reset (Status.Resting)</summary>
-        public float elapsedTime => ( status == Status.Running ? graph.elapsedTime - timeStarted : 0 );
+        public float elapsedTime => status == Status.Running ? graph.elapsedTime - timeStarted : 0;
 
         //Mark when status running change
         private float timeStarted { get; set; }
@@ -282,8 +282,8 @@ namespace NodeCanvas.Framework
                     var owner = agent as GraphOwner;
                     var contextName = owner != null ? owner.gameObject.name : graph.name;
                     Logger.LogWarning(string.Format("Node: '{0}' | ID: '{1}' | Graph Type: '{2}' | Context Object: '{3}'", name, ID, graph.GetType().Name, contextName), "Breakpoint", this);
-                    if ( owner != null ) { owner.PauseBehaviour(); }
-                    if ( breakEditor ) { StartCoroutine(YieldBreak(() => { if ( owner != null ) { owner.StartBehaviour(); } })); }
+                    owner?.PauseBehaviour();
+                    if ( breakEditor ) { StartCoroutine(YieldBreak(() => { owner?.StartBehaviour(); })); }
                     breakPointReached = true;
                     return status = Status.Running;
                 }
@@ -295,6 +295,13 @@ namespace NodeCanvas.Framework
 #endif
 
             return status = OnExecute(agent, blackboard);
+        }
+
+        ///Helper for breakpoints
+        IEnumerator YieldBreak(System.Action resume) {
+            Debug.Break();
+            yield return null;
+            resume();
         }
 
         ///<summary>Recursively reset the node and child nodes if it's not Resting already</summary>
@@ -316,17 +323,10 @@ namespace NodeCanvas.Framework
 
         ///----------------------------------------------------------------------------------------------
 
-        ///<summary>Helper for breakpoints</summary>
-        IEnumerator YieldBreak(System.Action resume) {
-            Debug.Break();
-            yield return null;
-            resume();
-        }
-
         ///<summary>Helper for easier logging</summary>
         public Status Error(object msg) {
-            if ( msg is System.Exception ) {
-                Logger.LogException((System.Exception)msg, LogTag.EXECUTION, this);
+            if ( msg is System.Exception exception ) {
+                Logger.LogException(exception, LogTag.EXECUTION, this);
             } else {
                 Logger.LogError(msg, LogTag.EXECUTION, this);
             }
@@ -346,7 +346,7 @@ namespace NodeCanvas.Framework
             Logger.LogWarning(msg, LogTag.EXECUTION, this);
         }
 
-        ///<summary>Set the Status of the node directly. Not recomended if you don't know why!</summary>
+        ///<summary>Set the Status of the node directly. ** Not recomended if you don't know why! **</summary>
         public void SetStatus(Status status) {
             this.status = status;
         }
@@ -415,13 +415,27 @@ namespace NodeCanvas.Framework
 
         ///<summary>Nodes can use coroutine as normal through MonoManager.</summary>
         public Coroutine StartCoroutine(IEnumerator routine) {
-            return MonoManager.current != null ? MonoManager.current.StartCoroutine(routine) : null;
+            return MonoManager.current?.StartCoroutine(routine);
         }
 
         ///<summary>Nodes can use coroutine as normal through MonoManager.</summary>
         public void StopCoroutine(Coroutine routine) {
-            if ( MonoManager.current != null ) { MonoManager.current.StopCoroutine(routine); }
+            MonoManager.current?.StopCoroutine(routine);
         }
+
+        ///----------------------------------------------------------------------------------------------
+
+        ///<summary>Start a synced coroutine. It will update only when the graph updates. Returnes the IEnumerator provided so you can force stop it if need be.</summary>
+        public IEnumerator StartSyncedCoroutine(IEnumerator routine) {
+            return graph.StartSyncedCoroutine(routine);
+        }
+
+        ///<summary>Stop a previously started synced coroutine.</summary>
+        public void StopSyncedCoroutine(IEnumerator routine) {
+            graph.StopSyncedCoroutine(routine);
+        }
+
+        ///----------------------------------------------------------------------------------------------
 
         ///<summary>Returns all *direct* parent nodes (first depth level)</summary>
         public IEnumerable<Node> GetParentNodes() {
@@ -457,8 +471,7 @@ namespace NodeCanvas.Framework
             if ( hardError != null ) { return "* " + hardError; }
 
             string result = null;
-            var assignable = this as ITaskAssignable;
-            if ( assignable != null && assignable.task != null ) {
+            if ( this is ITaskAssignable assignable && assignable.task != null ) {
                 result = assignable.task.GetWarningOrError();
             }
 
@@ -467,12 +480,12 @@ namespace NodeCanvas.Framework
 
         ///<summary>A hard error, missing things</summary>
         string GetHardError() {
-            if ( this is IMissingRecoverable ) {
-                return string.Format("Missing Node '{0}'", ( this as IMissingRecoverable ).missingType);
+            if ( this is IMissingRecoverable recoverable ) {
+                return string.Format("Missing Node '{0}'", recoverable.missingType);
             }
 
-            if ( this is IReflectedWrapper ) {
-                var info = ( this as IReflectedWrapper ).GetSerializedInfo();
+            if ( this is IReflectedWrapper wrapper ) {
+                var info = wrapper.GetSerializedInfo();
                 if ( info != null && info.AsMemberInfo() == null ) { return string.Format("Missing Reflected Info '{0}'", info.AsString()); }
             }
             return null;
@@ -520,12 +533,12 @@ namespace NodeCanvas.Framework
         //...
         public override string ToString() {
             var result = name;
-            if ( this is IReflectedWrapper ) {
-                var info = ( this as IReflectedWrapper ).GetSerializedInfo()?.AsMemberInfo();
+            if ( this is IReflectedWrapper wrapper ) {
+                var info = wrapper.GetSerializedInfo()?.AsMemberInfo();
                 if ( info != null ) { result = info.FriendlyName(); }
             }
-            if ( this is IGraphAssignable ) {
-                var subGraph = ( this as IGraphAssignable ).subGraph;
+            if ( this is IGraphAssignable assignable ) {
+                var subGraph = assignable.subGraph;
                 if ( subGraph != null ) { result = subGraph.name; }
             }
             return string.Format("{0}{1}", result, ( !string.IsNullOrEmpty(tag) ? " (" + tag + ")" : "" ));

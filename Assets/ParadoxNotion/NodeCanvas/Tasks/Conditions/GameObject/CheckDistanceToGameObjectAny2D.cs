@@ -14,7 +14,7 @@ namespace NodeCanvas.Tasks.Conditions
     {
 
         public BBParameter<List<GameObject>> targetObjects;
-        public CompareMethod checkType = CompareMethod.LessThan;
+        public CompareOp checkType = CompareOp.LessThan;
         public BBParameter<float> distance = 10;
 
         [SliderField(0, 0.1f)]
@@ -25,9 +25,7 @@ namespace NodeCanvas.Tasks.Conditions
         [BlackboardOnly]
         public BBParameter<GameObject> closerResult;
 
-        protected override string info {
-            get { return "Distance Any" + OperationTools.GetCompareString(checkType) + distance + " in " + targetObjects; }
-        }
+        protected override string info => "Distance Any" + OperationTools.GetCompareString(checkType) + distance + " in " + targetObjects;
 
         protected override bool OnCheck() {
             var r = false;

@@ -14,13 +14,11 @@ namespace NodeCanvas.StateMachines
         [Tooltip("If enabled, a transition to an already running state will not happen.")]
         public bool dontRetriggerStates = false;
 
-        public override string name { //yei for caps
-            get { return "FROM ANY STATE"; }
-        }
+        public override string name => "FROM ANY STATE";
 
-        public override int maxInConnections { get { return 0; } }
-        public override int maxOutConnections { get { return -1; } }
-        public override bool allowAsPrime { get { return false; } }
+        public override int maxInConnections => 0;
+        public override int maxOutConnections => -1;
+        public override bool allowAsPrime => false;
 
         public override void OnGraphStarted() {
             for ( var i = 0; i < outConnections.Count; i++ ) {
@@ -74,7 +72,7 @@ namespace NodeCanvas.StateMachines
         protected override void OnNodeGUI() {
             base.OnNodeGUI();
             if ( dontRetriggerStates ) {
-                UnityEngine.GUILayout.Label("<b>[NO RETRIGGER]</b>");
+                GUILayout.Label("<b>[NO RETRIGGER]</b>");
             }
         }
 

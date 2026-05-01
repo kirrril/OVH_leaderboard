@@ -20,7 +20,7 @@ namespace NodeCanvas.Framework
         public enum ActionsExecutionMode
         {
             ActionsRunInSequence,
-            ActionsRunInParallel
+            ActionsRunInParallel,
         }
 
         public ActionsExecutionMode executionMode;
@@ -36,7 +36,10 @@ namespace NodeCanvas.Framework
                     return "No Actions";
                 }
 
-                var finalText = actions.Count > 1 ? ( string.Format("<b>({0})</b>\n", executionMode == ActionsExecutionMode.ActionsRunInSequence ? "In Sequence" : "In Parallel") ) : string.Empty;
+                string execMode = null;
+                if ( executionMode == ActionsExecutionMode.ActionsRunInSequence ) execMode = "In Sequence";
+                if ( executionMode == ActionsExecutionMode.ActionsRunInParallel ) execMode = "In Parallel";
+                var finalText = actions.Count > 1 ? string.Format("<b>({0})</b>\n", execMode) : string.Empty;
                 for ( var i = 0; i < actions.Count; i++ ) {
 
                     var action = actions[i];
@@ -86,7 +89,7 @@ namespace NodeCanvas.Framework
             switch ( executionMode ) {
 
                 //parallel
-                case ( ActionsExecutionMode.ActionsRunInParallel ): {
+                case ActionsExecutionMode.ActionsRunInParallel: {
                         for ( var i = 0; i < actions.Count; i++ ) {
 
                             if ( finishedIndeces[i] ) {
@@ -95,6 +98,10 @@ namespace NodeCanvas.Framework
 
                             if ( !actions[i].isUserEnabled ) {
                                 finishedIndeces[i] = true;
+                                continue;
+                            }
+
+                            if ( elapsedTime < ( actions[i] as ParadoxNotion.Animation.ISequencableTrack ).time ) {
                                 continue;
                             }
 
@@ -121,7 +128,7 @@ namespace NodeCanvas.Framework
                     break;
 
                 //sequence
-                case ( ActionsExecutionMode.ActionsRunInSequence ): {
+                case ActionsExecutionMode.ActionsRunInSequence: {
                         for ( var i = currentActionIndex; i < actions.Count; i++ ) {
 
                             if ( !actions[i].isUserEnabled ) {
@@ -201,6 +208,7 @@ namespace NodeCanvas.Framework
 #if UNITY_EDITOR
 
         private ActionTask currentViewAction;
+        private bool showMiniSequencer => executionMode == ActionsExecutionMode.ActionsRunInParallel;
 
         //...
         protected override void OnTaskInspectorGUI() {
@@ -227,19 +235,33 @@ namespace NodeCanvas.Framework
 
             if ( actions.Count == 1 ) { return; }
 
+            float totalLength = 0f;
+            Rect seqTimesRect = default;
+            if ( showMiniSequencer ) {
+                GUILayout.Box(string.Empty, GUIStyle.none, GUILayout.Height(14), GUILayout.ExpandWidth(true));
+                seqTimesRect = GUILayoutUtility.GetLastRect();
+                seqTimesRect.xMin += 40; seqTimesRect.xMax -= 32;
+                totalLength = SequencerEditor.ResolveTotalLength(actions, 0, elapsedTime);
+                SequencerEditor.DrawTimes(seqTimesRect, 29, actions, totalLength);
+            }
+
             //show the actions
             EditorUtils.ReorderableList(actions, (i, picked) =>
             {
                 var action = actions[i];
                 GUI.color = Color.white.WithAlpha(action == currentViewAction ? 0.75f : 0.25f);
-                EditorGUILayout.BeginHorizontal("box");
+                EditorGUILayout.BeginHorizontal(GUI.skin.box);
 
                 GUI.color = Color.white.WithAlpha(action.isUserEnabled ? 0.8f : 0.25f);
                 GUI.enabled = !Application.isPlaying;
                 action.isUserEnabled = EditorGUILayout.Toggle(action.isUserEnabled, GUILayout.Width(18));
                 GUI.enabled = true;
 
-                GUILayout.Label(( action.isPaused ? "<b>||</b> " : action.isRunning ? "► " : "" ) + action.summaryInfo, GUILayout.MinWidth(0), GUILayout.ExpandWidth(true));
+                if ( !showMiniSequencer ) {
+                    GUILayout.Label(( action.isPaused ? "<b>||</b> " : action.isRunning ? "► " : "" ) + action.summaryInfo);
+                }
+
+                GUILayout.FlexibleSpace();
 
                 if ( !Application.isPlaying && GUILayout.Button("X", GUILayout.Width(20)) ) {
                     UndoUtility.RecordObject(ownerSystem.contextObject, "List Remove Task");
@@ -250,6 +272,12 @@ namespace NodeCanvas.Framework
                 EditorGUILayout.EndHorizontal();
 
                 var lastRect = GUILayoutUtility.GetLastRect();
+
+                if ( showMiniSequencer ) {
+                    var trackRect = Rect.MinMaxRect(seqTimesRect.x, lastRect.y, seqTimesRect.xMax, lastRect.yMax);
+                    SequencerEditor.ShowTrack(trackRect, action, totalLength);
+                }
+
                 EditorGUIUtility.AddCursorRect(lastRect, MouseCursor.Link);
                 if ( Event.current.type == EventType.MouseDown && lastRect.Contains(Event.current.mousePosition) ) {
                     currentViewAction = action == currentViewAction ? null : action;
@@ -258,6 +286,11 @@ namespace NodeCanvas.Framework
 
                 GUI.color = Color.white;
             });
+
+            if ( showMiniSequencer ) {
+                seqTimesRect.yMax = GUILayoutUtility.GetLastRect().yMax;
+                SequencerEditor.DrawRuntimeCarret(seqTimesRect, totalLength, elapsedTime);
+            }
 
             executionMode = (ActionsExecutionMode)EditorGUILayout.EnumPopup(executionMode);
         }

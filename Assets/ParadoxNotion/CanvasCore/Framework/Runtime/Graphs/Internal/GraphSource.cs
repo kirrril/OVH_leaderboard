@@ -20,15 +20,15 @@ namespace NodeCanvas.Framework.Internal
         }
 
         void ISerializationCollector.OnCollect(ISerializationCollectable child, int depth) {
-            if ( child is Task ) { allTasks.Add((Task)child); }
-            if ( child is BBParameter ) { allParameters.Add((BBParameter)child); }
+            if ( child is Task task ) { allTasks.Add(task); }
+            if ( child is BBParameter parameter ) { allParameters.Add(parameter); }
         }
 
         void ISerializationCollector.OnPop(ISerializationCollector parent) { }
         ///----------------------------------------------------------------------------------------------
 
 
-        public const float FRAMEWORK_VERSION = 3.33f;
+        public const float FRAMEWORK_VERSION = 3.41f;
 
         [SerializeField, fsSerializeAs("version"), fsWriteOnly, fsIgnoreInBuild]
         private float _version;

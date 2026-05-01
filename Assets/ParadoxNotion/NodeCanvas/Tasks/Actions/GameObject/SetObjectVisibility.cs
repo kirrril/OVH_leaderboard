@@ -21,9 +21,7 @@ namespace NodeCanvas.Tasks.Actions
 
         public SetVisibleMode setTo = SetVisibleMode.Toggle;
 
-        protected override string info {
-            get { return string.Format("{0} {1}", setTo, agentInfo); }
-        }
+        protected override string info => string.Format("{0} {1}", setTo, agentInfo);
 
         protected override void OnExecute() {
 

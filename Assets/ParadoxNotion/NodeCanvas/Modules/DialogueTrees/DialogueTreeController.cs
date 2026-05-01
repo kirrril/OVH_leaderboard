@@ -43,7 +43,7 @@ namespace NodeCanvas.DialogueTrees
         ///<summary>Start the already assgined DialogueTree with provided actor as instigator and callback</summary>
         public void StartDialogue(IDialogueActor instigator, Action<bool> callback) {
             graph = GetInstance(graph);
-            graph.StartGraph(instigator is Component ? (Component)instigator : instigator.transform, blackboard, updateMode, callback);
+            graph.StartGraph(instigator is Component component ? component : instigator.transform, blackboard, updateMode, callback);
         }
 
         ///<summary>Pause the DialogueTree</summary>
@@ -58,21 +58,17 @@ namespace NodeCanvas.DialogueTrees
 
         ///<summary>Set an actor reference by parameter name</summary>
         public void SetActorReference(string paramName, IDialogueActor actor) {
-            if ( behaviour != null ) {
-                behaviour.SetActorReference(paramName, actor);
-            }
+            behaviour?.SetActorReference(paramName, actor);
         }
 
         ///<summary>Set all actor reference parameters at once</summary>
         public void SetActorReferences(Dictionary<string, IDialogueActor> actors) {
-            if ( behaviour != null ) {
-                behaviour.SetActorReferences(actors);
-            }
+            behaviour?.SetActorReferences(actors);
         }
 
         ///<summary>Get the actor reference by parameter name</summary>
         public IDialogueActor GetActorReferenceByName(string paramName) {
-            return behaviour != null ? behaviour.GetActorReferenceByName(paramName) : null;
+            return behaviour?.GetActorReferenceByName(paramName);
         }
 
         ///----------------------------------------------------------------------------------------------

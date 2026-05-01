@@ -13,9 +13,7 @@ namespace NodeCanvas.Tasks.Actions
         [Tooltip("DestroyImmediately is recomended if you are destroying objects in use of the framework.")]
         public bool immediately;
 
-        protected override string info {
-            get { return string.Format("Remove '{0}'", typeof(T).Name); }
-        }
+        protected override string info => string.Format("{0}.Remove '{1}'", agentInfo, typeof(T).Name);
 
         protected override void OnExecute() {
             var o = agent.GetComponent<T>();

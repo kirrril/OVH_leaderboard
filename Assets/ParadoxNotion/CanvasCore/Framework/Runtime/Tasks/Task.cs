@@ -26,7 +26,7 @@ namespace NodeCanvas.Framework
         //We set the hint type that the agent parameter (if any) is.
         void ISerializationCallbackReceiver.OnBeforeSerialize() {
             if ( agentType == null ) { _agentParameter = null; }
-            if ( _agentParameter != null ) { _agentParameter.SetType(agentType); }
+            _agentParameter?.SetType(agentType);
         }
         void ISerializationCallbackReceiver.OnAfterDeserialize() { }
 
@@ -49,7 +49,6 @@ namespace NodeCanvas.Framework
         private string _taskName;
         private string _taskDescription;
         private string _obsoleteInfo;
-        private bool _isRuntimeActive;
         private bool _isInitSuccess;
         private EventRouter _eventRouter;
         //
@@ -105,10 +104,10 @@ namespace NodeCanvas.Framework
         }
 
         ///<summary>The owner system's assigned agent</summary>
-        public Component ownerSystemAgent => ownerSystem != null ? ownerSystem.agent : null;
+        public Component ownerSystemAgent => ownerSystem?.agent;
 
         ///<summary>The owner system's assigned blackboard</summary>
-        public IBlackboard ownerSystemBlackboard => ownerSystem != null ? ownerSystem.blackboard : null;
+        public IBlackboard ownerSystemBlackboard => ownerSystem?.blackboard;
 
         ///<summary>The time in seconds that the owner system is running</summary>
         public float ownerSystemElapsedTime => ownerSystem != null ? ownerSystem.elapsedTime : 0;
@@ -162,7 +161,11 @@ namespace NodeCanvas.Framework
             {
 #if UNITY_EDITOR
                 if ( !NodeCanvas.Editor.Prefs.showTaskSummary && !( this is ActionList ) && !( this is ConditionList ) ) {
-                    return string.Format("<b>{0}</b>", name);
+                    var text = string.Format("<b>{0}</b>", name);
+                    if ( this is ConditionTask && ( this as ConditionTask ).invert ) {
+                        text = "! " + text;
+                    }
+                    return text;
                 }
 #endif
 
@@ -182,7 +185,7 @@ namespace NodeCanvas.Framework
         public string agentInfo => _agentParameter != null ? _agentParameter.ToString() : "<b>Self</b>";
 
         ///<summary>The name of the blackboard variable selected if the agent is overriden and set to a blackboard variable or direct assignment.</summary>
-        public string agentParameterName => _agentParameter != null ? _agentParameter.name : null;
+        public string agentParameterName => _agentParameter?.name;
 
         ///<summary>Is the agent overriden or the default taken from owner system will be used?</summary>
         public bool agentIsOverride {
@@ -214,7 +217,7 @@ namespace NodeCanvas.Framework
         public IBlackboard blackboard => ownerSystemBlackboard;
 
         ///<summary>The cached EventRouter of the current agent used to subscribe/unsubscribe events. Use this for custom named events as well -> '.router.onCustomEvent'</summary>
-        public EventRouter router => _eventRouter != null ? _eventRouter : _eventRouter = agent == null ? null : agent.gameObject.GetAddComponent<EventRouter>();
+        public EventRouter router => _eventRouter != null ? _eventRouter : _eventRouter = agent?.gameObject.GetAddComponent<EventRouter>();
 
         ///----------------------------------------------------------------------------------------------
 
@@ -294,7 +297,7 @@ namespace NodeCanvas.Framework
                     if ( field.RTIsDefined<GetFromAgentAttribute>(true) ) {
                         var o = newAgent.GetComponent(field.FieldType);
                         field.SetValue(this, o);
-                        if ( ReferenceEquals(o, null) ) {
+                        if ( o is null ) {
                             return Error(string.Format("GetFromAgent Attribute failed to get the required Component of type '{0}' from '{1}'. Does it exist?", field.FieldType.Name, agent.gameObject.name));
                         }
                     }
@@ -316,23 +319,23 @@ namespace NodeCanvas.Framework
 
         ///<summary>Tasks can start coroutine through MonoManager</summary>
         protected Coroutine StartCoroutine(IEnumerator routine) {
-            return MonoManager.current != null ? MonoManager.current.StartCoroutine(routine) : null;
+            return MonoManager.current?.StartCoroutine(routine);
         }
 
         ///<summary>Tasks can start coroutine through MonoManager</summary>
         protected void StopCoroutine(Coroutine routine) {
-            if ( MonoManager.current != null ) { MonoManager.current.StopCoroutine(routine); }
+            MonoManager.current?.StopCoroutine(routine);
         }
 
         ///----------------------------------------------------------------------------------------------
 
         ///<summary>Sends an event through the owner system to handle (same as calling ownerSystem.SendEvent)</summary>
         protected void SendEvent(string name) {
-            if ( ownerSystem != null ) { ownerSystem.SendEvent(name, null, this); }
+            ownerSystem?.SendEvent(name, null, this);
         }
         ///<summary>Sends an event through the owner system to handle (same as calling ownerSystem.SendEvent)</summary>
         protected void SendEvent<T>(string name, T value) {
-            if ( ownerSystem != null ) { ownerSystem.SendEvent(name, value, this); }
+            ownerSystem?.SendEvent(name, value, this);
         }
 
         ///----------------------------------------------------------------------------------------------
@@ -380,17 +383,14 @@ namespace NodeCanvas.Framework
             return null;
         }
 
-        ///<summary> Override and return anything but null to mark the task has an error</summary>
-        virtual protected string OnErrorCheck() { return null; }
-
         ///<summary>A hard error, missing things</summary>
         string GetHardError() {
-            if ( this is IMissingRecoverable ) {
-                return string.Format("Missing Task '{0}'", ( this as IMissingRecoverable ).missingType);
+            if ( this is IMissingRecoverable recoverable ) {
+                return string.Format("Missing Task '{0}'", recoverable.missingType);
             }
 
-            if ( this is IReflectedWrapper ) {
-                var info = ( this as IReflectedWrapper ).GetSerializedInfo();
+            if ( this is IReflectedWrapper wrapper ) {
+                var info = wrapper.GetSerializedInfo();
                 if ( info != null && info.AsMemberInfo() == null ) { return string.Format("Missing Reflected Info '{0}'", info.AsString()); }
             }
             return null;
@@ -398,23 +398,21 @@ namespace NodeCanvas.Framework
 
         ///----------------------------------------------------------------------------------------------
 
-        ///<summary>Override in Tasks. This is called AFTER a NEW agent is set, after initialization and before execution. Return null if everything is ok, or a string with the error if not.</summary>
+        ///<summary>This is called AFTER a NEW agent is set, after initialization and before execution. Return null if everything is ok, or a string with the error if not.</summary>
         virtual protected string OnInit() { return null; }
         ///<summary>Called once the first time task is created</summary>
         virtual public void OnCreate(ITaskSystem ownerSystem) { }
         ///<summary>Called when the task is created, duplicated or otherwise needs validation.</summary>
         virtual public void OnValidate(ITaskSystem ownerSystem) { }
-        [System.Obsolete("Use OnDrawGizmosSelected")]
-        virtual public void OnDrawGizmos() { OnDrawGizmosSelected(); }
         ///<summary>Draw gizmos when the element containing the task is selected</summary>
         virtual public void OnDrawGizmosSelected() { }
+        ///<summary> Override and return anything but null to mark the task has an error editor wise</summary>
+        virtual protected string OnErrorCheck() { return null; }
 
         ///----------------------------------------------------------------------------------------------
 
         //...
-        public override string ToString() {
-            return summaryInfo;
-        }
+        public override string ToString() => summaryInfo;
 
         ///----------------------------------------------------------------------------------------------
 

@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: c95a158298e92ad45b61ba4e6ee389bd
+guid: a40ef934945262a43a6777dfea8b2cb6
 MonoImporter:
   externalObjects: {}
   serializedVersion: 2
@@ -13,6 +13,6 @@ AssetOrigin:
   serializedVersion: 1
   productId: 14914
   packageName: NodeCanvas
-  packageVersion: 3.3.3
-  assetPath: Assets/ParadoxNotion/NodeCanvas/Modules/DialogueTrees/Editor/GraphLocalization.cs
-  uploadId: 754282
+  packageVersion: 3.4.1
+  assetPath: Assets/ParadoxNotion/CanvasCore/Common/Design/PartialEditor/SequencerEditor.cs
+  uploadId: 866614

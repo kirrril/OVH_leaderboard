@@ -101,6 +101,14 @@ namespace ParadoxNotion.Serialization.FullSerializer.Internal
 
                     property.Write(instance, deserializedValue);
                 }
+                // else
+                // {
+                //     var propertyValue = property.Read(instance);
+                //     if ( propertyValue == null && property.AutoInstance ) {
+                //         propertyValue = fsMetaType.Get(property.StorageType).CreateInstance();
+                //         property.Write(instance, propertyValue);
+                //     }
+                // }
             }
 
             return result;

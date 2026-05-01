@@ -11,9 +11,7 @@ namespace NodeCanvas.Tasks.Conditions
 
         [BlackboardOnly] public BBObjectParameter targetVariable;
 
-        protected override string info {
-            get { return targetVariable + " Changed."; }
-        }
+        protected override string info => targetVariable + " Changed.";
 
         protected override string OnInit() {
             if ( targetVariable.isNone ) {
@@ -30,7 +28,9 @@ namespace NodeCanvas.Tasks.Conditions
             targetVariable.varRef.onValueChanged -= OnValueChanged;
         }
 
-        protected override bool OnCheck() { return false; }
+        protected override bool OnCheck() {
+            return false;
+        }
 
         private void OnValueChanged(object varValue) {
             YieldReturn(true);

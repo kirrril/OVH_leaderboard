@@ -13,22 +13,10 @@ namespace NodeCanvas.Tasks.Actions
         [BlackboardOnly]
         public BBParameter<GameObject> saveCloneAs;
 
-        protected override string info {
-            get { return "Instantiate " + agentInfo + " under " + ( parent.value ? parent.ToString() : "World" ) + " at " + clonePosition + " as " + saveCloneAs; }
-        }
+        protected override string info => "Instantiate " + agentInfo + " under " + ( parent.value ? parent.ToString() : "World" ) + " at " + clonePosition + " as " + saveCloneAs;
 
         protected override void OnExecute() {
-#if UNITY_5_4_OR_NEWER
-
-            var clone = (GameObject)Object.Instantiate(agent.gameObject, parent.value, false);
-
-#else
-
-            var clone = (GameObject)Object.Instantiate(agent.gameObject);
-            clone.transform.SetParent(parent.value);
-
-#endif
-
+            var clone = Object.Instantiate(agent.gameObject, parent.value, false);
             clone.transform.position = clonePosition.value;
             clone.transform.eulerAngles = cloneRotation.value;
             saveCloneAs.value = clone;

@@ -7,7 +7,7 @@ using NodeCanvas.Framework;
 namespace NodeCanvas.Editor
 {
 
-    [UnityEditor.InitializeOnLoad]
+    [InitializeOnLoad]
     static class HierarchyIcons
     {
         static HierarchyIcons() {
@@ -19,7 +19,13 @@ namespace NodeCanvas.Editor
             if ( !Prefs.showHierarchyIcons ) {
                 return;
             }
+
+#if UNITY_6000_3_OR_NEWER
+            var go = EditorUtility.EntityIdToObject(ID) as GameObject;
+#else
             var go = EditorUtility.InstanceIDToObject(ID) as GameObject;
+#endif
+            
             if ( go == null ) return;
             var owner = go.GetComponent<GraphOwner>();
             if ( owner == null ) return;

@@ -11,22 +11,20 @@ namespace NodeCanvas.Tasks.Conditions
     public class CheckKeyboardInput : ConditionTask
     {
 
-        public PressTypes pressType = PressTypes.Down;
+        public PressType pressType = PressType.Down;
         public KeyCode key = KeyCode.Space;
 
-        protected override string info {
-            get { return pressType.ToString() + " " + key.ToString(); }
-        }
+        protected override string info => pressType.ToString() + " " + key.ToString();
 
         protected override bool OnCheck() {
 
-            if ( pressType == PressTypes.Down )
+            if ( pressType == PressType.Down )
                 return Input.GetKeyDown(key);
 
-            if ( pressType == PressTypes.Up )
+            if ( pressType == PressType.Up )
                 return Input.GetKeyUp(key);
 
-            if ( pressType == PressTypes.Pressed )
+            if ( pressType == PressType.Pressed )
                 return Input.GetKey(key);
 
             return false;
@@ -40,7 +38,7 @@ namespace NodeCanvas.Tasks.Conditions
         protected override void OnTaskInspectorGUI() {
 
             UnityEditor.EditorGUILayout.BeginHorizontal();
-            pressType = (PressTypes)UnityEditor.EditorGUILayout.EnumPopup(pressType);
+            pressType = (PressType)UnityEditor.EditorGUILayout.EnumPopup(pressType);
             key = (KeyCode)UnityEditor.EditorGUILayout.EnumPopup(key);
             UnityEditor.EditorGUILayout.EndHorizontal();
         }

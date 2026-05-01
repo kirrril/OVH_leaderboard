@@ -15,11 +15,11 @@ namespace NodeCanvas.Tasks.Actions
         public BBParameter<AnimationClip> animationClip;
         public WrapMode animationWrap;
         public AnimationBlendMode blendMode;
-        [SliderField(0, 2)]
+        [SliderField(0.5f, 2)]
         public float playbackSpeed = 1;
         [SliderField(0, 1)]
         public float crossFadeTime = 0.25f;
-        public PlayDirections playDirection = PlayDirections.Forward;
+        public PlayDirection playDirection = PlayDirection.Forward;
         public BBParameter<string> mixTransformName;
         public BBParameter<int> animationLayer;
         public bool queueAnimation;
@@ -29,9 +29,9 @@ namespace NodeCanvas.Tasks.Actions
         private int dir = -1;
         private Transform mixTransform;
 
-        protected override string info {
-            get { return "Anim " + animationClip.ToString(); }
-        }
+        protected override string info => agentInfo + "." + animationClip.ToString();
+
+        public override float length => !animationClip.isNull ? ( animationClip.value.length / playbackSpeed ) - crossFadeTime : 0;
 
         protected override string OnInit() {
             agent.AddClip(animationClip.value, animationClip.value.name);
@@ -41,13 +41,13 @@ namespace NodeCanvas.Tasks.Actions
 
         protected override void OnExecute() {
 
-            if ( playDirection == PlayDirections.Toggle )
+            if ( playDirection == PlayDirection.Toggle )
                 dir = -dir;
 
-            if ( playDirection == PlayDirections.Backward )
+            if ( playDirection == PlayDirection.Backward )
                 dir = -1;
 
-            if ( playDirection == PlayDirections.Forward )
+            if ( playDirection == PlayDirection.Forward )
                 dir = 1;
 
             agent.AddClip(animationClip.value, animationClip.value.name);

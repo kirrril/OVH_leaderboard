@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 15e4ba6035d41e64c935ae3e74dee12e
+guid: 8f0500f18949910499a7c56b7756174d
 TextureImporter:
   fileIDToRecycleName: {}
   serializedVersion: 4
@@ -100,6 +100,6 @@ AssetOrigin:
   serializedVersion: 1
   productId: 14914
   packageName: NodeCanvas
-  packageVersion: 3.3.3
-  assetPath: Assets/ParadoxNotion/CanvasCore/Framework/Design/Editor/Resources/TypeIcons/Explicit/StepIterator.png
-  uploadId: 754282
+  packageVersion: 3.4.1
+  assetPath: Assets/ParadoxNotion/CanvasCore/Framework/Design/Editor/Resources/TypeIcons/Explicit/Different.png
+  uploadId: 866614

@@ -89,8 +89,7 @@ namespace NodeCanvas.Framework
 
         ///<summary>Deletes the Variable of name provided regardless of type and returns the deleted Variable object.</summary>
         public static Variable RemoveVariable(this IBlackboard blackboard, string varName) {
-            Variable variable = null;
-            if ( blackboard.variables.TryGetValue(varName, out variable) ) {
+            if ( blackboard.variables.TryGetValue(varName, out Variable variable) ) {
                 blackboard.variables.Remove(varName);
                 blackboard.TryInvokeOnVariableRemoved(variable);
                 variable.OnDestroy();
@@ -121,8 +120,7 @@ namespace NodeCanvas.Framework
         ///<summary>Set the value of the Variable value defined by its name. If a Variable by that name and type doesnt exist, a new variable is added by that name</summary>
         public static Variable SetVariableValue(this IBlackboard blackboard, string varName, object value) {
 
-            Variable variable;
-            if ( !blackboard.variables.TryGetValue(varName, out variable) ) {
+            if ( !blackboard.variables.TryGetValue(varName, out Variable variable) ) {
                 Logger.Log(string.Format("No Variable of name '{0}' and type '{1}' exists on Blackboard '{2}'. Adding new instead...", varName, value != null ? value.GetType().FriendlyName() : "null", blackboard), LogTag.BLACKBOARD, blackboard);
                 variable = blackboard.AddVariable(varName, value);
                 return variable;
@@ -143,7 +141,7 @@ namespace NodeCanvas.Framework
         public static void InitializePropertiesBinding(this IBlackboard blackboard, Component target, bool callSetter) {
             if ( blackboard.variables.Count == 0 ) { return; }
             foreach ( var variable in blackboard.variables.Values ) {
-                variable.InitializePropertyBinding(target?.gameObject, callSetter);
+                variable.InitializePropertyBinding(target != null ? target.gameObject : null, callSetter);
             }
         }
 
@@ -158,8 +156,7 @@ namespace NodeCanvas.Framework
         public static Variable GetVariable(this IBlackboard blackboard, string varName, Type ofType = null) {
 
             if ( blackboard.variables != null && varName != null ) {
-                Variable variable;
-                if ( blackboard.variables.TryGetValue(varName, out variable) ) {
+                if ( blackboard.variables.TryGetValue(varName, out Variable variable) ) {
                     if ( ofType == null || ofType == typeof(object) || variable.CanConvertTo(ofType) ) {
                         return variable;
                     }

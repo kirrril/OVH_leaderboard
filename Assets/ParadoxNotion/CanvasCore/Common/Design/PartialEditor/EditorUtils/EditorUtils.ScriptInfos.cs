@@ -56,8 +56,7 @@ namespace ParadoxNotion.Design
 
             if ( cachedInfos == null ) { cachedInfos = new Dictionary<Type, List<ScriptInfo>>(); }
 
-            List<ScriptInfo> infosResult;
-            if ( cachedInfos.TryGetValue(baseType, out infosResult) ) {
+            if ( cachedInfos.TryGetValue(baseType, out List<ScriptInfo> infosResult) ) {
                 return infosResult.ToList();
             }
 
@@ -102,7 +101,7 @@ namespace ParadoxNotion.Design
                             infosResult.Add(info.MakeGenericInfo(typeof(Dictionary<,>).MakeGenericType(typeof(string), t), string.Format("/{0}/{1}{2}", info.name, TypePrefs.DICT_MENU_STRING, t.NamespaceToPath()), -2));
 
                             //by request extra append dictionary <string, List<T>>
-                            infosResult.Add(info.MakeGenericInfo(typeof(Dictionary<,>).MakeGenericType(typeof(string), typeof(List<>).MakeGenericType (t) ), string.Format("/{0}/{1}{2}", info.name, TypePrefs.DICT_MENU_STRING, t.NamespaceToPath()), -2));
+                            infosResult.Add(info.MakeGenericInfo(typeof(Dictionary<,>).MakeGenericType(typeof(string), typeof(List<>).MakeGenericType(t)), string.Format("/{0}/{1}{2}", info.name, TypePrefs.DICT_MENU_STRING, t.NamespaceToPath()), -2));
                         }
                         continue;
                     }
@@ -124,7 +123,7 @@ namespace ParadoxNotion.Design
         ///<summary>Makes and returns a closed generic ScriptInfo for targetType out of an existing ScriptInfo</summary>
         public static ScriptInfo MakeGenericInfo(this ScriptInfo info, Type targetType, string subCategory = null, int priorityShift = 0) {
             if ( !info.isValid || !info.originalType.IsGenericTypeDefinition ) {
-                return default(ScriptInfo);
+                return default;
             }
 
             if ( info.originalType.TryMakeGeneric(targetType, out Type genericType) ) {
@@ -136,7 +135,7 @@ namespace ParadoxNotion.Design
                 newInfo.originalCategory = info.originalCategory;
                 return newInfo;
             }
-            return default(ScriptInfo);
+            return default;
         }
 
         ///<summary>Not really. Only for purposes of menus usage.</summary>

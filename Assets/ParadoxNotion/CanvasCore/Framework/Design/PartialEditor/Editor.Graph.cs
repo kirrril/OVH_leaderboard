@@ -17,8 +17,7 @@ namespace NodeCanvas.Framework
             if ( _childAssignableIndex == -1 || _childAssignableIndex > allNodes.Count - 1 ) {
                 return null;
             }
-            var assignable = allNodes[_childAssignableIndex] as IGraphAssignable;
-            if ( assignable != null ) {
+            if ( allNodes[_childAssignableIndex] is IGraphAssignable assignable ) {
                 return assignable.subGraph;
             }
             return null;
@@ -46,7 +45,7 @@ namespace NodeCanvas.Framework
         ///<summary>Editor. Returns a Generic menu for on node click</summary>
         public GenericMenu CallbackOnNodesContextMenu(GenericMenu menu, Node[] nodes) { return OnNodesContextMenu(menu, nodes); }
         ///<summary>Editor. Invoke drag and drop on canvas for object</summary>
-        public void CallbackOnDropAccepted(Object o, Vector2 canvasMousePos) {
+        public void CallbackOnObjectDropInGraph(Object o, Vector2 canvasMousePos) {
             ///<summary>for all graphs, make possible to drag and drop IGraphAssignables</summary>
             foreach ( var type in Editor.GraphEditorUtility.GetDropedReferenceNodeTypes<IGraphAssignable>(o) ) {
                 if ( baseNodeType.IsAssignableFrom(type) ) {
@@ -55,7 +54,7 @@ namespace NodeCanvas.Framework
                     return;
                 }
             }
-            OnDropAccepted(o, canvasMousePos);
+            OnObjectDropInGraph(o, canvasMousePos);
         }
         ///<summary>Editor. Invoke drag and drop on canvas for variable</summary>
         public void CallbackOnVariableDropInGraph(IBlackboard bb, Variable variable, Vector2 canvasMousePos) { OnVariableDropInGraph(bb, variable, canvasMousePos); }
@@ -69,7 +68,7 @@ namespace NodeCanvas.Framework
         ///<summary>Editor. Override to add more entries to the right click context menu when multiple nodes are selected</summary>
         virtual protected GenericMenu OnNodesContextMenu(GenericMenu menu, Node[] nodes) { return menu; }
         ///<summary>Editor. Handle drag and drop objects in the graph</summary>
-        virtual protected void OnDropAccepted(Object o, Vector2 canvasMousePos) { }
+        virtual protected void OnObjectDropInGraph(Object o, Vector2 canvasMousePos) { }
         ///<summary>Editor. Handle what happens when blackboard variable is drag and droped in graph</summary>
         virtual protected void OnVariableDropInGraph(IBlackboard bb, Variable variable, Vector2 canvasMousePos) { }
         ///<summary>Editor. Append stuff in graph editor toolbar</summary>

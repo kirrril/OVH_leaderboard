@@ -14,9 +14,7 @@ namespace NodeCanvas.Tasks.Conditions
         public BBObjectParameter valueA = new BBObjectParameter(typeof(System.Enum));
         public BBObjectParameter valueB = new BBObjectParameter(typeof(System.Enum));
 
-        protected override string info {
-            get { return valueA + " == " + valueB; }
-        }
+        protected override string info => valueA + " == " + valueB;
 
         protected override bool OnCheck() {
             return Equals(valueA.value, valueB.value);

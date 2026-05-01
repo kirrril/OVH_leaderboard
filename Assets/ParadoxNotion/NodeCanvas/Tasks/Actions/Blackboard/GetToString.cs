@@ -15,9 +15,7 @@ namespace NodeCanvas.Tasks.Actions
         [BlackboardOnly]
         public BBParameter<string> toString;
 
-        protected override string info {
-            get { return string.Format("{0} = {1}.ToString()", toString, variable); }
-        }
+        protected override string info => string.Format("{0} = {1}.ToString()", toString, variable);
 
         protected override void OnExecute() {
             toString.value = !variable.isNull ? variable.value.ToString() : "NULL";

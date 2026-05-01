@@ -41,13 +41,13 @@ namespace ParadoxNotion.Design
         //unity callback
         static void OnPostprocessAllAssets(string[] importedAssets, string[] deletedAssets, string[] movedAssets, string[] movedFromAssetPaths) {
             AssetsImported(importedAssets);
-            if ( onAssetsImported != null ) { onAssetsImported(importedAssets); }
+            onAssetsImported?.Invoke(importedAssets);
 
             AssetsDeleted(deletedAssets);
-            if ( onAssetsDeleted != null ) { onAssetsDeleted(deletedAssets); }
+            onAssetsDeleted?.Invoke(deletedAssets);
 
             AssetsMoved(movedAssets, movedFromAssetPaths);
-            if ( onAssetsMoved != null ) { onAssetsMoved(movedAssets, movedFromAssetPaths); }
+            onAssetsMoved?.Invoke(movedAssets, movedFromAssetPaths);
 
         }
 
@@ -78,8 +78,6 @@ namespace ParadoxNotion.Design
             AssetsDeleted(moveFromPaths);
             AssetsImported(moveToPaths);
         }
-
-
     }
 }
 

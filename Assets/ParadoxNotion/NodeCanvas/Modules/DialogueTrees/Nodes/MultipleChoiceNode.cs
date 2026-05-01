@@ -119,7 +119,7 @@ namespace NodeCanvas.DialogueTrees
 
             GUILayout.BeginHorizontal();
             if ( availableTime > 0 ) {
-                GUILayout.Label(availableTime + "' Seconds");
+                GUILayout.Label(availableTime + " Seconds");
             }
             if ( saySelection ) {
                 GUILayout.Label("Say Selection");

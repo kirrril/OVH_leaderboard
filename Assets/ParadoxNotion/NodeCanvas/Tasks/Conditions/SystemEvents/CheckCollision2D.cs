@@ -12,7 +12,7 @@ namespace NodeCanvas.Tasks.Conditions
     public class CheckCollision2D_Rigidbody : ConditionTask<Rigidbody2D>
     {
 
-        public CollisionTypes checkType = CollisionTypes.CollisionEnter;
+        public CollisionType checkType = CollisionType.CollisionEnter;
         public bool specifiedTagOnly;
         [TagField]
         public string objectTag = "Untagged";
@@ -26,12 +26,10 @@ namespace NodeCanvas.Tasks.Conditions
 
         private bool stay;
 
-        protected override string info {
-            get { return checkType.ToString() + ( specifiedTagOnly ? ( " '" + objectTag + "' tag" ) : "" ); }
-        }
+        protected override string info => checkType.ToString() + ( specifiedTagOnly ? ( " '" + objectTag + "' tag" ) : "" );
 
         protected override bool OnCheck() {
-            return checkType == CollisionTypes.CollisionStay ? stay : false;
+            return checkType == CollisionType.CollisionStay && stay;
         }
 
         protected override void OnEnable() {
@@ -47,7 +45,7 @@ namespace NodeCanvas.Tasks.Conditions
         void OnCollisionEnter2D(ParadoxNotion.EventData<Collision2D> data) {
             if ( !specifiedTagOnly || data.value.gameObject.CompareTag(objectTag) ) {
                 stay = true;
-                if ( checkType == CollisionTypes.CollisionEnter || checkType == CollisionTypes.CollisionStay ) {
+                if ( checkType == CollisionType.CollisionEnter || checkType == CollisionType.CollisionStay ) {
                     saveGameObjectAs.value = data.value.gameObject;
                     saveContactPoint.value = data.value.contacts[0].point;
                     saveContactNormal.value = data.value.contacts[0].normal;
@@ -59,7 +57,7 @@ namespace NodeCanvas.Tasks.Conditions
         void OnCollisionExit2D(ParadoxNotion.EventData<Collision2D> data) {
             if ( !specifiedTagOnly || data.value.gameObject.CompareTag(objectTag) ) {
                 stay = false;
-                if ( checkType == CollisionTypes.CollisionExit ) {
+                if ( checkType == CollisionType.CollisionExit ) {
                     saveGameObjectAs.value = data.value.gameObject;
                     YieldReturn(true);
                 }
@@ -75,7 +73,7 @@ namespace NodeCanvas.Tasks.Conditions
     public class CheckCollision2D : ConditionTask<Collider2D>
     {
 
-        public CollisionTypes checkType = CollisionTypes.CollisionEnter;
+        public CollisionType checkType = CollisionType.CollisionEnter;
         public bool specifiedTagOnly;
         [TagField]
         public string objectTag = "Untagged";
@@ -89,12 +87,10 @@ namespace NodeCanvas.Tasks.Conditions
 
         private bool stay;
 
-        protected override string info {
-            get { return checkType.ToString() + ( specifiedTagOnly ? ( " '" + objectTag + "' tag" ) : "" ); }
-        }
+        protected override string info => checkType.ToString() + ( specifiedTagOnly ? ( " '" + objectTag + "' tag" ) : "" );
 
         protected override bool OnCheck() {
-            return checkType == CollisionTypes.CollisionStay ? stay : false;
+            return checkType == CollisionType.CollisionStay && stay;
         }
 
         protected override void OnEnable() {
@@ -107,10 +103,10 @@ namespace NodeCanvas.Tasks.Conditions
             router.onCollisionExit2D -= OnCollisionExit2D;
         }
 
-        void OnCollisionEnter2D(ParadoxNotion.EventData<Collision2D> data) {
+        void OnCollisionEnter2D(EventData<Collision2D> data) {
             if ( !specifiedTagOnly || data.value.gameObject.CompareTag(objectTag) ) {
                 stay = true;
-                if ( checkType == CollisionTypes.CollisionEnter || checkType == CollisionTypes.CollisionStay ) {
+                if ( checkType == CollisionType.CollisionEnter || checkType == CollisionType.CollisionStay ) {
                     saveGameObjectAs.value = data.value.gameObject;
                     saveContactPoint.value = data.value.contacts[0].point;
                     saveContactNormal.value = data.value.contacts[0].normal;
@@ -119,10 +115,10 @@ namespace NodeCanvas.Tasks.Conditions
             }
         }
 
-        void OnCollisionExit2D(ParadoxNotion.EventData<Collision2D> data) {
+        void OnCollisionExit2D(EventData<Collision2D> data) {
             if ( !specifiedTagOnly || data.value.gameObject.CompareTag(objectTag) ) {
                 stay = false;
-                if ( checkType == CollisionTypes.CollisionExit ) {
+                if ( checkType == CollisionType.CollisionExit ) {
                     saveGameObjectAs.value = data.value.gameObject;
                     YieldReturn(true);
                 }

@@ -23,11 +23,7 @@ namespace NodeCanvas.Tasks.Conditions
         public BBParameter<float> viewAngle = 70f;
         public Vector2 offset;
 
-        private RaycastHit2D hit;
-
-        protected override string info {
-            get { return "Can See " + target; }
-        }
+        protected override string info => "Can See " + target;
 
         protected override bool OnCheck() {
 

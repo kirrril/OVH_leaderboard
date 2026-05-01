@@ -5,7 +5,7 @@ using System.Reflection;
 namespace ParadoxNotion.Design
 {
 
-    ///<summary>Contains info about inspected field rin regards to reflected inspector and object/attribute drawers</summary>
+    ///<summary>Contains info about inspected field in regards to reflected inspector and object/attribute drawers</summary>
     public struct InspectedFieldInfo
     {
         ///<summary>The field inspected</summary>

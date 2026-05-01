@@ -27,18 +27,16 @@ namespace NodeCanvas.DialogueTrees
             }
         }
 
-        virtual public bool requireActorSelection { get { return true; } }
-        public override int maxInConnections { get { return -1; } }
-        public override int maxOutConnections { get { return 1; } }
-        sealed public override System.Type outConnectionType { get { return typeof(DTConnection); } }
-        sealed public override bool allowAsPrime { get { return true; } }
-        sealed public override bool canSelfConnect { get { return false; } }
-        sealed public override Alignment2x2 commentsAlignment { get { return Alignment2x2.Right; } }
-        sealed public override Alignment2x2 iconAlignment { get { return Alignment2x2.Bottom; } }
+        virtual public bool requireActorSelection => true;
+        public override int maxInConnections => -1;
+        public override int maxOutConnections => 1;
+        sealed public override System.Type outConnectionType => typeof(DTConnection);
+        sealed public override bool allowAsPrime => true;
+        sealed public override bool canSelfConnect => false;
+        sealed public override Alignment2x2 commentsAlignment => Alignment2x2.Bottom;
+        sealed public override Alignment2x2 iconAlignment => Alignment2x2.Bottom;
 
-        protected DialogueTree DLGTree {
-            get { return (DialogueTree)graph; }
-        }
+        protected DialogueTree DLGTree => (DialogueTree)graph;
 
         ///<summary>The key name actor parameter to be used for this node</summary>
         public string actorName {
@@ -52,7 +50,7 @@ namespace NodeCanvas.DialogueTrees
                 if ( _actorName != value && !string.IsNullOrEmpty(value) ) {
                     _actorName = value;
                     var param = DLGTree.GetParameterByName(value);
-                    _actorParameterID = param != null ? param.ID : null;
+                    _actorParameterID = param?.ID;
                 }
             }
         }

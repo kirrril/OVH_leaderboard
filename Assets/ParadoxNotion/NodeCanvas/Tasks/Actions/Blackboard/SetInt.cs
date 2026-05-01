@@ -14,12 +14,10 @@ namespace NodeCanvas.Tasks.Actions
 
         [BlackboardOnly]
         public BBParameter<int> valueA;
-        public OperationMethod Operation = OperationMethod.Set;
+        public AssignOp Operation = AssignOp.Set;
         public BBParameter<int> valueB;
 
-        protected override string info {
-            get { return valueA + OperationTools.GetOperationString(Operation) + valueB; }
-        }
+        protected override string info => valueA + OperationTools.GetOperationString(Operation) + valueB;
 
         protected override void OnExecute() {
             valueA.value = OperationTools.Operate(valueA.value, valueB.value, Operation);

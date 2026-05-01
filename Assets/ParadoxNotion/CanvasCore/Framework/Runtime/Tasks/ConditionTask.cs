@@ -58,9 +58,6 @@ namespace NodeCanvas.Framework
             }
         }
 
-        [System.Obsolete("Use 'Check'")]
-        public bool CheckCondition(Component agent, IBlackboard blackboard) { return Check(agent, blackboard); }
-
         ///<summary>Check the condition for the provided agent and with the provided blackboard</summary>
         public bool Check(Component agent, IBlackboard blackboard) {
 
@@ -115,8 +112,11 @@ namespace NodeCanvas.Framework
         virtual protected void OnEnable() { }
         ///<summary>Override to do things when condition is disabled</summary>
         virtual protected void OnDisable() { }
+
         ///<summary>Override to return whether the condition is true or false. The result will be inverted if Invert is checked.</summary>
-        virtual protected bool OnCheck() { return true; }
+        protected virtual bool OnCheck() {
+            return true;
+        }
 
         ///----------------------------------------------------------------------------------------------
     }

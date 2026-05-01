@@ -1,5 +1,7 @@
 fileFormatVersion: 2
-guid: ed5496c4ac88e3d4f944de65fdf5f327
+guid: 120059d728fc2844a80740eee081892b
+timeCreated: 1495927436
+licenseType: Store
 TextureImporter:
   fileIDToRecycleName: {}
   serializedVersion: 4
@@ -7,7 +9,7 @@ TextureImporter:
     mipMapMode: 0
     enableMipMap: 0
     sRGBTexture: 0
-    linearTexture: 1
+    linearTexture: 0
     fadeOut: 0
     borderMipMap: 0
     mipMapFadeDistanceStart: 1
@@ -22,8 +24,8 @@ TextureImporter:
   generateCubemap: 6
   cubemapConvolution: 0
   seamlessCubemap: 0
-  textureFormat: -3
-  maxTextureSize: 1024
+  textureFormat: 1
+  maxTextureSize: 2048
   textureSettings:
     filterMode: 1
     aniso: 1
@@ -100,6 +102,6 @@ AssetOrigin:
   serializedVersion: 1
   productId: 14914
   packageName: NodeCanvas
-  packageVersion: 3.3.3
-  assetPath: Assets/ParadoxNotion/CanvasCore/Framework/Design/Editor/Resources/TypeIcons/Explicit/IndexSwitcher.png
-  uploadId: 754282
+  packageVersion: 3.4.1
+  assetPath: Assets/ParadoxNotion/CanvasCore/Framework/Design/Editor/Resources/TypeIcons/Explicit/Optional.png
+  uploadId: 866614

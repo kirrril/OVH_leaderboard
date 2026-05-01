@@ -24,15 +24,8 @@ namespace ParadoxNotion
         }
 
         ///<summary>Is target position along from, to curve</summary>
-        public static bool IsPosAlongCurve(Vector2 from, Vector2 to, Vector2 fromTangent, Vector2 toTangent, Vector2 targetPosition) {
-            float norm = 0;
-            return IsPosAlongCurve(from, to, fromTangent, toTangent, targetPosition, out norm);
-        }
-
-
-        ///<summary>Is target position along from, to curve</summary>
         public static bool IsPosAlongCurve(Vector2 from, Vector2 to, Vector2 fromTangent, Vector2 toTangent, Vector2 targetPosition, out float norm) {
-            if ( ParadoxNotion.RectUtils.GetBoundRect(from, to).ExpandBy(POS_CHECK_DISTANCE).Contains(targetPosition) ) {
+            if ( RectUtils.GetBoundRect(from, to).ExpandBy(POS_CHECK_DISTANCE).Contains(targetPosition) ) {
                 for ( var i = 0f; i <= POS_CHECK_RES; i++ ) {
                     var checkPos = GetPosAlongCurve(from, to, fromTangent, toTangent, i / POS_CHECK_RES);
                     if ( Vector2.Distance(targetPosition, checkPos) < POS_CHECK_DISTANCE ) {
@@ -116,8 +109,8 @@ namespace ParadoxNotion
                     return;
             }
 
-            fromTangent = default(Vector2);
-            toTangent = default(Vector2);
+            fromTangent = default;
+            toTangent = default;
         }
 
 

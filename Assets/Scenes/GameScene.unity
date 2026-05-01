@@ -453,7 +453,6 @@ MonoBehaviour:
   agents: {fileID: 1524743005}
   playerController: {fileID: 437535149}
   animator: {fileID: 636847535}
-  targetSpot: {fileID: 0}
   spotsManLegs:
   - {fileID: 2037138103}
   - {fileID: 831291124}
@@ -2160,7 +2159,6 @@ MonoBehaviour:
   agents: {fileID: 1524743005}
   playerController: {fileID: 437535149}
   animator: {fileID: 619516980}
-  targetSpot: {fileID: 0}
   spotsManLegs:
   - {fileID: 2037138103}
   - {fileID: 831291124}
@@ -3595,7 +3593,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1400528944}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: GameManager, Assembly-CSharp
         m_MethodName: OnShowLeaderboardClick
         m_Mode: 1
@@ -5400,7 +5398,6 @@ MonoBehaviour:
   agents: {fileID: 1524743005}
   playerController: {fileID: 437535149}
   animator: {fileID: 934187005}
-  targetSpot: {fileID: 0}
   spotsManLegs:
   - {fileID: 2037138103}
   - {fileID: 831291124}
@@ -7033,7 +7030,6 @@ MonoBehaviour:
   agents: {fileID: 1524743005}
   playerController: {fileID: 437535149}
   animator: {fileID: 1722560186}
-  targetSpot: {fileID: 0}
   spotsManLegs:
   - {fileID: 2037138103}
   - {fileID: 831291124}
@@ -7543,7 +7539,6 @@ MonoBehaviour:
   agents: {fileID: 1524743005}
   playerController: {fileID: 437535149}
   animator: {fileID: 1755402456}
-  targetSpot: {fileID: 0}
   spotsManLegs:
   - {fileID: 2037138103}
   - {fileID: 831291124}
@@ -7685,6 +7680,66 @@ Transform:
   m_Children:
   - {fileID: 802746442}
   m_Father: {fileID: 1143616033}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &647299504
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 647299506}
+  - component: {fileID: 647299505}
+  m_Layer: 0
+  m_Name: GameManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &647299505
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 647299504}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 370345c8119a66745adc8c1ae4e9bac1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::GameManager
+  legsTraining: 0
+  chestTraining: 0
+  backTraining: 0
+  treadmillTraining: 0
+  bikeTraining: 0
+  jumpboxTraining: 0
+  barbellTraining: 0
+  chest1Training: 0
+  chest2Training: 0
+  dipsTraining: 0
+  back1Training: 0
+  back2Training: 0
+  rowerTraining: 0
+  extensionTraining: 0
+  backBarbell1Training: 0
+  pullUpsTraining: 0
+--- !u!4 &647299506
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 647299504}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0.04353, y: 0.55485, z: 15.62403}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &652467861
 GameObject:
@@ -8878,7 +8933,6 @@ MonoBehaviour:
   agents: {fileID: 1524743005}
   playerController: {fileID: 437535149}
   animator: {fileID: 1300322567}
-  targetSpot: {fileID: 0}
   spotsManLegs:
   - {fileID: 2037138103}
   - {fileID: 831291124}
@@ -12743,7 +12797,6 @@ MonoBehaviour:
   agents: {fileID: 1524743005}
   playerController: {fileID: 437535149}
   animator: {fileID: 588597587}
-  targetSpot: {fileID: 0}
   spotsManLegs:
   - {fileID: 2037138103}
   - {fileID: 831291124}
@@ -13938,7 +13991,6 @@ MonoBehaviour:
   agents: {fileID: 1524743005}
   playerController: {fileID: 437535149}
   animator: {fileID: 422235077}
-  targetSpot: {fileID: 0}
   spotsManLegs:
   - {fileID: 2037138103}
   - {fileID: 831291124}
@@ -15386,62 +15438,6 @@ Transform:
   - {fileID: 1055241705}
   m_Father: {fileID: 1303882629}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &1400528943
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1400528945}
-  - component: {fileID: 1400528944}
-  m_Layer: 0
-  m_Name: GameManager
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 0
---- !u!114 &1400528944
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1400528943}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ddc59f517febf0742b5e024683f4f614, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  scoreManager: {fileID: 544478343}
-  scoreInput: {fileID: 1414863750}
-  scoreStatusText: {fileID: 1130702884}
-  rankManager: {fileID: 2118574701}
-  offlineStatusManager: {fileID: 7070679}
-  rankText: {fileID: 248193239}
-  upAndDown: {fileID: 1865106084}
-  up: {fileID: 21300000, guid: 5df03ed1f6b83f74abce9aba5645e64b, type: 3}
-  down: {fileID: 21300000, guid: 7e57c7d8324ba4145a30f5fd8bbcaa22, type: 3}
-  highestScoreText: {fileID: 43215244}
-  sessionScoreText: {fileID: 307460894}
-  showLeaderboardButton: {fileID: 292804352}
---- !u!4 &1400528945
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1400528943}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1402042200
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -16492,7 +16488,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1400528944}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: GameManager, Assembly-CSharp
         m_MethodName: OnScoreSubmission
         m_Mode: 1
@@ -20483,6 +20479,55 @@ Transform:
   m_Children:
   - {fileID: 1473725736}
   m_Father: {fileID: 770539894}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1868214797
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1868214799}
+  - component: {fileID: 1868214798}
+  m_Layer: 0
+  m_Name: PlayerData
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1868214798
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1868214797}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c3d3c3be4d50d034bae650bced21ea66, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerData
+  playerName: 
+  sessionToken: 
+  currentScore: 0
+  bestScore: 0
+  health: 5
+--- !u!4 &1868214799
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1868214797}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0.04353, y: 0.55485, z: 15.62403}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1870883125
 GameObject:
@@ -24532,7 +24577,6 @@ MonoBehaviour:
   agents: {fileID: 1524743005}
   playerController: {fileID: 437535149}
   animator: {fileID: 943044358549231800}
-  targetSpot: {fileID: 0}
   spotsManLegs:
   - {fileID: 2037138103}
   - {fileID: 831291124}
@@ -25809,10 +25853,11 @@ SceneRoots:
   - {fileID: 660286363}
   - {fileID: 998797865}
   - {fileID: 832024986}
-  - {fileID: 1400528945}
   - {fileID: 1147152803}
   - {fileID: 1524743006}
   - {fileID: 1824734518}
   - {fileID: 4399281006811814680}
   - {fileID: 1148489591}
   - {fileID: 1030791518}
+  - {fileID: 1868214799}
+  - {fileID: 647299506}

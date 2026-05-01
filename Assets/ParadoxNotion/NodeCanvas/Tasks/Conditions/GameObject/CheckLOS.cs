@@ -19,17 +19,13 @@ namespace NodeCanvas.Tasks.Conditions
         [BlackboardOnly]
         public BBParameter<float> saveDistanceAs;
 
-        private RaycastHit hit = new RaycastHit();
-
-        protected override string info {
-            get { return "LOS with " + LOSTarget.ToString(); }
-        }
+        protected override string info => "LOS with " + LOSTarget.ToString();
 
         protected override bool OnCheck() {
 
             var t = LOSTarget.value.transform;
 
-            if ( Physics.Linecast(agent.position + offset, t.position + offset, out hit, layerMask.value) ) {
+            if ( Physics.Linecast(agent.position + offset, t.position + offset, out RaycastHit hit, layerMask.value) ) {
                 var targetCollider = t.GetComponent<Collider>();
                 if ( targetCollider == null || hit.collider != targetCollider ) {
                     saveDistanceAs.value = hit.distance;

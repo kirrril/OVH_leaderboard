@@ -20,9 +20,7 @@ namespace NodeCanvas.Tasks.Actions
 
         private DialogueTreeController instance;
 
-        protected override string info {
-            get { return string.Format("Start Dialogue {0}", dialogueTreeController); }
-        }
+        protected override string info => string.Format("Start Dialogue {0}", dialogueTreeController);
 
         protected override void OnExecute() {
 

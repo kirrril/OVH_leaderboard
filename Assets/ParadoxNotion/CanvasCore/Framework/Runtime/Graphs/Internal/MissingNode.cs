@@ -27,17 +27,15 @@ namespace NodeCanvas.Framework.Internal
             set { _recoveryState = value; }
         }
 
-        public override string name {
-            get { return "Missing Node".FormatError(); }
-        }
+        public override string name => "Missing Node".FormatError();
 
-        public override System.Type outConnectionType { get { return null; } }
-        public override int maxInConnections { get { return 0; } }
-        public override int maxOutConnections { get { return 0; } }
-        public override bool allowAsPrime { get { return false; } }
-        public override bool canSelfConnect { get { return false; } }
-        public override Alignment2x2 commentsAlignment { get { return Alignment2x2.Right; } }
-        public override Alignment2x2 iconAlignment { get { return Alignment2x2.Default; } }
+        public override System.Type outConnectionType => null;
+        public override int maxInConnections => 0;
+        public override int maxOutConnections => 0;
+        public override bool allowAsPrime => false;
+        public override bool canSelfConnect => false;
+        public override Alignment2x2 commentsAlignment => Alignment2x2.Right;
+        public override Alignment2x2 iconAlignment => Alignment2x2.Default;
 
 
 

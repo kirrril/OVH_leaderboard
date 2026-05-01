@@ -6,7 +6,6 @@ using ParadoxNotion.Serialization;
 namespace NodeCanvas
 {
 
-    [AddComponentMenu("NodeCanvas/Standalone Action List (Bonus)")]
     public class ActionListPlayer : MonoBehaviour, ITaskSystem, ISerializationCallbackReceiver
     {
 
@@ -22,7 +21,6 @@ namespace NodeCanvas
         private float timeStarted;
 
         void ISerializationCallbackReceiver.OnBeforeSerialize() {
-            // if ( ParadoxNotion.Services.Threader.applicationIsPlaying ) { return; }
             _objectReferences = new List<UnityEngine.Object>();
             _serializedList = JSONSerializer.Serialize(typeof(ActionList), _actionList, _objectReferences);
         }

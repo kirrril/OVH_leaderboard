@@ -5,7 +5,7 @@ using ParadoxNotion.Serialization;
 using ParadoxNotion.Serialization.FullSerializer;
 using NodeCanvas.Framework.Internal;
 using UnityEngine;
-
+using ParadoxNotion.Design;
 
 namespace NodeCanvas.Framework
 {
@@ -24,20 +24,33 @@ namespace NodeCanvas.Framework
 #endif
 
     ///<summary>Base class for all actions. Extend this to create your own.</summary>
-    abstract public class ActionTask : Task
+    abstract public class ActionTask : Task, ParadoxNotion.Animation.ISequencableTrack
     {
+
+        [SerializeField, MinValue(0)]
+        private float _preDelay;
+
         private Status status = Status.Resting;
         private float timeStarted;
         private bool latch;
 
         ///<summary>The time in seconds this action is running if at all</summary>
-        public float elapsedTime => ( isRunning ? ownerSystem.elapsedTime - timeStarted : 0 );
+        public float elapsedTime => isRunning ? ownerSystem.elapsedTime - timeStarted : 0;
 
         ///<summary>Is the action currently running?</summary>
         public bool isRunning => status == Status.Running;
 
         ///<summary>Is the action currently paused?</summary>
         public bool isPaused { get; private set; }
+
+        ///<summary>Trigger time when used as a sequencer track.</summary>
+        float ParadoxNotion.Animation.ISequencableTrack.time { get => _preDelay; set => _preDelay = value; }
+
+        ///Show info instead of name if a track
+        string ParadoxNotion.Animation.ISequencableTrack.name => info;
+
+        ///<summary>The presumed length this action will take to complete if known. This is only informational!</summary>
+        virtual public float length => elapsedTime;
 
         ///----------------------------------------------------------------------------------------------
 
@@ -50,7 +63,7 @@ namespace NodeCanvas.Framework
         //This is only used and usefull if user needs to execute an action task completely as standalone.
         IEnumerator IndependentActionUpdater(Component agent, IBlackboard blackboard, Action<Status> callback) {
             while ( Execute(agent, blackboard) == Status.Running ) { yield return null; }
-            if ( callback != null ) { callback(status); }
+            callback?.Invoke(status);
         }
 
         ///----------------------------------------------------------------------------------------------
@@ -104,7 +117,7 @@ namespace NodeCanvas.Framework
                 return;
             }
 
-            latch = success != null ? true : false;
+            latch = success != null;
 
             isPaused = false;
             status = success == null ? Status.Resting : ( success == true ? Status.Success : Status.Failure );
@@ -136,9 +149,8 @@ namespace NodeCanvas.Framework
         virtual protected void OnPause() { }
         ///<summary>Called when the action resumes after being paused</summary>
         virtual protected void OnResume() { }
+
         ///----------------------------------------------------------------------------------------------
 
-        [System.Obsolete("Use 'Execute'")]
-        public Status ExecuteAction(Component agent, IBlackboard blackboard) { return Execute(agent, blackboard); }
     }
 }

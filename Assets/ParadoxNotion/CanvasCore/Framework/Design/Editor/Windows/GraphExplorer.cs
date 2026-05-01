@@ -127,7 +127,7 @@ namespace NodeCanvas.Editor
         }
 
         //...
-        void DoElement(HierarchyTree.Element element, Rect parentElementRect = default(Rect)) {
+        void DoElement(HierarchyTree.Element element, Rect parentElementRect = default) {
 
             if ( element.children == null ) { return; }
 
@@ -139,8 +139,7 @@ namespace NodeCanvas.Editor
 
                 //Dont show undefined parameters.
                 //TODO: I dont like this "special case" here
-                if ( child.reference is BBParameter ) {
-                    var bbPram = (BBParameter)child.reference;
+                if ( child.reference is BBParameter bbPram ) {
                     if ( !bbPram.isDefined ) { continue; }
                 }
 
@@ -152,7 +151,7 @@ namespace NodeCanvas.Editor
 
                     if ( EditorGUIUtility.isProSkin ) { GUI.color = Color.black.WithAlpha(indent == 1 ? 0.6f : 0.3f); }
                     if ( !EditorGUIUtility.isProSkin ) { GUI.color = Color.white.WithAlpha(indent == 1 ? 0.6f : 0.3f); }
-                    GUILayout.BeginHorizontal("box");
+                    GUILayout.BeginHorizontal(GUI.skin.box);
                     GUI.color = Color.white;
                     GUILayout.Space(indent * INDENT_WIDTH);
                     var displayText = string.Format("<b>{0}</b>{1}", toString, Prefs.explorerShowTypeNames ? " (" + typeName + ")" : string.Empty);

@@ -20,9 +20,7 @@ namespace NodeCanvas.Tasks.Actions
 
         public SetEnableMode setTo = SetEnableMode.Toggle;
 
-        protected override string info {
-            get { return string.Format("{0} {1}", setTo, agentInfo); }
-        }
+        protected override string info => string.Format("{0} {1}", setTo, agentInfo);
 
         protected override void OnExecute() {
 

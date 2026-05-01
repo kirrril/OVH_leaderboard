@@ -29,9 +29,7 @@ namespace NodeCanvas.Tasks.Actions
         private int index = -1;
         private Vector3? lastRequest;
 
-        protected override string info {
-            get { return string.Format("{0} Patrol {1}", patrolMode, targetList); }
-        }
+        protected override string info => string.Format("{0} Patrol {1}", patrolMode, targetList);
 
         protected override void OnExecute() {
 

@@ -17,12 +17,12 @@ namespace NodeCanvas.DialogueTrees
 
         public BooleanStatus finishState = BooleanStatus.Success;
 
-        public override int maxOutConnections { get { return 0; } }
-        public override bool requireActorSelection { get { return false; } }
+        public override int maxOutConnections => 0;
+        public override bool requireActorSelection => false;
 
         protected override Status OnExecute(Component agent, IBlackboard bb) {
             status = (Status)finishState;
-            DLGTree.Stop(finishState == BooleanStatus.Success ? true : false);
+            DLGTree.Stop(finishState == BooleanStatus.Success);
             return status;
         }
 

@@ -16,9 +16,7 @@ namespace NodeCanvas.Tasks.Conditions
         public BBParameter<List<T>> targetList;
         public BBParameter<T> checkElement;
 
-        protected override string info {
-            get { return targetList + " contains " + checkElement; }
-        }
+        protected override string info => targetList + " contains " + checkElement;
 
         protected override bool OnCheck() {
             return targetList.value.Contains(checkElement.value);

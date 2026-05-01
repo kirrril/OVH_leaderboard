@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 0f6570749d9f8124782c3a84c92de6d2
+guid: b4eccc15bea0e664198cc8b1c977906b
 MonoImporter:
   externalObjects: {}
   serializedVersion: 2
@@ -13,6 +13,6 @@ AssetOrigin:
   serializedVersion: 1
   productId: 14914
   packageName: NodeCanvas
-  packageVersion: 3.3.3
+  packageVersion: 3.4.1
   assetPath: Assets/ParadoxNotion/NodeCanvas/Modules/DialogueTrees/Locales.cs
-  uploadId: 754282
+  uploadId: 866614

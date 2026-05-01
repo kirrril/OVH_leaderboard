@@ -20,9 +20,7 @@ namespace NodeCanvas.Tasks.Actions
         public BBParameter<List<GameObject>> saveAs;
         public bool reverse;
 
-        protected override string info {
-            get { return "Sort " + targetList + " by distance as " + saveAs; }
-        }
+        protected override string info => "Sort " + targetList + " by distance as " + saveAs;
 
         protected override void OnExecute() {
 

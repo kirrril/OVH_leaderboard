@@ -20,13 +20,15 @@ namespace NodeCanvas.Editor
         private Texture2D resourcesIcon;
         private Texture2D supportIcon;
         private Texture2D communityIcon;
+        private Texture2D tutorialsIcon;
 
         private GraphInfoAttribute att;
         private string packageName;
         private string docsURL;
         private string resourcesURL;
-        private string forumsURL;
-        private string discordUrl = "https://discord.gg/97q2Rjh";
+        private readonly string DISCORD_URL = "https://discord.gg/97q2Rjh";
+        private readonly string FORUMS_URL = "https://paradoxnotion.com/forums-page";
+        private readonly string YOUTUBE_URL = "https://youtube.com/@paradoxnotion";
 
         private string webMessage;
 
@@ -42,19 +44,19 @@ namespace NodeCanvas.Editor
             titleContent = new GUIContent("Welcome");
             if ( assetType == null ) { assetType = GraphEditor.currentGraph?.GetType(); }
             if ( assetType == null ) { assetType = ReflectionTools.GetImplementationsOf(typeof(Graph)).Where(x => x.IsDefined(typeof(GraphInfoAttribute), true)).LastOrDefault(); }
-            att = assetType != null ? assetType.RTGetAttributesRecursive<GraphInfoAttribute>().LastOrDefault() : null;
+            att = assetType?.RTGetAttributesRecursive<GraphInfoAttribute>().LastOrDefault();
 
             packageName = att != null ? att.packageName : "NodeCanvas";
             docsURL = att != null ? att.docsURL : "https://paradoxnotion.com/";
             resourcesURL = att != null ? att.resourcesURL : "https://paradoxnotion.com/";
-            forumsURL = att != null ? att.forumsURL : "https://paradoxnotion.com/";
 
             header = Resources.Load(string.Format("{0}Header", packageName)) as Texture2D;
             docsIcon = Resources.Load("Manual") as Texture2D;
+            tutorialsIcon = Resources.Load("Tutorials") as Texture2D;
             resourcesIcon = Resources.Load("Resources") as Texture2D;
             supportIcon = Resources.Load("Support") as Texture2D;
             communityIcon = Resources.Load("Community") as Texture2D;
-            var size = new Vector2(header != null ? header.width : 800, 435);
+            var size = new Vector2(header != null ? header.width : 800, 490);
             minSize = size;
             maxSize = size;
             FetchWebMessageBoard();
@@ -78,7 +80,7 @@ namespace NodeCanvas.Editor
                         if ( isAll || target.ToLower() == packageName.ToLower() ) {
                             if ( !isAll ) {
                                 var version = targetPair[1];
-                                var uptodate = NodeCanvas.Framework.Internal.GraphSource.FRAMEWORK_VERSION == float.Parse(version);
+                                var uptodate = Framework.Internal.GraphSource.FRAMEWORK_VERSION == float.Parse(version);
                                 result += uptodate ? "<b>You are up to date on the latest version!</b>" : string.Format("<b>There is a new version available! ( v{0} )</b>", version);
                             }
                             var content = board.GetStringWithinOuter('{', '}');
@@ -101,7 +103,7 @@ namespace NodeCanvas.Editor
             var headerRect = header != null ? new Rect(0, 0, header.width, header.height) : new Rect(0, 0, maxSize.x, 110);
             EditorGUIUtility.AddCursorRect(headerRect, MouseCursor.Link);
             if ( GUI.Button(headerRect, string.Empty, GUIStyle.none) ) {
-                UnityEditor.Help.BrowseURL("https://paradoxnotion.com");
+                Help.BrowseURL("https://paradoxnotion.com");
             }
 
             if ( header != null ) {
@@ -111,7 +113,7 @@ namespace NodeCanvas.Editor
                 GUI.Label(headerRect, $"\t\t<size=30><b>{packageName}</b></size>", Styles.leftLabel);
             }
 
-            var copyrightText = "<color=#9c9c9c><size=10><b>© 2014-2025 Paradox Notion. All rights reserved.</b></size></color>";
+            var copyrightText = "<color=#9c9c9c><size=10><b>© 2014-2026 Paradox Notion. All rights reserved.</b></size></color>";
             var size = Styles.leftLabel.CalcSize(new GUIContent(copyrightText));
             var copyrightRect = new Rect(92, 69, size.x, size.y);
             GUI.color = Color.black.WithAlpha(0.05f);
@@ -121,7 +123,7 @@ namespace NodeCanvas.Editor
 
             GUILayout.Space(headerRect.height);
 
-            GUI.Label(new Rect(headerRect.x + 333, headerRect.yMax - 56, 150, 20), $"<color=#d2d2d2><size=10><b>v{NodeCanvas.Framework.Internal.GraphSource.FRAMEWORK_VERSION}</b></size></color>");
+            GUI.Label(new Rect(headerRect.x + 333, headerRect.yMax - 56, 150, 20), $"<color=#d2d2d2><size=10><b>v{Framework.Internal.GraphSource.FRAMEWORK_VERSION}</b></size></color>");
 
             ///----------------------------------------------------------------------------------------------
 
@@ -150,9 +152,10 @@ namespace NodeCanvas.Editor
             ///----------------------------------------------------------------------------------------------
 
             ShowEntry(docsIcon, "<size=16><b>Documentation</b></size>\nRead thorough documentation and API reference online.", docsURL);
+            ShowEntry(tutorialsIcon, "<size=16><b>Tutorials</b></size>\nWatch the online video tutorials on YouTube.", YOUTUBE_URL);
             ShowEntry(resourcesIcon, "<size=16><b>Resources</b></size>\nDownload samples, extensions and other resources.", resourcesURL);
-            ShowEntry(supportIcon, "<size=16><b>Support</b></size>\nJoin the online forums, get support and give feedback.", forumsURL);
-            ShowEntry(communityIcon, "<size=16><b>Community</b></size>\nJoin the online Discord community.", discordUrl);
+            ShowEntry(supportIcon, "<size=16><b>Support</b></size>\nJoin the online forums, get support and give feedback.", FORUMS_URL);
+            ShowEntry(communityIcon, "<size=16><b>Community</b></size>\nJoin the online Discord community.", DISCORD_URL);
 
 
             ///----------------------------------------------------------------------------------------------
@@ -173,7 +176,7 @@ namespace NodeCanvas.Editor
             GUI.backgroundColor = Color.clear;
             GUI.contentColor = EditorGUIUtility.isProSkin ? ColorUtils.Grey(0.8f) : Color.black;
             if ( GUILayout.Button(icon, GUILayout.Width(50), GUILayout.Height(50)) ) {
-                UnityEditor.Help.BrowseURL(url);
+                Help.BrowseURL(url);
             }
             GUI.contentColor = Color.white;
             EditorGUIUtility.AddCursorRect(GUILayoutUtility.GetLastRect(), MouseCursor.Link);

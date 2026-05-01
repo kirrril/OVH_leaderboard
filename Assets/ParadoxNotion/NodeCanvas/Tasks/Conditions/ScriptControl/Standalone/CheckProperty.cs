@@ -21,7 +21,7 @@ namespace NodeCanvas.Tasks.Conditions
         [SerializeField]
         protected BBParameter checkValue;
         [SerializeField]
-        protected CompareMethod comparison;
+        protected CompareOp comparison;
 
         private MethodInfo targetMethod { get { return functionWrapper != null ? functionWrapper.GetMethod() : null; } }
 
@@ -81,7 +81,7 @@ namespace NodeCanvas.Tasks.Conditions
                 UndoUtility.RecordObject(ownerSystem.contextObject, "Set Reflection Member");
                 functionWrapper = ReflectedFunctionWrapper.Create(method, blackboard);
                 checkValue = BBParameter.CreateInstance(method.ReturnType, blackboard);
-                comparison = CompareMethod.EqualTo;
+                comparison = CompareOp.EqualTo;
             }
         }
 
@@ -117,7 +117,7 @@ namespace NodeCanvas.Tasks.Conditions
                 GUILayout.EndVertical();
 
                 GUI.enabled = checkValue.varType == typeof(float) || checkValue.varType == typeof(int);
-                comparison = (CompareMethod)UnityEditor.EditorGUILayout.EnumPopup("Comparison", comparison);
+                comparison = (CompareOp)UnityEditor.EditorGUILayout.EnumPopup("Comparison", comparison);
                 GUI.enabled = true;
                 NodeCanvas.Editor.BBParameterEditor.ParameterField("Value", checkValue);
             }

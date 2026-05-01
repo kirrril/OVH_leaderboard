@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 using ParadoxNotion.Serialization.FullSerializer;
 
@@ -28,8 +28,7 @@ namespace ParadoxNotion.Serialization
 
             var json = data.AsDictionary;
 
-            fsData typeData;
-            if ( json.TryGetValue(fsSerializer.KEY_INSTANCE_TYPE, out typeData) ) {
+            if ( json.TryGetValue(fsSerializer.KEY_INSTANCE_TYPE, out fsData typeData) ) {
 
                 //check if serialized can actually resolve the type
                 var serializedType = ReflectionTools.GetType(typeData.AsString, storageType);

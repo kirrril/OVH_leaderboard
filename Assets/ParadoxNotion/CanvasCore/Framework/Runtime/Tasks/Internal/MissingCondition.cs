@@ -28,9 +28,7 @@ namespace NodeCanvas.Framework.Internal
             set { _recoveryState = value; }
         }
 
-        protected override string info {
-            get { return ReflectionTools.FriendlyTypeName(_missingType).FormatError(); }
-        }
+        protected override string info => ReflectionTools.FriendlyTypeName(_missingType).FormatError();
 
 
         ///----------------------------------------------------------------------------------------------

@@ -9,7 +9,7 @@ namespace ParadoxNotion.Services
         public event EventRouter.EventDelegate onAnimatorMove;
 
         void OnAnimatorMove() {
-            if ( onAnimatorMove != null ) { onAnimatorMove(new EventData(gameObject, this)); }
+            onAnimatorMove?.Invoke(new EventData(gameObject, this));
         }
     }
 }

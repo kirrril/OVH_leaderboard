@@ -18,7 +18,7 @@ namespace NodeCanvas.Framework
         void Update();
     }
 
-    ///<summary>Denotes that the node can be invoked in means outside of it's 'Execution' scope.</summary>
+    ///<summary>Denotes that the node can be invoked in means outside of its 'Execution' scope.</summary>
     public interface IInvokable : IGraphElement
     {
         string GetInvocationID();
@@ -63,11 +63,4 @@ namespace NodeCanvas.Framework
     {
         ParadoxNotion.Serialization.ISerializedReflectedInfo GetSerializedInfo();
     }
-
-    //----------------------------------------------------------------------------------------------
-    [System.Obsolete("This is no longer used nor required")]
-    public interface ISubTasksContainer { Task[] GetSubTasks(); }
-    [System.Obsolete("This is no longer used nor required")]
-    public interface ISubParametersContainer { BBParameter[] GetSubParameters(); }
-    //----------------------------------------------------------------------------------------------
 }

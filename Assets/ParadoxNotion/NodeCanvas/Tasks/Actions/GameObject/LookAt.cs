@@ -14,9 +14,7 @@ namespace NodeCanvas.Tasks.Actions
         public BBParameter<GameObject> lookTarget;
         public bool repeat = false;
 
-        protected override string info {
-            get { return "LookAt " + lookTarget; }
-        }
+        protected override string info => agentInfo + ".LookAt " + lookTarget;
 
         protected override void OnExecute() { DoLook(); }
         protected override void OnUpdate() { DoLook(); }
@@ -26,8 +24,7 @@ namespace NodeCanvas.Tasks.Actions
             lookPos.y = agent.position.y;
             agent.LookAt(lookPos);
 
-            if ( !repeat )
-                EndAction(true);
+            if ( !repeat ) EndAction(true);
         }
     }
 }

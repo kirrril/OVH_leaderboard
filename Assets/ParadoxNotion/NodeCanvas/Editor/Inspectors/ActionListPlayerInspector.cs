@@ -12,9 +12,7 @@ namespace NodeCanvas.Editor
     public class ActionListPlayerInspector : UnityEditor.Editor
     {
 
-        private ActionListPlayer list {
-            get { return (ActionListPlayer)target; }
-        }
+        private ActionListPlayer list => target as ActionListPlayer;
 
         public override void OnInspectorGUI() {
 

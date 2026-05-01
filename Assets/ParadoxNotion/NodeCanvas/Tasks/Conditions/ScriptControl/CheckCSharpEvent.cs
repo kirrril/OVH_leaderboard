@@ -109,7 +109,10 @@ namespace NodeCanvas.Tasks.Conditions
         }
 
         public void Raised() { YieldReturn(true); }
-        protected override bool OnCheck() { return false; }
+
+        protected override bool OnCheck() {
+            return false;
+        }
 
         void SetTargetEvent(EventInfo info) {
             if ( info != null ) {
@@ -219,7 +222,9 @@ namespace NodeCanvas.Tasks.Conditions
             YieldReturn(true);
         }
 
-        protected override bool OnCheck() { return false; }
+        protected override bool OnCheck() {
+            return false;
+        }
 
         void SetTargetEvent(EventInfo info) {
             if ( info != null ) {
@@ -299,7 +304,7 @@ namespace NodeCanvas.Tasks.Conditions
             {
                 if ( eventInfo == null ) { return "No Event Selected"; }
                 if ( targetEvent == null ) { return eventInfo.AsString().FormatError(); }
-                return string.Format("'{0}' Raised && Value == {1}", targetEvent.Name, checkValue);
+                return string.Format("{0}.{1} &= {2}", agentInfo, targetEvent.Name, checkValue);
             }
         }
 
@@ -328,7 +333,9 @@ namespace NodeCanvas.Tasks.Conditions
             }
         }
 
-        protected override bool OnCheck() { return false; }
+        protected override bool OnCheck() {
+            return false;
+        }
 
         void SetTargetEvent(EventInfo info) {
             if ( info != null ) {

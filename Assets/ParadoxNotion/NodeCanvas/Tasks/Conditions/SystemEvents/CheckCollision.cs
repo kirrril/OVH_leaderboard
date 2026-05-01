@@ -12,7 +12,7 @@ namespace NodeCanvas.Tasks.Conditions
     public class CheckCollision_Rigidbody : ConditionTask<Rigidbody>
     {
 
-        public CollisionTypes checkType = CollisionTypes.CollisionEnter;
+        public CollisionType checkType = CollisionType.CollisionEnter;
         public bool specifiedTagOnly;
         [TagField]
         public string objectTag = "Untagged";
@@ -25,9 +25,7 @@ namespace NodeCanvas.Tasks.Conditions
 
         private bool stay;
 
-        protected override string info {
-            get { return checkType.ToString() + ( specifiedTagOnly ? ( " '" + objectTag + "' tag" ) : "" ); }
-        }
+        protected override string info => checkType.ToString() + ( specifiedTagOnly ? ( " '" + objectTag + "' tag" ) : "" );
 
         protected override void OnEnable() {
             router.onCollisionEnter += OnCollisionEnter;
@@ -40,13 +38,13 @@ namespace NodeCanvas.Tasks.Conditions
         }
 
         protected override bool OnCheck() {
-            return checkType == CollisionTypes.CollisionStay ? stay : false;
+            return checkType == CollisionType.CollisionStay && stay;
         }
 
         public void OnCollisionEnter(ParadoxNotion.EventData<Collision> data) {
             if ( !specifiedTagOnly || data.value.gameObject.CompareTag(objectTag) ) {
                 stay = true;
-                if ( checkType == CollisionTypes.CollisionEnter || checkType == CollisionTypes.CollisionStay ) {
+                if ( checkType == CollisionType.CollisionEnter || checkType == CollisionType.CollisionStay ) {
                     saveGameObjectAs.value = data.value.gameObject;
                     saveContactPoint.value = data.value.contacts[0].point;
                     saveContactNormal.value = data.value.contacts[0].normal;
@@ -58,7 +56,7 @@ namespace NodeCanvas.Tasks.Conditions
         public void OnCollisionExit(ParadoxNotion.EventData<Collision> data) {
             if ( !specifiedTagOnly || data.value.gameObject.CompareTag(objectTag) ) {
                 stay = false;
-                if ( checkType == CollisionTypes.CollisionExit ) {
+                if ( checkType == CollisionType.CollisionExit ) {
                     saveGameObjectAs.value = data.value.gameObject;
                     YieldReturn(true);
                 }
@@ -73,7 +71,7 @@ namespace NodeCanvas.Tasks.Conditions
     public class CheckCollision : ConditionTask<Collider>
     {
 
-        public CollisionTypes checkType = CollisionTypes.CollisionEnter;
+        public CollisionType checkType = CollisionType.CollisionEnter;
         public bool specifiedTagOnly;
         [TagField]
         public string objectTag = "Untagged";
@@ -86,9 +84,7 @@ namespace NodeCanvas.Tasks.Conditions
 
         private bool stay;
 
-        protected override string info {
-            get { return checkType.ToString() + ( specifiedTagOnly ? ( " '" + objectTag + "' tag" ) : "" ); }
-        }
+        protected override string info => checkType.ToString() + ( specifiedTagOnly ? ( " '" + objectTag + "' tag" ) : "" );
 
         protected override void OnEnable() {
             router.onCollisionEnter += OnCollisionEnter;
@@ -101,13 +97,13 @@ namespace NodeCanvas.Tasks.Conditions
         }
 
         protected override bool OnCheck() {
-            return checkType == CollisionTypes.CollisionStay ? stay : false;
+            return checkType == CollisionType.CollisionStay && stay;
         }
 
-        public void OnCollisionEnter(ParadoxNotion.EventData<Collision> data) {
+        public void OnCollisionEnter(EventData<Collision> data) {
             if ( !specifiedTagOnly || data.value.gameObject.CompareTag(objectTag) ) {
                 stay = true;
-                if ( checkType == CollisionTypes.CollisionEnter || checkType == CollisionTypes.CollisionStay ) {
+                if ( checkType == CollisionType.CollisionEnter || checkType == CollisionType.CollisionStay ) {
                     saveGameObjectAs.value = data.value.gameObject;
                     saveContactPoint.value = data.value.contacts[0].point;
                     saveContactNormal.value = data.value.contacts[0].normal;
@@ -116,10 +112,10 @@ namespace NodeCanvas.Tasks.Conditions
             }
         }
 
-        public void OnCollisionExit(ParadoxNotion.EventData<Collision> data) {
+        public void OnCollisionExit(EventData<Collision> data) {
             if ( !specifiedTagOnly || data.value.gameObject.CompareTag(objectTag) ) {
                 stay = false;
-                if ( checkType == CollisionTypes.CollisionExit ) {
+                if ( checkType == CollisionType.CollisionExit ) {
                     saveGameObjectAs.value = data.value.gameObject;
                     YieldReturn(true);
                 }

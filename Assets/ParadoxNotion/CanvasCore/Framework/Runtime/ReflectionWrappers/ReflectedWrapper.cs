@@ -32,8 +32,8 @@ namespace NodeCanvas.Framework.Internal
         public void SetVariablesBB(IBlackboard bb) { foreach ( var bbVar in GetVariables() ) bbVar.bb = bb; }
         public SerializedMethodInfo GetSerializedMethod() { return _targetMethod; }
         public MethodInfo GetMethod() { return _targetMethod; }
-        public bool HasChanged() { return _targetMethod != null ? _targetMethod.HasChanged() : false; }
-        public string AsString() { return _targetMethod != null ? _targetMethod.AsString() : null; }
+        public bool HasChanged() { return _targetMethod != null && _targetMethod.HasChanged(); }
+        public string AsString() { return _targetMethod?.AsString(); }
         public override string ToString() { return AsString(); }
 
         abstract public BBParameter[] GetVariables();

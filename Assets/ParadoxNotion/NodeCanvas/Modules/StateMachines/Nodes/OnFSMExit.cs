@@ -8,7 +8,7 @@ namespace NodeCanvas.StateMachines
 
     [Description("Execute a number of Actions when the FSM stops/exits, if Conditions are met. Note that the actions will only execute for 1 frame. This is not a state.")]
     [Color("ff64cb")]
-    [ParadoxNotion.Design.Icon("MacroOut")]
+    [ParadoxNotion.Design.Icon("Outgoing")]
     [Name("On FSM Exit")]
     public class OnFSMExit : FSMNode
     {

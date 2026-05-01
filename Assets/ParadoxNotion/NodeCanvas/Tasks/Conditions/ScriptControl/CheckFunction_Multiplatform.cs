@@ -22,7 +22,7 @@ namespace NodeCanvas.Tasks.Conditions
         [SerializeField]
         protected List<BBObjectParameter> parameters = new List<BBObjectParameter>();
         [SerializeField]
-        protected CompareMethod comparison;
+        protected CompareOp comparison;
         [SerializeField, BlackboardOnly]
         protected BBObjectParameter checkValue;
 
@@ -102,7 +102,6 @@ namespace NodeCanvas.Tasks.Conditions
             return result;
         }
 
-
         void SetMethod(MethodInfo method) {
             if ( method == null ) {
                 return;
@@ -120,7 +119,7 @@ namespace NodeCanvas.Tasks.Conditions
             }
 
             this.checkValue = new BBObjectParameter(method.ReturnType) { bb = blackboard };
-            comparison = CompareMethod.EqualTo;
+            comparison = CompareOp.EqualTo;
         }
 
 
@@ -161,7 +160,7 @@ namespace NodeCanvas.Tasks.Conditions
                 }
 
                 GUI.enabled = checkValue.varType == typeof(float) || checkValue.varType == typeof(int);
-                comparison = (CompareMethod)UnityEditor.EditorGUILayout.EnumPopup("Comparison", comparison);
+                comparison = (CompareOp)UnityEditor.EditorGUILayout.EnumPopup("Comparison", comparison);
                 GUI.enabled = true;
                 NodeCanvas.Editor.BBParameterEditor.ParameterField("Check Value", checkValue);
             }

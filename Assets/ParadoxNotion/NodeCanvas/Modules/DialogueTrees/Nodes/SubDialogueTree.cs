@@ -20,7 +20,7 @@ namespace NodeCanvas.DialogueTrees
         [fsSerializeAs("actorParametersMap")]
         private Dictionary<string, string> _actorParametersMap = null;
 
-        public override int maxOutConnections { get { return 2; } }
+        public override int maxOutConnections => 2;
 
         public override DialogueTree subGraph { get { return _subTree.value; } set { _subTree.value = value; } }
         public override BBParameter subGraphParameter => _subTree;
@@ -36,7 +36,7 @@ namespace NodeCanvas.DialogueTrees
             currentInstance = (DialogueTree)this.CheckInstance();
             this.TryWriteAndBindMappedVariables();
             TryWriteMappedActorParameters();
-            currentInstance.StartGraph(finalActor is Component ? (Component)finalActor : finalActor.transform, bb.parent, Graph.UpdateMode.Manual, OnSubDialogueFinish);
+            currentInstance.StartGraph(finalActor is Component component ? component : finalActor.transform, bb.parent, Graph.UpdateMode.Manual, OnSubDialogueFinish);
             return Status.Running;
         }
 

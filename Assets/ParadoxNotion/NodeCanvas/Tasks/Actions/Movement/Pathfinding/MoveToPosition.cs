@@ -18,9 +18,7 @@ namespace NodeCanvas.Tasks.Actions
 
         private Vector3? lastRequest;
 
-        protected override string info {
-            get { return "Seek " + targetPosition; }
-        }
+        protected override string info => "Seek " + targetPosition;
 
         protected override void OnExecute() {
             agent.speed = speed.value;

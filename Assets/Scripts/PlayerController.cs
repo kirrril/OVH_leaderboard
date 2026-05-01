@@ -29,8 +29,6 @@ public class PlayerController : MonoBehaviour
     public bool playerAttack;
     private bool playerInteract;
     private bool playerJump;
-    public int score = 0;
-    public int health = 5;
 
     public enum State { Walking, Training, Fighting, BeingSubmissed, Jumping, PushingTheDoor, ClimbingThePole, Dying, MakingDoubleSelfie };
     public State currentState = State.Walking;
@@ -62,7 +60,7 @@ public class PlayerController : MonoBehaviour
                 HandleBeingSubmissed();
                 break;
             case State.Dying:
-                HandleDying();
+                HandleLosingHealth();
                 break;
             case State.MakingDoubleSelfie:
                 HandleMakingDoubleSelfie();
@@ -116,9 +114,9 @@ public class PlayerController : MonoBehaviour
         rb.angularVelocity = Vector3.zero;
     }
 
-    private void HandleDying()
+    private void HandleLosingHealth()
     {
-        health -= 1;
+        GameManager.Instance.LoseHealth();
         transform.position = entryPoint.position;
         transform.rotation = entryPoint.rotation;
         SetCamera(reinitCameraTarget, reinitCameraPlace);
@@ -187,11 +185,6 @@ public class PlayerController : MonoBehaviour
     public void OnJump(InputAction.CallbackContext ctx)
     {
         playerJump = ctx.ReadValueAsButton();
-    }
-
-    public void ModifyScore(int delta)
-    {
-        score = Mathf.Max(0, score + delta);
     }
 
     private void OnTriggerEnter(Collider other)

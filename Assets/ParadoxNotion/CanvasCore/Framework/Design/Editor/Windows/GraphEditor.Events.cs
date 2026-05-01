@@ -20,12 +20,12 @@ namespace NodeCanvas.Editor
         ///<summary>Graph events BEFORE nodes</summary>
         static void HandlePreNodesGraphEvents(Graph graph, Vector2 canvasMousePos) {
 
-            if ( e.button == 2 && e.type == EventType.MouseDown /*|| e.type == EventType.MouseUp*/ ) {
+            if ( e.button == 2 && e.type == EventType.MouseDown ) {
                 UndoUtility.RecordObjectComplete(graph, "Graph Pan");
             }
 
             if ( e.type == EventType.MouseUp || e.type == EventType.KeyUp ) {
-                SnapNodesToGrid(graph);
+                SnapNodesAndGroupsToGrid(graph);
             }
 
             if ( e.type == EventType.KeyDown && e.keyCode == KeyCode.F && GUIUtility.keyboardControl == 0 ) {

@@ -10,22 +10,21 @@ namespace NodeCanvas.Editor
     public class TaskWizardWindow : EditorWindow
     {
 
-        enum TaskType { Action, Condition }
-        TaskType type = TaskType.Action;
+        private enum TaskType { Action, Condition }
+        private TaskType type = TaskType.Action;
 
-        string taskName;
-        string category;
-        string description;
-        string agentType;
-        string ns;
+        private string taskName;
+        private string category;
+        private string description;
+        private string agentType;
+        private string ns;
 
         public static void ShowWindow() {
-            var window = ScriptableObject.CreateInstance(typeof(TaskWizardWindow)) as TaskWizardWindow;
-            window.ShowUtility();
+            CreateInstance<TaskWizardWindow>().ShowUtility();
         }
 
         void OnEnable() {
-            titleContent = new GUIContent("NC Task Wizard");
+            titleContent = new GUIContent("NodeCanvas Task Wizard");
         }
 
         void OnGUI() {

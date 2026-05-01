@@ -18,9 +18,7 @@ namespace NodeCanvas.Tasks.Actions
         [BlackboardOnly]
         public BBParameter<GameObject> saveAs;
 
-        protected override string info {
-            get { return "Get Closer from '" + list + "' as " + saveAs; }
-        }
+        protected override string info => "Get Closer from '" + list + "' as " + saveAs;
 
         protected override void OnExecute() {
 

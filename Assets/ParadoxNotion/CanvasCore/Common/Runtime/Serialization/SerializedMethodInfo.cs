@@ -118,7 +118,7 @@ namespace ParadoxNotion.Serialization
 
         //operator
         public static implicit operator MethodInfo(SerializedMethodInfo value) {
-            return value != null ? value._method : null;
+            return value?._method;
         }
     }
 }

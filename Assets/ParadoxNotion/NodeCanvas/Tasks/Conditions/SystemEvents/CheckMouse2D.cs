@@ -12,11 +12,9 @@ namespace NodeCanvas.Tasks.Conditions
     public class CheckMouse2D : ConditionTask<Collider2D>
     {
 
-        public MouseInteractionTypes checkType = MouseInteractionTypes.MouseEnter;
+        public MouseInteractionType checkType = MouseInteractionType.MouseEnter;
 
-        protected override string info {
-            get { return checkType.ToString(); }
-        }
+        protected override string info => checkType.ToString();
 
         protected override void OnEnable() {
             router.onMouseEnter += OnMouseEnter;
@@ -30,22 +28,24 @@ namespace NodeCanvas.Tasks.Conditions
             router.onMouseOver -= OnMouseOver;
         }
 
-        protected override bool OnCheck() { return false; }
+        protected override bool OnCheck() {
+            return false;
+        }
 
-        void OnMouseEnter(ParadoxNotion.EventData msg) {
-            if ( checkType == MouseInteractionTypes.MouseEnter ) {
+        void OnMouseEnter(EventData msg) {
+            if ( checkType == MouseInteractionType.MouseEnter ) {
                 YieldReturn(true);
             }
         }
 
-        void OnMouseExit(ParadoxNotion.EventData msg) {
-            if ( checkType == MouseInteractionTypes.MouseExit ) {
+        void OnMouseExit(EventData msg) {
+            if ( checkType == MouseInteractionType.MouseExit ) {
                 YieldReturn(true);
             }
         }
 
-        void OnMouseOver(ParadoxNotion.EventData msg) {
-            if ( checkType == MouseInteractionTypes.MouseOver ) {
+        void OnMouseOver(EventData msg) {
+            if ( checkType == MouseInteractionType.MouseOver ) {
                 YieldReturn(true);
             }
         }

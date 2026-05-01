@@ -15,8 +15,8 @@ namespace NodeCanvas.Framework.Internal
             get
             {
                 var o = base.value;
-                if ( o is GameObject ) { return ( o as GameObject ).transform; }
-                if ( o is Component ) { return (Component)o; }
+                if ( o is GameObject go ) { return go.transform; }
+                if ( o is Component component ) { return component; }
                 return null;
             }
             set { _value = value; } //the linked blackboard variable is NEVER set through the TaskAgentParameter. Instead we set the local (inherited) variable

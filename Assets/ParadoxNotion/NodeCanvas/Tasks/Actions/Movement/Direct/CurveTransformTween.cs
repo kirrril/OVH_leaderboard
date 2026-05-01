@@ -1,5 +1,6 @@
 using NodeCanvas.Framework;
 using ParadoxNotion.Design;
+using ParadoxNotion.Serialization.FullSerializer;
 using UnityEngine;
 
 
@@ -33,13 +34,16 @@ namespace NodeCanvas.Tasks.Actions
         public TransformMode transformMode;
         public TweenMode mode;
         public PlayMode playMode;
-        public BBParameter<Vector3> targetPosition;
+        [fsSerializeAs("targetPosition")]
+        public BBParameter<Vector3> targetVector;
         public BBParameter<AnimationCurve> curve = AnimationCurve.EaseInOut(0, 0, 1, 1);
         public BBParameter<float> time = 0.5f;
 
         private Vector3 original;
         private Vector3 final;
         private bool ponging = false;
+
+        public override float length => time.value;
 
         protected override void OnExecute() {
 
@@ -54,7 +58,7 @@ namespace NodeCanvas.Tasks.Actions
                 original = agent.localScale;
 
             if ( !ponging )
-                final = targetPosition.value + ( mode == TweenMode.Additive ? original : Vector3.zero );
+                final = targetVector.value + ( mode == TweenMode.Additive ? original : Vector3.zero );
 
             ponging = playMode == PlayMode.PingPong;
 
@@ -74,7 +78,7 @@ namespace NodeCanvas.Tasks.Actions
                 agent.localScale = value;
 
             if ( elapsedTime >= time.value )
-                EndAction(true);
+                EndAction();
         }
     }
 }

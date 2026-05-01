@@ -93,9 +93,20 @@ namespace NodeCanvas.StateMachines
                 var case1 = transitionEvaluation == TransitionEvaluationMode.CheckContinuously;
                 var case2 = transitionEvaluation == TransitionEvaluationMode.CheckAfterStateFinished && status != Status.Running;
                 if ( case1 || case2 ) {
-                    CheckTransitions();
+                    if ( CheckTransitions() ) {
+                        return status;
+                    }
                 }
 
+                //if no transition happened and..
+                //..state is finished, try pop back to stacked state if any
+                if ( status == Status.Success || status == Status.Failure ) {
+                    if ( FSM.TryPopNow() ) {
+                        return status;
+                    }
+                }
+
+                //...state still running, update it
                 if ( status == Status.Running ) {
                     OnUpdate();
                 }

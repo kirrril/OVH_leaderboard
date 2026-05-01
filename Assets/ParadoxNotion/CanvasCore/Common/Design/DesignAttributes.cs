@@ -63,7 +63,7 @@ namespace ParadoxNotion.Design
     }
 
     ///<summary>Use for categorization</summary>
-    [AttributeUsage(AttributeTargets.All)]
+    [AttributeUsage(AttributeTargets.Class)]
     public class CategoryAttribute : Attribute
     {
         readonly public string category;
@@ -73,7 +73,7 @@ namespace ParadoxNotion.Design
     }
 
     ///<summary>Use to give a description</summary>
-    [AttributeUsage(AttributeTargets.All)]
+    [AttributeUsage(AttributeTargets.Class)]
     public class DescriptionAttribute : Attribute
     {
         readonly public string description;

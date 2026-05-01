@@ -14,9 +14,7 @@ namespace NodeCanvas.Tasks.Actions
 
         protected override void OnExecute() {
             var graph = ownerSystem as Graph;
-            if ( graph != null ) {
-                graph.Stop(finishStatus == BooleanStatus.Success);
-            }
+            graph?.Stop(finishStatus == BooleanStatus.Success);
             EndAction(finishStatus == BooleanStatus.Success);
         }
     }

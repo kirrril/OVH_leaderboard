@@ -50,7 +50,7 @@ public class ManController : MonoBehaviour
     void Update()
     {
         UpdateWalkingAnimation();
-        blackboard.SetVariableValue("playerScore", playerController.score);
+        blackboard.SetVariableValue("playerScore", PlayerData.Instance.currentScore);
     }
 
     private void UpdateWalkingAnimation()
@@ -209,7 +209,7 @@ public class ManController : MonoBehaviour
     public void DoInsult()
     {
         Debug.Log("You little nerd!");
-        playerController.ModifyScore(-1);
+        GameManager.Instance.ModifyScore(-1);
     }
 
     public void DoAttack()

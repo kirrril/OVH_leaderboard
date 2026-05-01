@@ -16,9 +16,7 @@ namespace NodeCanvas.Tasks.Actions
         [BlackboardOnly]
         public BBParameter<float> floatVariable;
 
-        protected override string info {
-            get { return "Set " + floatVariable + " Random(" + minValue + ", " + maxValue + ")"; }
-        }
+        protected override string info => "Set " + floatVariable + " Random(" + minValue + ", " + maxValue + ")";
 
         protected override void OnExecute() {
             floatVariable.value = Random.Range(minValue.value, maxValue.value);

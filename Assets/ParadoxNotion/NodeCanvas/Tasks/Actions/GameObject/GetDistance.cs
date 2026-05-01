@@ -15,9 +15,7 @@ namespace NodeCanvas.Tasks.Actions
         [BlackboardOnly]
         public BBParameter<float> saveAs;
 
-        protected override string info {
-            get { return string.Format("Get Distance to {0}", target.ToString()); }
-        }
+        protected override string info => string.Format("{0} Distance to {1}", agentInfo, target.ToString());
 
         protected override void OnExecute() {
 

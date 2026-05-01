@@ -14,9 +14,7 @@ namespace NodeCanvas.Tasks.Conditions
 
         public EventTriggerType eventType;
 
-        protected override string info {
-            get { return string.Format("{0} on {1}", eventType.ToString(), agentInfo); }
-        }
+        protected override string info => string.Format("{0} on {1}", eventType.ToString(), agentInfo);
 
         protected override void OnEnable() {
             switch ( eventType ) {
@@ -54,7 +52,9 @@ namespace NodeCanvas.Tasks.Conditions
             }
         }
 
-        protected override bool OnCheck() { return false; }
+        protected override bool OnCheck() {
+            return false;
+        }
 
         void OnPointerEnter(ParadoxNotion.EventData<PointerEventData> data) { YieldReturn(true); }
         void OnPointerExit(ParadoxNotion.EventData<PointerEventData> data) { YieldReturn(true); }

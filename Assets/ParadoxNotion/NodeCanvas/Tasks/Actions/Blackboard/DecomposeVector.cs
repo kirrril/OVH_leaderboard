@@ -19,9 +19,7 @@ namespace NodeCanvas.Tasks.Actions
         [BlackboardOnly]
         public BBParameter<float> z;
 
-        protected override string info {
-            get { return "Decompose Vector " + targetVector; }
-        }
+        protected override string info => "Decompose Vector " + targetVector;
 
         protected override void OnExecute() {
             x.value = targetVector.value.x;

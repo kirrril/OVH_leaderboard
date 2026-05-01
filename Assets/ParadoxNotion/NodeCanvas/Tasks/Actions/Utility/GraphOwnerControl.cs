@@ -21,9 +21,7 @@ namespace NodeCanvas.Tasks.Actions
         public Control control = Control.StartBehaviour;
         public bool waitActionFinish = true;
 
-        protected override string info {
-            get { return agentInfo + "." + control.ToString(); }
-        }
+        protected override string info => agentInfo + "." + control.ToString();
 
         protected override void OnExecute() {
 

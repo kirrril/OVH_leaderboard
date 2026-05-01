@@ -10,7 +10,7 @@ namespace NodeCanvas.Tasks.Conditions
     public class CheckMousePick2D : ConditionTask
     {
 
-        public ParadoxNotion.ButtonKeys buttonKey;
+        public ParadoxNotion.ButtonKey buttonKey;
         public LayerMask mask = -1;
 
         [BlackboardOnly] public BBParameter<GameObject> saveGoAs;
@@ -18,7 +18,6 @@ namespace NodeCanvas.Tasks.Conditions
         [BlackboardOnly] public BBParameter<Vector3> savePosAs;
 
         private int buttonID;
-        private RaycastHit2D hit;
 
         protected override string info {
             get
@@ -37,7 +36,7 @@ namespace NodeCanvas.Tasks.Conditions
             buttonID = (int)buttonKey;
             if ( Input.GetMouseButtonDown(buttonID) ) {
                 var ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-                hit = Physics2D.Raycast(ray.origin, ray.direction, Mathf.Infinity, mask);
+                var hit = Physics2D.Raycast(ray.origin, ray.direction, Mathf.Infinity, mask);
                 if ( hit.collider != null ) {
                     savePosAs.value = hit.point;
                     saveGoAs.value = hit.collider.gameObject;

@@ -107,12 +107,12 @@ namespace ParadoxNotion.Design
 
         ///<summary>Used just after a field to mark warning icon to it</summary>
         public static void MarkLastFieldWarning(string tooltip) {
-            Internal_MarkLastField(ParadoxNotion.Design.Icons.warningIcon, tooltip);
+            Internal_MarkLastField(Icons.warningIcon, tooltip);
         }
 
         ///<summary>Used just after a field to mark warning icon to it</summary>
         public static void MarkLastFieldError(string tooltip) {
-            Internal_MarkLastField(ParadoxNotion.Design.Icons.errorIcon, tooltip);
+            Internal_MarkLastField(Icons.errorIcon, tooltip);
         }
 
         //...
@@ -123,21 +123,8 @@ namespace ParadoxNotion.Design
             rect.y += 1;
             rect.width = 16;
             rect.height = 16;
-            GUI.Box(rect, EditorUtils.GetTempContent(null, icon, tooltip), GUIStyle.none);
+            GUI.Box(rect, GetTempContent(null, icon, tooltip), GUIStyle.none);
         }
-
-        // public static Rect BeginHighlightArea() {
-        //     var rect = GUILayoutUtility.GetLastRect();
-        //     GUILayout.BeginVertical();
-        //     return rect;
-        // }
-
-        // public static void EndHighlightArea(Rect beginRect) {
-        //     GUILayout.EndVertical();
-        //     var last = GUILayoutUtility.GetLastRect();
-        //     var rect = Rect.MinMaxRect(beginRect.xMin, beginRect.yMin, last.xMax, last.yMax);
-        //     Styles.Draw(rect, Styles.highlightBox);
-        // }
 
         ///<summary>Editor for LayerMask</summary>
 		public static LayerMask LayerMaskField(string prefix, LayerMask layerMask, params GUILayoutOption[] layoutOptions) {
@@ -153,8 +140,7 @@ namespace ParadoxNotion.Design
 
         ///<summary>Do a cached editor Foldout based on provided key object</summary>
         public static bool CachedFoldout(Type key, GUIContent content) {
-            var foldout = false;
-            registeredEditorFoldouts.TryGetValue(key, out foldout);
+            registeredEditorFoldouts.TryGetValue(key, out bool foldout);
             foldout = EditorGUILayout.Foldout(foldout, content);
             return registeredEditorFoldouts[key] = foldout;
         }
@@ -185,11 +171,13 @@ namespace ParadoxNotion.Design
             GUILayout.BeginVertical();
             EditorGUI.indentLevel++;
 
-            var options = new ReorderableListOptions();
-            options.allowAdd = optionsAtt == null || optionsAtt.allowAdd;
-            options.allowRemove = optionsAtt == null || optionsAtt.allowRemove;
-            options.unityObjectContext = info.unityObjectContext;
-            list = EditorUtils.ReorderableList(list, options, (i, r) =>
+            var options = new ReorderableListOptions
+            {
+                allowAdd = optionsAtt == null || optionsAtt.allowAdd,
+                allowRemove = optionsAtt == null || optionsAtt.allowRemove,
+                unityObjectContext = info.unityObjectContext
+            };
+            list = ReorderableList(list, options, (i, r) =>
             {
                 list[i] = ReflectedFieldInspector("Element " + i, list[i], argType, info);
             });
@@ -222,7 +210,7 @@ namespace ParadoxNotion.Design
 
             if ( GUILayout.Button("Add Element") ) {
                 if ( !typeof(UnityObject).IsAssignableFrom(keyType) ) {
-                    object newKey = null;
+                    object newKey;
                     if ( keyType == typeof(string) ) {
                         newKey = string.Empty;
                     } else {
@@ -318,9 +306,11 @@ namespace ParadoxNotion.Design
         ///<summary>Generic Popup for selection of any element within a list</summary>
         public static T Popup<T>(GUIContent content, T selected, IEnumerable<T> options, params GUILayoutOption[] GUIOptions) {
             var listOptions = new List<T>(options);
-            listOptions.Insert(0, default(T));
-            var stringedOptions = new List<string>(listOptions.Select(o => o != null ? o.ToString() : "[NONE]"));
-            stringedOptions[0] = listOptions.Count == 1 ? "[NONE AVAILABLE]" : "[NONE]";
+            listOptions.Insert(0, default);
+            var stringedOptions = new List<string>(listOptions.Select(o => o != null ? o.ToString() : "[NONE]"))
+            {
+                [0] = listOptions.Count == 1 ? "[NONE AVAILABLE]" : "[NONE]"
+            };
 
             var index = 0;
             if ( listOptions.Contains(selected) ) {
@@ -331,7 +321,7 @@ namespace ParadoxNotion.Design
             GUI.enabled = wasEnable && stringedOptions.Count > 1;
             index = EditorGUILayout.Popup(content, index, stringedOptions.Select(s => new GUIContent(s)).ToArray(), GUIOptions);
             GUI.enabled = wasEnable;
-            return index == 0 ? default(T) : listOptions[index];
+            return index == 0 ? default : listOptions[index];
         }
 
 

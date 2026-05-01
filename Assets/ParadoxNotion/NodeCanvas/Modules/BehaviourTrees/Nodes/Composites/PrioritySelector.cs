@@ -106,6 +106,7 @@ namespace NodeCanvas.BehaviourTrees
                     return curve.Evaluate(Mathf.InverseLerp(inputMin.value, inputMax.value, input.value));
                 }
             }
+
             public Consideration() {
                 input = 1f;
                 function = null;
@@ -212,7 +213,7 @@ namespace NodeCanvas.BehaviourTrees
                 var consideration = desire.considerations[j];
                 GUILayout.BeginVertical("box");
                 consideration.input = (BBParameter<float>)Editor.BBParameterEditor.ParameterField(EditorUtils.GetTempContent("Input", null, "The input value of the consideration"), consideration.input, true);
-                consideration.function = (BBParameter<AnimationCurve>)Editor.BBParameterEditor.ParameterField(EditorUtils.GetTempContent("Cuve", null, "The utility function curve. It will be evaluated by the input value after input is adjusted to a 0 to 1 range by min and max below. Curve should also be in a 0 to 1 range."), consideration.function);
+                consideration.function = (BBParameter<AnimationCurve>)Editor.BBParameterEditor.ParameterField(EditorUtils.GetTempContent("Curve", null, "The utility function curve. It will be evaluated by the input value after input is adjusted to a 0 to 1 range by min and max below. Curve should also be in a 0 to 1 range."), consideration.function);
                 if ( consideration.function.value != null ) {
                     var curveInRange = consideration.function.value.keys.LastOrDefault().time <= 1 && consideration.function.value.keys.FirstOrDefault().time >= 0;
                     if ( !curveInRange ) {

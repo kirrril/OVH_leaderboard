@@ -9,7 +9,7 @@ namespace NodeCanvas.BehaviourTrees
 
     [Category("Composites")]
     [Description("Selects a child to execute based on its chance to be selected and returns Success if the child returns Success, otherwise picks another child.\nReturns Failure if all children return Failure, or a direct 'Failure Chance' is introduced.")]
-    [ParadoxNotion.Design.Icon("ProbabilitySelector")]
+    [ParadoxNotion.Design.Icon("Probability")]
     [Color("b3ff7f")]
     public class ProbabilitySelector : BTComposite
     {

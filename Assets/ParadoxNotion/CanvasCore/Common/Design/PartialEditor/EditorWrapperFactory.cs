@@ -14,11 +14,10 @@ namespace ParadoxNotion.Design
 
         ///<summary>Returns a cached EditorObjectWrapper of type T for target object</summary>
         public static T GetEditor<T>(object target) where T : EditorObjectWrapper {
-            EditorObjectWrapper wrapper;
-            if ( cachedEditors.TryGetValueWithRefCheck(target, out wrapper) ) {
+            if ( cachedEditors.TryGetValueWithRefCheck(target, out EditorObjectWrapper wrapper) ) {
                 return (T)wrapper;
             }
-            wrapper = (T)( typeof(T).CreateObject() );
+            wrapper = (T)typeof(T).CreateObject();
             wrapper.Enable(target);
             cachedEditors.Add(target, wrapper);
             return (T)wrapper;
@@ -97,7 +96,7 @@ namespace ParadoxNotion.Design
             get
             {
                 var o = field.GetValue(editor.target);
-                return o != null ? (T)o : default(T);
+                return o != null ? (T)o : default;
             }
             set
             {

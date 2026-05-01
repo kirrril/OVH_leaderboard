@@ -12,22 +12,18 @@ namespace ParadoxNotion.Design
     ///<summary>Documentation from XML</summary>
     public static class XMLDocs
     {
-        private static Dictionary<MemberInfo, XmlElement> cachedElements = new Dictionary<MemberInfo, XmlElement>();
-        private static Dictionary<MemberInfo, string> cachedSummaries = new Dictionary<MemberInfo, string>();
+        private static readonly Dictionary<MemberInfo, XmlElement> cachedElements = new Dictionary<MemberInfo, XmlElement>();
+        private static readonly Dictionary<MemberInfo, string> cachedSummaries = new Dictionary<MemberInfo, string>();
 
         ///<summary>Returns a chached summary info for member</summary>
         public static string GetMemberSummary(MemberInfo memberInfo) {
-            string result;
-            if ( cachedSummaries.TryGetValue(memberInfo, out result) ) { return result; }
+            if ( cachedSummaries.TryGetValue(memberInfo, out string result) ) { return result; }
             var element = GetXmlElementForMember(memberInfo);
-            return cachedSummaries[memberInfo] = ( element != null ? element["summary"].InnerText.Trim() : "No Documentation Found" );
+            return cachedSummaries[memberInfo] = element != null ? element["summary"].InnerText.Trim() : "No Documentation Found";
         }
 
         ///<summary>Returns a chached return info for method</summary>
-        public static string GetMethodReturn(MethodBase method) {
-            var element = GetXmlElementForMember(method);
-            return element != null ? element["returns"].InnerText.Trim() : null;
-        }
+        public static string GetMethodReturn(MethodBase method) { return GetXmlElementForMember(method)?["returns"].InnerText.Trim(); }
 
         ///<summary>Returns a semi-chached method parameter info for method</summary>
         public static string GetMethodParameter(MethodBase method, ParameterInfo parameter) { return GetMethodParameter(method, parameter.Name); }
@@ -37,11 +33,10 @@ namespace ParadoxNotion.Design
             var methodElement = GetXmlElementForMember(method);
             if ( methodElement != null ) {
                 foreach ( var element in methodElement ) {
-                    var xmlElement = element as XmlElement;
-                    if ( xmlElement == null ) { continue; }
+                    if ( !( element is XmlElement xmlElement ) ) { continue; }
                     var found = xmlElement.Attributes["name"];
                     if ( found != null && found.Value == parameterName ) {
-                        return xmlElement.InnerText.Trim();
+                        return xmlElement.InnerText.Trim().Replace("\n", string.Empty);
                     }
                 }
             }
@@ -51,20 +46,18 @@ namespace ParadoxNotion.Design
         ///<summary>Returns a cached XML elements for member</summary>
         static XmlElement GetXmlElementForMember(MemberInfo memberInfo) {
 
-            if ( memberInfo is MethodInfo ) {
-                var method = (MethodInfo)memberInfo;
+            if ( memberInfo is MethodInfo method ) {
                 if ( method.IsPropertyAccessor() ) { memberInfo = method.GetAccessorProperty(); }
             }
 
             if ( memberInfo == null ) { return null; }
 
-            XmlElement element;
-            if ( cachedElements.TryGetValue(memberInfo, out element) ) { return element; }
+            if ( cachedElements.TryGetValue(memberInfo, out XmlElement element) ) { return element; }
 
-            if ( memberInfo is MethodInfo ) {
-                element = GetMemberDoc((MethodInfo)memberInfo);
-            } else if ( memberInfo is Type ) {
-                element = GetTypeDoc((Type)memberInfo);
+            if ( memberInfo is MethodInfo info ) {
+                element = GetMemberDoc(info);
+            } else if ( memberInfo is Type type ) {
+                element = GetTypeDoc(type);
             } else {
                 element = GetMemberDoc(memberInfo);
             }
@@ -75,8 +68,7 @@ namespace ParadoxNotion.Design
         static XmlElement GetTypeDoc(Type type) { return GetDoc(type, $"T:{type.FullName}"); }
 
         static XmlElement GetMemberDoc(MemberInfo memberInfo) {
-            if ( memberInfo is MethodInfo ) {
-                var methodInfo = (MethodInfo)memberInfo;
+            if ( memberInfo is MethodInfo methodInfo ) {
                 var parameters = methodInfo.GetParameters();
                 if ( parameters.Length == 0 ) {
                     return GetDoc(methodInfo.DeclaringType, $"M:{methodInfo.DeclaringType.FullName}.{methodInfo.Name}");

@@ -13,8 +13,7 @@ namespace NodeCanvas.StateMachines
     [GraphInfo(
         packageName = "NodeCanvas",
         docsURL = "https://nodecanvas.paradoxnotion.com/documentation/",
-        resourcesURL = "https://nodecanvas.paradoxnotion.com/downloads/",
-        forumsURL = "https://nodecanvas.paradoxnotion.com/forums-page/"
+        resourcesURL = "https://nodecanvas.paradoxnotion.com/downloads/"
         )]
     [CreateAssetMenu(menuName = "ParadoxNotion/NodeCanvas/FSM Asset")]
     public class FSM : Graph
@@ -43,10 +42,10 @@ namespace NodeCanvas.StateMachines
         public FSMState previousState { get; private set; }
 
         ///<summary>The current state name. Null if none</summary>
-        public string currentStateName => currentState != null ? currentState.name : null;
+        public string currentStateName => currentState?.name;
 
         ///<summary>The previous state name. Null if none</summary>
-        public string previousStateName => previousState != null ? previousState.name : null;
+        public string previousStateName => previousState?.name;
 
         public override System.Type baseNodeType => typeof(FSMNode);
         public override bool requiresAgent => true;
@@ -62,22 +61,23 @@ namespace NodeCanvas.StateMachines
             //we may be loading in async
             ThreadSafeInitCall(GatherCallbackReceivers);
             updatableNodes = new List<IUpdatable>();
+            stateStack = new Stack<FSMState>();
             for ( var i = 0; i < allNodes.Count; i++ ) {
-                if ( allNodes[i] is IUpdatable ) {
-                    updatableNodes.Add((IUpdatable)allNodes[i]);
+                if ( allNodes[i] is IUpdatable updatable ) {
+                    updatableNodes.Add(updatable);
                 }
             }
         }
 
         protected override void OnGraphStarted() {
-            stateStack = new Stack<FSMState>();
+            stateStack.Clear();
             enterStartStateFlag = true;
         }
 
         protected override void OnGraphUpdate() {
 
             if ( enterStartStateFlag ) {
-                //use a flag so that other nodes can do stuff on graph started
+                //use a flag so that nodes can do stuff first in their OnGraphStarted
                 enterStartStateFlag = false;
                 EnterState((FSMState)primeNode, TransitionCallMode.Normal);
             }
@@ -94,10 +94,10 @@ namespace NodeCanvas.StateMachines
 
                 //Update current state
                 currentState.Execute(agent, blackboard);
-                
+
                 //this can only happen if FSM stoped just now (from the above update)
                 if ( currentState == null ) { Stop(false); return; }
-                
+
                 if ( onStateUpdate != null && currentState.status == Status.Running ) {
                     onStateUpdate(currentState);
                 }
@@ -109,8 +109,7 @@ namespace NodeCanvas.StateMachines
                 if ( currentState.status != Status.Running && currentState.outConnections.Count == 0 ) {
                     //...but we have a stacked state -> pop return to it
                     if ( stateStack.Count > 0 ) {
-                        var popState = stateStack.Pop();
-                        EnterState(popState, TransitionCallMode.Normal);
+                        EnterState(stateStack.Pop(), TransitionCallMode.Normal);
                         return;
                     }
 
@@ -131,14 +130,12 @@ namespace NodeCanvas.StateMachines
 
         protected override void OnGraphStoped() {
             if ( currentState != null ) {
-                if ( onStateExit != null ) {
-                    onStateExit(currentState);
-                }
+                onStateExit?.Invoke(currentState);
             }
 
             previousState = null;
             currentState = null;
-            stateStack = null;
+            stateStack.Clear();
         }
 
         ///<summary>Enter a state providing the state itself</summary>
@@ -155,7 +152,7 @@ namespace NodeCanvas.StateMachines
             }
 
             if ( currentState != null ) {
-                if ( onStateExit != null ) { onStateExit(currentState); }
+                onStateExit?.Invoke(currentState);
                 currentState.Reset(false);
                 if ( callMode == TransitionCallMode.Stacked ) {
                     stateStack.Push(currentState);
@@ -172,8 +169,8 @@ namespace NodeCanvas.StateMachines
             previousState = currentState;
             currentState = newState;
 
-            if ( onStateTransition != null ) { onStateTransition(currentState); }
-            if ( onStateEnter != null ) { onStateEnter(currentState); }
+            onStateTransition?.Invoke(currentState);
+            onStateEnter?.Invoke(currentState);
             currentState.Execute(agent, blackboard);
             return true;
         }
@@ -189,6 +186,14 @@ namespace NodeCanvas.StateMachines
 
             Logger.LogWarning("No State with name '" + stateName + "' found on FSM '" + name + "'", LogTag.EXECUTION, this);
             return null;
+        }
+
+        ///<summary>Try pop back to stacked state if any. Return true if it did.</summary>
+        public bool TryPopNow() {
+            if ( stateStack.Count > 0 ) {
+                return EnterState(stateStack.Pop(), TransitionCallMode.Normal);
+            }
+            return false;
         }
 
         ///<summary>Get all State Names</summary>
@@ -214,6 +219,7 @@ namespace NodeCanvas.StateMachines
             }
         }
 
+        //...
         public FSMState PeekStack() {
             return stateStack != null && stateStack.Count > 0 ? stateStack.Peek() : null;
         }

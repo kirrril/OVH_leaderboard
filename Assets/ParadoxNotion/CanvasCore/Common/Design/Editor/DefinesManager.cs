@@ -1,5 +1,7 @@
 ﻿#if UNITY_EDITOR
 
+#pragma warning disable 0618
+
 using System.Linq;
 using UnityEditor;
 
@@ -51,5 +53,7 @@ namespace ParadoxNotion.Design
         }
     }
 }
+
+#pragma warning restore 0618
 
 #endif

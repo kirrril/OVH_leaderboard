@@ -11,18 +11,20 @@ namespace NodeCanvas.Tasks.Actions
     public class CheckSpeed : ConditionTask<Rigidbody>
     {
 
-        public CompareMethod checkType = CompareMethod.EqualTo;
+        public CompareOp checkType = CompareOp.EqualTo;
         public BBParameter<float> value;
 
         [SliderField(0, 0.1f)]
         public float differenceThreshold = 0.05f;
 
-        protected override string info {
-            get { return "Speed" + OperationTools.GetCompareString(checkType) + value; }
-        }
+        protected override string info => "Speed" + OperationTools.GetCompareString(checkType) + value;
 
         protected override bool OnCheck() {
+#if UNITY_6000_3_OR_NEWER
             var speed = agent.linearVelocity.magnitude;
+#else
+            var speed = agent.velocity.magnitude;
+#endif
             return OperationTools.Compare((float)speed, (float)value.value, checkType, differenceThreshold);
         }
     }

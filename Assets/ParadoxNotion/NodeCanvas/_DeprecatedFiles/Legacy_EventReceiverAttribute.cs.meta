@@ -1,7 +1,5 @@
 fileFormatVersion: 2
-guid: 0aa9c33e3adc45844ae3376c2a089529
-timeCreated: 1541329570
-licenseType: Store
+guid: 3f211ef59adfd7e42bef9c68cc1b3ebc
 MonoImporter:
   externalObjects: {}
   serializedVersion: 2
@@ -15,6 +13,6 @@ AssetOrigin:
   serializedVersion: 1
   productId: 14914
   packageName: NodeCanvas
-  packageVersion: 3.3.3
-  assetPath: Assets/ParadoxNotion/CanvasCore/Common/Runtime/Utility/GUIStyleUtils.cs
-  uploadId: 754282
+  packageVersion: 3.4.1
+  assetPath: Assets/ParadoxNotion/NodeCanvas/_DeprecatedFiles/Legacy_EventReceiverAttribute.cs
+  uploadId: 866614

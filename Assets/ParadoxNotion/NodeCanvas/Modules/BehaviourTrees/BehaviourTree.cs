@@ -10,8 +10,7 @@ namespace NodeCanvas.BehaviourTrees
     [GraphInfo(
         packageName = "NodeCanvas",
         docsURL = "https://nodecanvas.paradoxnotion.com/documentation/",
-        resourcesURL = "https://nodecanvas.paradoxnotion.com/downloads/",
-        forumsURL = "https://nodecanvas.paradoxnotion.com/forums-page/"
+        resourcesURL = "https://nodecanvas.paradoxnotion.com/downloads/"
         )]
     [CreateAssetMenu(menuName = "ParadoxNotion/NodeCanvas/Behaviour Tree Asset")]
     public class BehaviourTree : Graph
@@ -33,9 +32,9 @@ namespace NodeCanvas.BehaviourTrees
         }
 
         public override void OnDerivedDataDeserialization(object data) {
-            if ( data is DerivedSerializationData ) {
-                this.repeat = ( (DerivedSerializationData)data ).repeat;
-                this.updateInterval = ( (DerivedSerializationData)data ).updateInterval;
+            if ( data is DerivedSerializationData x ) {
+                this.repeat = x.repeat;
+                this.updateInterval = x.updateInterval;
             }
         }
         ///----------------------------------------------------------------------------------------------
@@ -58,9 +57,7 @@ namespace NodeCanvas.BehaviourTrees
             {
                 if ( _rootStatus != value ) {
                     _rootStatus = value;
-                    if ( onRootStatusChanged != null ) {
-                        onRootStatusChanged(this, value);
-                    }
+                    onRootStatusChanged?.Invoke(this, value);
                 }
             }
         }

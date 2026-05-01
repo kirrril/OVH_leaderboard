@@ -24,8 +24,7 @@ namespace ParadoxNotion.Design
 
         ///<summary>Return an object drawer instance of target inspected type</summary>
         public static IObjectDrawer GetObjectDrawer(Type objectType) {
-            IObjectDrawer result = null;
-            if ( objectDrawers.TryGetValue(objectType, out result) ) {
+            if ( objectDrawers.TryGetValue(objectType, out IObjectDrawer result) ) {
                 return result;
             }
 
@@ -47,16 +46,6 @@ namespace ParadoxNotion.Design
                 return objectDrawers[objectType] = Activator.CreateInstance(fallbackDrawerType) as IObjectDrawer;
             }
 
-
-            // foreach ( var drawerType in ReflectionTools.GetImplementationsOf(typeof(IObjectDrawer)) ) {
-            //     if ( drawerType != typeof(DefaultObjectDrawer) ) {
-            //         var args = drawerType.BaseType.RTGetGenericArguments();
-            //         if ( args.Length == 1 && args[0].IsAssignableFrom(objectType) ) {
-            //             return objectDrawers[objectType] = Activator.CreateInstance(drawerType) as IObjectDrawer;
-            //         }
-            //     }
-            // }
-
             return objectDrawers[objectType] = new DefaultObjectDrawer(objectType);
         }
 
@@ -64,8 +53,7 @@ namespace ParadoxNotion.Design
         public static IAttributeDrawer GetAttributeDrawer(DrawerAttribute att) { return GetAttributeDrawer(att.GetType()); }
         ///<summary>Return an attribute drawer instance of target attribute type</summary>
         public static IAttributeDrawer GetAttributeDrawer(Type attributeType) {
-            IAttributeDrawer result = null;
-            if ( attributeDrawers.TryGetValue(attributeType, out result) ) {
+            if ( attributeDrawers.TryGetValue(attributeType, out IAttributeDrawer result) ) {
                 return result;
             }
 
@@ -126,15 +114,15 @@ namespace ParadoxNotion.Design
             this.instance = (T)instance;
             this.info = info;
 
-            this.attributes = info.attributes != null ? info.attributes.OfType<DrawerAttribute>().OrderBy(a => a.priority).ToArray() : null;
+            this.attributes = info.attributes?.OfType<DrawerAttribute>().OrderBy(a => a.priority).ToArray();
 
             this.attributeIndex = -1;
             var result = ( this as IObjectDrawer ).MoveNextDrawer();
 
             // //flush references
-            this.info = default(InspectedFieldInfo);
+            this.info = default;
             this.content = null;
-            this.instance = default(T);
+            this.instance = default;
             this.attributes = null;
 
             return result;
@@ -207,7 +195,7 @@ namespace ParadoxNotion.Design
             var result = OnGUI(content, instance);
 
             //flush references
-            this.info = default(InspectedFieldInfo);
+            this.info = default;
             this.content = null;
             this.instance = null;
             this.attribute = null;

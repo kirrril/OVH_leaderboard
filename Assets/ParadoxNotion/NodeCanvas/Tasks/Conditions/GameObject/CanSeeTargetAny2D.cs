@@ -26,7 +26,7 @@ namespace NodeCanvas.Tasks.Conditions
         [BlackboardOnly]
         public BBParameter<GameObject> closerResult;
 
-        protected override string info { get { return "Can See Any " + targetObjects; } }
+        protected override string info => "Can See Any " + targetObjects;
 
         protected override bool OnCheck() {
 

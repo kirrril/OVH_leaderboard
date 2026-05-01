@@ -30,16 +30,12 @@ namespace NodeCanvas.StateMachines
 
         //...
         public void EnableCondition(Component agent, IBlackboard blackboard) {
-            if ( condition != null ) {
-                condition.Enable(agent, blackboard);
-            }
+            condition?.Enable(agent, blackboard);
         }
 
         //...
         public void DisableCondition() {
-            if ( condition != null ) {
-                condition.Disable();
-            }
+            condition?.Disable();
         }
 
         ///<summary>Perform the transition disregarding whether or not the condition (if any) is valid</summary>
@@ -52,13 +48,9 @@ namespace NodeCanvas.StateMachines
         ///---------------------------------------UNITY EDITOR-------------------------------------------
 #if UNITY_EDITOR
 
-        public override TipConnectionStyle tipConnectionStyle {
-            get { return TipConnectionStyle.Arrow; }
-        }
+        public override TipConnectionStyle tipConnectionStyle => TipConnectionStyle.Arrow;
 
-        public override bool animate {
-            get { return status == Status.Failure; }
-        }
+        public override bool animate => status == Status.Failure;
 
         protected override string GetConnectionInfo() {
             var result = transitionCallMode == FSM.TransitionCallMode.Normal ? string.Empty : string.Format("<b>[{0}]</b>\n", transitionCallMode.ToString());
@@ -67,7 +59,7 @@ namespace NodeCanvas.StateMachines
         }
 
         protected override void OnConnectionInspectorGUI() {
-            UnityEditor.EditorGUILayout.HelpBox("Stacked Call Mode will push the current state to the stack and pop return to it later when another finished state without outgoing transitions has been encountered within the FSM. If you decide to use this feature make sure that you are not cycle stacking states.\nA Clean transition will clear the FSM stack.", UnityEditor.MessageType.None);
+            UnityEditor.EditorGUILayout.HelpBox("Stacked Call Mode will push the current state to the stack and pop return to it later when another state in the FSM has finished and either:\nA) It had no outgoing transitions at all, or\nB) It performed no transition right when it just finished.\n\nIf you decide to use this feature make sure that you are not cycle stacking states. A Clean transition will clear the FSM stack.", UnityEditor.MessageType.None);
             transitionCallMode = (FSM.TransitionCallMode)UnityEditor.EditorGUILayout.EnumPopup("Call Mode (Experimental)", transitionCallMode);
             ParadoxNotion.Design.EditorUtils.Separator();
             NodeCanvas.Editor.TaskEditor.TaskFieldMulti<ConditionTask>(condition, graph, (c) => { condition = c; });

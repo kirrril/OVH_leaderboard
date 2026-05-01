@@ -16,9 +16,7 @@ namespace NodeCanvas.Tasks.Actions
         public BBParameter<string> targetVariableName;
         public BBObjectParameter newValue;
 
-        protected override string info {
-            get { return string.Format("<b>{0}</b> = {1}", targetVariableName.ToString(), newValue != null ? newValue.ToString() : ""); }
-        }
+        protected override string info => string.Format("<b>{0}</b> = {1}", targetVariableName.ToString(), newValue != null ? newValue.ToString() : "");
 
         protected override void OnExecute() {
             agent.SetVariableValue(targetVariableName.value, newValue.value);

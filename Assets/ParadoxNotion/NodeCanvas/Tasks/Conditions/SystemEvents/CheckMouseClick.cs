@@ -13,11 +13,11 @@ namespace NodeCanvas.Tasks.Conditions
 
         public MouseClickEvent checkType = MouseClickEvent.MouseDown;
 
-        protected override string info {
-            get { return checkType.ToString(); }
-        }
+        protected override string info => checkType.ToString();
 
-        protected override bool OnCheck() { return false; }
+        protected override bool OnCheck() {
+            return false;
+        }
 
         protected override void OnEnable() {
             router.onMouseDown += OnMouseDown;
@@ -29,13 +29,13 @@ namespace NodeCanvas.Tasks.Conditions
             router.onMouseUp -= OnMouseUp;
         }
 
-        void OnMouseDown(ParadoxNotion.EventData msg) {
+        void OnMouseDown(EventData msg) {
             if ( checkType == MouseClickEvent.MouseDown ) {
                 YieldReturn(true);
             }
         }
 
-        void OnMouseUp(ParadoxNotion.EventData msg) {
+        void OnMouseUp(EventData msg) {
             if ( checkType == MouseClickEvent.MouseUp ) {
                 YieldReturn(true);
             }

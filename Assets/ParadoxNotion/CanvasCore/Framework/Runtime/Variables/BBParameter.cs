@@ -96,9 +96,7 @@ namespace NodeCanvas.Framework
 
                     _varRef = value;
                     Bind(value);
-                    if ( onVariableReferenceChanged != null ) {
-                        onVariableReferenceChanged(value);
-                    }
+                    onVariableReferenceChanged?.Invoke(value);
                 }
             }
         }
@@ -159,7 +157,6 @@ namespace NodeCanvas.Framework
 #if UNITY_EDITOR
         //reason: automatically links to varefs if ref is missing when var is added to bb
         void OnBBVariableAdded(Variable variable) {
-            // if ( variable.ID == targetVariableID ) { varRef = variable; }
             if ( this.varRef == null && variable.name == this.name && variable.CanConvertTo(varType) ) {
                 varRef = variable;
             }
@@ -193,7 +190,7 @@ namespace NodeCanvas.Framework
         ///<summary>Shortcut to 'useBlackboard AND !isNone'</summary>
         public bool isDefined => !string.IsNullOrEmpty(name);
         ///<summary>The type of the Variable reference or null if there is no Variable referenced. The returned type is for most cases the same as 'VarType'. RefType and VarType can be different when an AutoConvert is taking place.</summary>
-        public Type refType => varRef != null ? varRef.varType : null;
+        public Type refType => varRef?.varType;
 
         ///<summary>The value as object type when accessing from base class.</summary>
         public object value { get { return GetValueBoxed(); } set { SetValueBoxed(value); } }
@@ -354,7 +351,7 @@ namespace NodeCanvas.Framework
                         Logger.Log(string.Format("Dynamic Parameter Variable '{0}' Encountered...", name), LogTag.VARIABLE, this);
                         //setting the varRef property also binds it
                         varRef = PromoteToVariable(bb);
-                        if ( setter != null ) { setter(value); }
+                        setter?.Invoke(value);
                     } else {
                         Logger.LogError(string.Format("A Parameter Variable named '{0}' is missing. If it was meant to be a dynamic variable, please ensure that it starts with an underscore ('_') prefix by convention.", name), LogTag.EXECUTION, this);
                     }
@@ -398,8 +395,8 @@ namespace NodeCanvas.Framework
 
         //Bind the Getter
         bool BindGetter(Variable variable) {
-            if ( variable is Variable<T> ) {
-                getter = ( variable as Variable<T> ).GetValue;
+            if ( variable is Variable<T> direct ) {
+                getter = direct.GetValue;
                 return true;
             }
 
@@ -414,8 +411,8 @@ namespace NodeCanvas.Framework
 
         //Bind the Setter
         bool BindSetter(Variable variable) {
-            if ( variable is Variable<T> ) {
-                setter = ( variable as Variable<T> ).SetValue;
+            if ( variable is Variable<T> direct ) {
+                setter = direct.SetValue;
                 return true;
             }
 

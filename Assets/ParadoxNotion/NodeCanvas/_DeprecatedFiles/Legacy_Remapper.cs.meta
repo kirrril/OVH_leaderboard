@@ -1,18 +1,15 @@
 fileFormatVersion: 2
-guid: 67edb5bec49183c4a81c065c965f85c2
+guid: b95e7194b7b2eb24fab03071e0cebf33
 MonoImporter:
-  externalObjects: {}
   serializedVersion: 2
   defaultReferences: []
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 
-  assetBundleName: 
-  assetBundleVariant: 
 AssetOrigin:
   serializedVersion: 1
   productId: 14914
   packageName: NodeCanvas
-  packageVersion: 3.3.3
+  packageVersion: 3.4.1
   assetPath: Assets/ParadoxNotion/NodeCanvas/_DeprecatedFiles/Legacy_Remapper.cs
-  uploadId: 754282
+  uploadId: 866614

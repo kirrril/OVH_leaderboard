@@ -14,15 +14,13 @@ namespace NodeCanvas.Tasks.Conditions
 
         [RequiredField]
         public BBParameter<GameObject> checkTarget;
-        public CompareMethod checkType = CompareMethod.LessThan;
+        public CompareOp checkType = CompareOp.LessThan;
         public BBParameter<float> distance = 10;
 
         [SliderField(0, 0.1f)]
         public float floatingPoint = 0.05f;
 
-        protected override string info {
-            get { return "Distance" + OperationTools.GetCompareString(checkType) + distance + " to " + checkTarget; }
-        }
+        protected override string info => "Distance" + OperationTools.GetCompareString(checkType) + distance + " to " + checkTarget;
 
         protected override bool OnCheck() {
             return OperationTools.Compare(Vector2.Distance(agent.position, checkTarget.value.transform.position), distance.value, checkType, floatingPoint);

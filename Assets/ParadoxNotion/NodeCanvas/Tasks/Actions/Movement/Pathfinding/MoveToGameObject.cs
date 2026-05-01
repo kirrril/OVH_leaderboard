@@ -18,9 +18,7 @@ namespace NodeCanvas.Tasks.Actions
 
         private Vector3? lastRequest;
 
-        protected override string info {
-            get { return "Seek " + target; }
-        }
+        protected override string info => "Seek " + target;
 
         protected override void OnExecute() {
             if ( target.value == null ) { EndAction(false); return; }

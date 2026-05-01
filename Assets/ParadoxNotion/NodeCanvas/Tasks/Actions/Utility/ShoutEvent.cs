@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using System.Collections.Generic;
 using NodeCanvas.Framework;
 using ParadoxNotion.Design;
 
@@ -20,9 +19,8 @@ namespace NodeCanvas.Tasks.Actions
         private bool[] receivedOwners;
         private float traveledDistance;
 
-        protected override string info {
-            get { return string.Format("Shout Event [{0}]", eventName.ToString()); }
-        }
+        protected override string info => string.Format("Shout Event [{0}]", eventName.ToString());
+        public override float length => completionTime.value;
 
         protected override void OnExecute() {
             owners = Object.FindObjectsByType<GraphOwner>(FindObjectsSortMode.None);

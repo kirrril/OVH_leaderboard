@@ -15,7 +15,6 @@ namespace ParadoxNotion
     public static class ReflectionTools
     {
         public const BindingFlags FLAGS_ALL = BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.FlattenHierarchy;
-        public const BindingFlags FLAGS_ALL_DECLARED = BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance | BindingFlags.Static | BindingFlags.DeclaredOnly;
 
         ///----------------------------------------------------------------------------------------------
 
@@ -33,7 +32,6 @@ namespace ParadoxNotion
         private static Dictionary<Type, FieldInfo[]> _typeFields;
         private static Dictionary<Type, PropertyInfo[]> _typeProperties;
         private static Dictionary<Type, EventInfo[]> _typeEvents;
-        // private static Dictionary<Type, object[]> _typeAttributes;
         private static Dictionary<MemberInfo, object[]> _memberAttributes;
         private static Dictionary<MemberInfo, bool> _obsoleteCache;
         private static Dictionary<Type, MethodInfo[]> _typeExtensions;
@@ -60,7 +58,6 @@ namespace ParadoxNotion
             _typeFields = new Dictionary<Type, FieldInfo[]>();
             _typeProperties = new Dictionary<Type, PropertyInfo[]>();
             _typeEvents = new Dictionary<Type, EventInfo[]>();
-            // _typeAttributes = new Dictionary<Type, object[]>();
             _memberAttributes = new Dictionary<MemberInfo, object[]>();
             _obsoleteCache = new Dictionary<MemberInfo, bool>();
             _typeExtensions = new Dictionary<Type, MethodInfo[]>();
@@ -70,9 +67,7 @@ namespace ParadoxNotion
 
         ///----------------------------------------------------------------------------------------------
 
-        private static Assembly[] loadedAssemblies {
-            get { return _loadedAssemblies != null ? _loadedAssemblies : _loadedAssemblies = AppDomain.CurrentDomain.GetAssemblies(); }
-        }
+        private static Assembly[] loadedAssemblies => _loadedAssemblies != null ? _loadedAssemblies : _loadedAssemblies = AppDomain.CurrentDomain.GetAssemblies();
 
         //Alternative to Type.GetType to work with FullName instead of AssemblyQualifiedName when looking up a type by string
         //This also handles Generics and their arguments, assembly changes and namespace changes to some extend.
@@ -84,8 +79,7 @@ namespace ParadoxNotion
                 return null;
             }
 
-            Type type = null;
-            if ( _typesMap.TryGetValue(typeFullName, out type) ) {
+            if ( _typesMap.TryGetValue(typeFullName, out Type type) ) {
                 return type;
             }
 
@@ -192,7 +186,7 @@ namespace ParadoxNotion
             }
 
             catch ( Exception e ) {
-                ParadoxNotion.Services.Logger.LogException(e, "Type Request Bug. Please report. :-(");
+                Logger.LogException(e, "Type Request Bug. Please report. :-(");
                 return null;
             }
         }
@@ -202,8 +196,7 @@ namespace ParadoxNotion
             var allTypes = GetAllTypes(true);
             for ( var i = 0; i < allTypes.Length; i++ ) {
                 var t = allTypes[i];
-                var att = t.GetCustomAttribute(typeof(Serialization.DeserializeFromAttribute), false) as Serialization.DeserializeFromAttribute;
-                if ( att != null && att.previousTypeFullName == typeName ) {
+                if ( t.GetCustomAttribute(typeof(Serialization.DeserializeFromAttribute), false) is Serialization.DeserializeFromAttribute att && att.previousTypeFullName == typeName ) {
                     return t;
                 }
             }
@@ -260,8 +253,7 @@ namespace ParadoxNotion
         ///<summary>Get a collection of types assignable to provided type, excluding Abstract types</summary>
         public static Type[] GetImplementationsOf(Type baseType) {
 
-            Type[] result = null;
-            if ( _subTypesMap.TryGetValue(baseType, out result) ) {
+            if ( _subTypesMap.TryGetValue(baseType, out Type[] result) ) {
                 return result;
             }
 
@@ -375,8 +367,7 @@ namespace ParadoxNotion
         ///<summary>Returns the type of method case of accessor, operator or event.</summary>
         public static MethodType GetMethodSpecialType(this MethodBase method) {
 
-            MethodType methodType;
-            if ( _methodSpecialType.TryGetValue(method, out methodType) ) {
+            if ( _methodSpecialType.TryGetValue(method, out MethodType methodType) ) {
                 return methodType;
             }
 
@@ -455,13 +446,13 @@ namespace ParadoxNotion
         ///<summary>Get a friendly name for member info</summary>
         public static string FriendlyName(this MemberInfo info) {
             if ( info == null ) { return null; }
-            if ( info is Type ) { return FriendlyName((Type)info); }
+            if ( info is Type t ) { return FriendlyName(t); }
             var type = info.ReflectedType.FriendlyName();
             return type + '.' + info.Name;
         }
 
         ///<summary>Get a friendly name of a methd which is the case for when it's a special name.</summary>
-        public static string FriendlyName(this MethodBase method) { var specialType = MethodType.Normal; return method.FriendlyName(out specialType); }
+        public static string FriendlyName(this MethodBase method) { return method.FriendlyName(out _); }
         public static string FriendlyName(this MethodBase method, out MethodType specialNameType) {
             specialNameType = MethodType.Normal;
             var methodName = method.Name;
@@ -497,12 +488,12 @@ namespace ParadoxNotion
 
         ///<summary>Get a friendly full signature string name for a method</summary>
         public static string SignatureName(this MethodBase method) {
-            string sig = null;
+            string sig;
             if ( _methodSignatures.TryGetValue(method, out sig) ) {
                 return sig;
             }
 
-            var specialType = MethodType.Normal;
+            MethodType specialType;
             var methodName = method.FriendlyName(out specialType);
             var parameters = method.GetParameters();
             if ( method is ConstructorInfo ) {
@@ -614,19 +605,17 @@ namespace ParadoxNotion
         ///----------------------------------------------------------------------------------------------
 
         public static Type[] RTGetGenericArguments(this Type type) {
-            Type[] result = null;
-            if ( _genericArgsTypeCache.TryGetValue(type, out result) ) {
+            if ( _genericArgsTypeCache.TryGetValue(type, out Type[] result) ) {
                 return result;
             }
-            return _genericArgsTypeCache[type] = result = type.GetGenericArguments();
+            return _genericArgsTypeCache[type] = type.GetGenericArguments();
         }
 
         public static Type[] RTGetGenericArguments(this MethodInfo method) {
-            Type[] result = null;
-            if ( _genericArgsMathodCache.TryGetValue(method, out result) ) {
+            if ( _genericArgsMathodCache.TryGetValue(method, out Type[] result) ) {
                 return result;
             }
-            return _genericArgsMathodCache[method] = result = method.GetGenericArguments();
+            return _genericArgsMathodCache[method] = method.GetGenericArguments();
         }
 
         ///----------------------------------------------------------------------------------------------
@@ -821,8 +810,7 @@ namespace ParadoxNotion
         ///----------------------------------------------------------------------------------------------
 
         public static ConstructorInfo[] RTGetConstructors(this Type type) {
-            ConstructorInfo[] constructors;
-            if ( !_typeConstructors.TryGetValue(type, out constructors) ) {
+            if ( !_typeConstructors.TryGetValue(type, out ConstructorInfo[] constructors) ) {
                 constructors = type.GetConstructors(FLAGS_ALL);
                 _typeConstructors[type] = constructors;
             }
@@ -831,8 +819,7 @@ namespace ParadoxNotion
         }
 
         public static MethodInfo[] RTGetMethods(this Type type) {
-            MethodInfo[] methods;
-            if ( !_typeMethods.TryGetValue(type, out methods) ) {
+            if ( !_typeMethods.TryGetValue(type, out MethodInfo[] methods) ) {
                 methods = type.GetMethods(FLAGS_ALL);
                 _typeMethods[type] = methods;
             }
@@ -841,8 +828,7 @@ namespace ParadoxNotion
         }
 
         public static FieldInfo[] RTGetFields(this Type type) {
-            FieldInfo[] fields;
-            if ( !_typeFields.TryGetValue(type, out fields) ) {
+            if ( !_typeFields.TryGetValue(type, out FieldInfo[] fields) ) {
                 fields = type.GetFields(FLAGS_ALL);
                 _typeFields[type] = fields;
             }
@@ -851,8 +837,7 @@ namespace ParadoxNotion
         }
 
         public static PropertyInfo[] RTGetProperties(this Type type) {
-            PropertyInfo[] properties;
-            if ( !_typeProperties.TryGetValue(type, out properties) ) {
+            if ( !_typeProperties.TryGetValue(type, out PropertyInfo[] properties) ) {
                 properties = type.GetProperties(FLAGS_ALL);
                 _typeProperties[type] = properties;
             }
@@ -861,8 +846,7 @@ namespace ParadoxNotion
         }
 
         public static EventInfo[] RTGetEvents(this Type type) {
-            EventInfo[] events;
-            if ( !_typeEvents.TryGetValue(type, out events) ) {
+            if ( !_typeEvents.TryGetValue(type, out EventInfo[] events) ) {
                 events = type.GetEvents(FLAGS_ALL);
                 _typeEvents[type] = events;
             }
@@ -872,50 +856,23 @@ namespace ParadoxNotion
 
         ///----------------------------------------------------------------------------------------------
 
-        // ///<summary>Get all attributes from type including inherited</summary>
-        // public static object[] RTGetAllAttributes(this Type type) {
-        //     object[] attributes;
-        //     if ( !_typeAttributes.TryGetValue(type, out attributes) ) {
-        //         //put in try catch clause to avoid problems with some unity types
-        //         try { attributes = type.GetCustomAttributes(true); }
-        //         catch { /*...*/ }
-        //         finally { _typeAttributes[type] = attributes; }
-        //     }
-        //     return attributes;
-        // }
-
         ///<summary>Is attribute defined?</summary>
         public static bool RTIsDefined<T>(this Type type, bool inherited) where T : Attribute { return type.RTIsDefined(typeof(T), inherited); }
         public static bool RTIsDefined(this Type type, Type attributeType, bool inherited) {
             return type.IsDefined(attributeType, inherited);
-            // return inherited ? type.RTGetAttribute(attributeType, inherited) != null : type.IsDefined(attributeType, false);
         }
 
         ///<summary>Get attribute from type of type T</summary>
         public static T RTGetAttribute<T>(this Type type, bool inherited) where T : Attribute { return (T)type.RTGetAttribute(typeof(T), inherited); }
         public static Attribute RTGetAttribute(this Type type, Type attributeType, bool inherited) {
             return type.GetCustomAttribute(attributeType, inherited);
-            // object[] attributes = RTGetAllAttributes(type);
-            // if ( attributes != null ) {
-            //     for ( var i = 0; i < attributes.Length; i++ ) {
-            //         var att = (Attribute)attributes[i];
-            //         var attType = att.GetType();
-            //         if ( attType.RTIsAssignableTo(attributeType) ) {
-            //             if ( inherited || type.IsDefined(attType, false) ) {
-            //                 return att;
-            //             }
-            //         }
-            //     }
-            // }
-            // return null;
         }
 
         ///------------------------------------------
 
         ///<summary>Get all attributes from member including inherited</summary>
         public static object[] RTGetAllAttributes(this MemberInfo member) {
-            object[] attributes;
-            if ( !_memberAttributes.TryGetValue(member, out attributes) ) {
+            if ( !_memberAttributes.TryGetValue(member, out object[] attributes) ) {
                 attributes = member.GetCustomAttributes(true);
                 _memberAttributes[member] = attributes;
             }
@@ -926,24 +883,12 @@ namespace ParadoxNotion
         public static bool RTIsDefined<T>(this MemberInfo member, bool inherited) where T : Attribute { return member.RTIsDefined(typeof(T), inherited); }
         public static bool RTIsDefined(this MemberInfo member, Type attributeType, bool inherited) {
             return member.IsDefined(attributeType, inherited);
-            // return inherited ? member.RTGetAttribute(attributeType, inherited) != null : member.IsDefined(attributeType, false);
         }
 
         ///<summary>Get attribute from member of type T</summary>
         public static T RTGetAttribute<T>(this MemberInfo member, bool inherited) where T : Attribute { return (T)member.RTGetAttribute(typeof(T), inherited); }
         public static Attribute RTGetAttribute(this MemberInfo member, Type attributeType, bool inherited) {
             return member.GetCustomAttribute(attributeType, inherited);
-            // object[] attributes = RTGetAllAttributes(member);
-            // for ( var i = 0; i < attributes.Length; i++ ) {
-            //     var att = (Attribute)attributes[i];
-            //     var attType = att.GetType();
-            //     if ( attType.RTIsAssignableTo(attributeType) ) {
-            //         if ( inherited || member.IsDefined(attType, false) ) {
-            //             return att;
-            //         }
-            //     }
-            // }
-            // return null;
         }
 
         ///<summary>Get all attributes of type T recursively up the type hierarchy</summary>
@@ -1004,13 +949,13 @@ namespace ParadoxNotion
         ///<summary>Quicky to get if an event info is static.</summary>
         public static bool IsStatic(this EventInfo info) {
             var m = info.GetAddMethod();
-            return m != null ? m.IsStatic : false;
+            return m != null && m.IsStatic;
         }
 
         ///<summary>Quicky to get if a property info is static.</summary>
         public static bool IsStatic(this PropertyInfo info) {
             var m = info.GetGetMethod();
-            return m != null ? m.IsStatic : false;
+            return m != null && m.IsStatic;
         }
 
         ///<summary>Is the parameter provided a params array?</summary>
@@ -1021,19 +966,17 @@ namespace ParadoxNotion
         ///<summary>Utility to determine obsolete members quicker. Also handles property accessor methods.</summary>
         public static bool IsObsolete(this MemberInfo member, bool inherited = true) {
 
-            bool result;
-            if ( _obsoleteCache.TryGetValue(member, out result) ) {
+            if ( _obsoleteCache.TryGetValue(member, out bool result) ) {
                 return result;
             }
 
             var resultMember = member;
-            if ( member is MethodInfo ) {
-                var m = (MethodInfo)member;
+            if ( member is MethodInfo m ) {
                 if ( m.IsPropertyAccessor() ) {
                     resultMember = m.GetAccessorProperty();
                 }
             }
-            var isObsolete = resultMember.RTIsDefined<System.ObsoleteAttribute>(inherited);
+            var isObsolete = resultMember.RTIsDefined<ObsoleteAttribute>(inherited);
             return _obsoleteCache[member] = isObsolete;
         }
 
@@ -1062,8 +1005,7 @@ namespace ParadoxNotion
 
         ///<summary>Get a list of methods that extend the provided type</summary>
         public static MethodInfo[] GetExtensionMethods(this Type targetType) {
-            MethodInfo[] methods = null;
-            if ( _typeExtensions.TryGetValue(targetType, out methods) ) {
+            if ( _typeExtensions.TryGetValue(targetType, out MethodInfo[] methods) ) {
                 return methods;
             }
             var result = new List<MethodInfo>();
@@ -1224,7 +1166,7 @@ namespace ParadoxNotion
             var newArray = System.Array.CreateInstance(elementType, newSize);
             var preserveLength = System.Math.Min(oldSize, newSize);
             if ( preserveLength > 0 ) {
-                System.Array.Copy(array, newArray, preserveLength);
+                Array.Copy(array, newArray, preserveLength);
             }
             return newArray;
         }
@@ -1256,7 +1198,7 @@ namespace ParadoxNotion
                 return;
             }
 
-            if ( push != null ) { push(root); }
+            push?.Invoke(root);
 
             var fields = type.RTGetFields();
             for ( var i = 0; i < fields.Length; i++ ) {
@@ -1266,14 +1208,14 @@ namespace ParadoxNotion
                     if ( value == null ) {
                         continue;
                     }
-                    if ( value is IList ) {
-                        foreach ( var item in (IList)value ) {
+                    if ( value is IList list ) {
+                        foreach ( var item in list ) {
                             DigFields(item, move, push, pop);
                         }
                         continue;
                     }
-                    if ( value is IDictionary ) {
-                        foreach ( var item in ( (IDictionary)value ).Values ) {
+                    if ( value is IDictionary dictionary ) {
+                        foreach ( var item in dictionary.Values ) {
                             DigFields(item, move, push, pop);
                         }
                         continue;
@@ -1282,7 +1224,7 @@ namespace ParadoxNotion
                 }
             }
 
-            if ( pop != null ) { pop(root); }
+            pop?.Invoke(root);
         }
 
         ///----------------------------------------------------------------------------------------------
@@ -1317,62 +1259,5 @@ namespace ParadoxNotion
             return (T instance, TValue value) => { info.SetValue(instance, value); };
 #endif
         }
-
-        ///----------------------------------------------------------------------------------------------
-        // ///<summary>Can type be made generic by using target type as argument?</summary>
-        // public static bool CanBeMadeGenericWith(this Type def, Type type) {
-        //     if ( def == null || !def.RTIsGenericType() ) { return false; }
-        //     return type.IsAllowedByGenericArgument(def.GetGenericTypeDefinition().RTGetGenericArguments().FirstOrDefault());
-        // }
-
-        // ///<summary>Can method be made generic by using target type as argument?</summary>
-        // public static bool CanBeMadeGenericWith(this MethodInfo def, Type type) {
-        //     if ( def == null || !def.IsGenericMethod ) { return false; }
-        //     return type.IsAllowedByGenericArgument(def.GetGenericMethodDefinition().RTGetGenericArguments().FirstOrDefault());
-        // }
-
-        // ///<summary>Is type allowed to be assigned to target generic argument based on that argument's constaints?</summary>
-        // public static bool IsAllowedByGenericArgument(this Type type, Type genericArgument) {
-
-        //     if ( type == null || genericArgument == null ) { return false; }
-
-        //     var constraints = genericArgument.GetGenericParameterConstraints();
-        //     var attributes = genericArgument.GenericParameterAttributes;
-
-        //     var result = true;
-        //     for ( var i = 0; i < constraints.Length; i++ ) {
-        //         var constraint = constraints[i];
-        //         if ( constraint == typeof(ValueType) ) continue;
-        //         if ( !result ) break;
-        //         result &= constraint.RTIsAssignableFrom(type);
-        //     }
-
-        //     if ( result ) {
-        //         if ( ( attributes & GenericParameterAttributes.DefaultConstructorConstraint ) ==
-        //             GenericParameterAttributes.DefaultConstructorConstraint &&
-        //             ( attributes & GenericParameterAttributes.NotNullableValueTypeConstraint ) !=
-        //             GenericParameterAttributes.NotNullableValueTypeConstraint ) {
-        //             var constructor = type.RTGetConstructors().FirstOrDefault(info => info.IsPublic && info.GetParameters().Length == 0);
-        //             if ( constructor == null ) result = false;
-        //         }
-        //     }
-
-        //     if ( result ) {
-        //         if ( ( attributes & GenericParameterAttributes.ReferenceTypeConstraint ) ==
-        //             GenericParameterAttributes.ReferenceTypeConstraint ) {
-        //             if ( type.RTIsValueType() ) result = false;
-        //         }
-        //     }
-
-        //     if ( result ) {
-        //         if ( ( attributes & GenericParameterAttributes.NotNullableValueTypeConstraint ) ==
-        //             GenericParameterAttributes.NotNullableValueTypeConstraint ) {
-        //             if ( !type.RTIsValueType() ) result = false;
-        //         }
-        //     }
-        //     return result;
-        // }
-
-
     }
 }

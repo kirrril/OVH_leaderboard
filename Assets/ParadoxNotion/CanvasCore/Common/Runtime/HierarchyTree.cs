@@ -34,9 +34,7 @@ namespace ParadoxNotion
 
             ///<summary>Remove a child element</summary>
             public void RemoveChild(Element child) {
-                if ( _children != null ) {
-                    _children.Remove(child);
-                }
+                _children?.Remove(child);
             }
 
             ///<summary>Get root element</summary>
@@ -64,7 +62,7 @@ namespace ParadoxNotion
             ///<summary>Get first parent reference of type T, including self element</summary>
             public T GetFirstParentReferenceOfType<T>() {
                 if ( this._reference is T ) { return (T)_reference; }
-                return _parent != null ? _parent.GetFirstParentReferenceOfType<T>() : default(T);
+                return _parent != null ? _parent.GetFirstParentReferenceOfType<T>() : default;
             }
 
             ///<summary>Get all children references of type T recursively</summary>
@@ -72,8 +70,8 @@ namespace ParadoxNotion
                 if ( _children == null ) { yield break; }
                 for ( var i = 0; i < _children.Count; i++ ) {
                     var element = _children[i];
-                    if ( element._reference is T ) {
-                        yield return (T)element._reference;
+                    if ( element._reference is T t ) {
+                        yield return t;
                     }
                     foreach ( var deep in element.GetAllChildrenReferencesOfType<T>() ) {
                         yield return deep;

@@ -34,7 +34,7 @@ namespace NodeCanvas.Editor
             wantsMouseMove = true;
             wantsMouseEnterLeaveWindow = true;
             search = null;
-            scrollPos = default(Vector2);
+            scrollPos = default;
 
             activeOwners = new List<GraphOwner>();
             if ( Application.isPlaying ) {
@@ -71,14 +71,6 @@ namespace NodeCanvas.Editor
         }
 
         ///----------------------------------------------------------------------------------------------
-
-        //...
-        void Update() {
-            if ( willRepaint ) {
-                willRepaint = false;
-                Repaint();
-            }
-        }
 
         //...
         void OnGUI() {
@@ -136,6 +128,11 @@ namespace NodeCanvas.Editor
 
             if ( Event.current.type == EventType.MouseLeaveWindow ) {
                 willRepaint = true;
+            }
+
+            if ( willRepaint ) {
+                willRepaint = false;
+                Repaint();
             }
         }
     }

@@ -21,7 +21,7 @@ namespace ParadoxNotion.Design
 
         ///<summary>Is copy available?</summary>
         public static bool Has<T>() {
-            return ( cachedCopies.TryGetValue(typeof(T), out string json) );
+            return cachedCopies.TryGetValue(typeof(T), out _);
         }
 
         ///<summary>Returns true if copy exist and the copy</summary>
@@ -35,7 +35,7 @@ namespace ParadoxNotion.Design
             if ( cachedCopies.TryGetValue(typeof(T), out string json) ) {
                 return JSONSerializer.Deserialize<T>(json);
             }
-            return default(T);
+            return default;
         }
 
         ///<summary>Sets a copy</summary>
@@ -47,7 +47,7 @@ namespace ParadoxNotion.Design
 
         ///<summary></summary>
         public static bool HasCache<T>() {
-            return ( cachedObjects.TryGetValue(typeof(T), out object obj) );
+            return cachedObjects.TryGetValue(typeof(T), out _);
         }
 
         ///<summary></summary>
@@ -61,7 +61,7 @@ namespace ParadoxNotion.Design
             if ( cachedObjects.TryGetValue(typeof(T), out object obj) ) {
                 return (T)obj;
             }
-            return default(T);
+            return default;
         }
 
         ///<summary></summary>

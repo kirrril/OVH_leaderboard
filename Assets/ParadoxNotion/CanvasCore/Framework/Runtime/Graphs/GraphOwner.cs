@@ -171,7 +171,7 @@ namespace NodeCanvas.Framework
         ///<summary>Is the assigned graph currently paused?</summary>
         public bool isPaused => graph != null ? graph.isPaused : false;
 
-        ///<summary>The time is seconds the graph is running</summary>
+        ///<summary>The time in seconds the graph is running</summary>
         public float elapsedTime => graph != null ? graph.elapsedTime : 0;
 
         ///----------------------------------------------------------------------------------------------
@@ -188,7 +188,7 @@ namespace NodeCanvas.Framework
                 return originalGraph;
             }
 
-            //if its already a stored instance, return the instance
+            //if it's already a stored instance, return the instance
             if ( instances.ContainsValue(originalGraph) ) {
                 return originalGraph;
             }
@@ -203,8 +203,10 @@ namespace NodeCanvas.Framework
             return instance;
         }
 
-        ///<summary>Makes and returns the runtime instance based on the current graph set.</summary>
+        ///<summary>Makes and returns the runtime instance based on the current graph assigned.</summary>
         public Graph MakeRuntimeGraphInstance() { return graph = GetInstance(graph); }
+        ///<summary>Makes, stores and returns the runtime instance that will be used for the source graph.</summary>
+        public Graph MakeRuntimeGraphInstance(Graph source) { return GetInstance(source); }
 
         ///<summary>Start the graph assigned. It will be auto updated.</summary>
         public void StartBehaviour() { StartBehaviour(updateMode, null); }
@@ -240,7 +242,7 @@ namespace NodeCanvas.Framework
             graph?.UpdateGraph();
         }
 
-        ///<summary>The same as calling Stop, Start Behaviour</summary>
+        ///<summary>The same as calling Stop then Start Behaviour</summary>
         public void RestartBehaviour() {
             StopBehaviour();
             StartBehaviour();
@@ -434,7 +436,6 @@ namespace NodeCanvas.Framework
             }
         }
 
-
         ///----------------------------------------------------------------------------------------------
         ///---------------------------------------UNITY EDITOR-------------------------------------------
         ///----------------------------------------------------------------------------------------------
@@ -492,8 +493,6 @@ namespace NodeCanvas.Framework
                     graph.UpdateReferencesFromOwner(this);
                     graph.Validate();
                 }
-
-                // BindExposedParameters(); // DISABLE: was creating confusion when editing multiple graphowner instances using asset graphs and having different variable overrides
             }
         }
 

@@ -9,7 +9,7 @@ namespace NodeCanvas.BehaviourTrees
     [Name("Optional", -3)]
     [Category("Decorators")]
     [Description("Force return Optional status. Thus making it optional to the parent node in regards to what status is returned. This has the same effect as disabling the node, but instead it executes normaly.")]
-    [ParadoxNotion.Design.Icon("UpwardsArrow")]
+    [ParadoxNotion.Design.Icon("Optional")]
     public class Optional : BTDecorator
     {
 

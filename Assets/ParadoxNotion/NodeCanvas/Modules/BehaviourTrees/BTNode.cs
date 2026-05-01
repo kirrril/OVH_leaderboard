@@ -9,13 +9,13 @@ namespace NodeCanvas.BehaviourTrees
     abstract public class BTNode : Node
     {
 
-        sealed public override System.Type outConnectionType { get { return typeof(BTConnection); } }
-        sealed public override bool allowAsPrime { get { return true; } }
-        sealed public override bool canSelfConnect { get { return false; } }
-        public override Alignment2x2 commentsAlignment { get { return Alignment2x2.Bottom; } }
-        public override Alignment2x2 iconAlignment { get { return Alignment2x2.Default; } }
-        public override int maxInConnections { get { return 1; } }
-        public override int maxOutConnections { get { return 0; } }
+        sealed public override System.Type outConnectionType => typeof(BTConnection);
+        sealed public override bool allowAsPrime => true;
+        sealed public override bool canSelfConnect => false;
+        public override Alignment2x2 commentsAlignment => Alignment2x2.Bottom;
+        public override Alignment2x2 iconAlignment => Alignment2x2.Default;
+        public override int maxInConnections => 1;
+        public override int maxOutConnections => 0;
 
         ///<summary>Add a child node to this node connected to the specified child index</summary>
         public T AddChild<T>(int childIndex) where T : BTNode {

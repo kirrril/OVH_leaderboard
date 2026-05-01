@@ -18,7 +18,7 @@ namespace ParadoxNotion.Services
                 get
                 {
                     object reference = null;
-                    if ( _contextRef != null ) { _contextRef.TryGetTarget(out reference); }
+                    _contextRef?.TryGetTarget(out reference);
                     return reference;
                 }
                 set { _contextRef = new System.WeakReference<object>(value); }
@@ -77,8 +77,7 @@ namespace ParadoxNotion.Services
             if ( subscribers != null && subscribers.Count > 0 ) {
                 var msg = new Message();
                 msg.type = type;
-                if ( message is System.Exception ) {
-                    var exc = (System.Exception)message;
+                if ( message is System.Exception exc ) {
                     msg.text = exc.Message + "\n" + exc.StackTrace.Split('\n').FirstOrDefault();
                 } else {
                     msg.text = message != null ? message.ToString() : "NULL";
@@ -114,8 +113,8 @@ namespace ParadoxNotion.Services
 
         //forward the log to unity console
         private static void ForwardToUnity(LogType type, object message, string tag, object context) {
-            if ( message is System.Exception ) {
-                UnityEngine.Debug.unityLogger.LogException((System.Exception)message);
+            if ( message is System.Exception exception ) {
+                UnityEngine.Debug.unityLogger.LogException(exception);
             } else {
                 UnityEngine.Debug.unityLogger.Log(type, tag, message, context as UnityEngine.Object);
             }

@@ -18,9 +18,7 @@ namespace NodeCanvas.Tasks.Actions
         [BlackboardOnly]
         public BBParameter<List<GameObject>> saveAs;
 
-        protected override string info {
-            get { return "GetObjects in '" + targetLayers + "' as " + saveAs; }
-        }
+        protected override string info => "GetObjects in '" + targetLayers + "' as " + saveAs;
 
         protected override void OnExecute() {
             saveAs.value = ParadoxNotion.ObjectUtils.FindGameObjectsWithinLayerMask(targetLayers.value).ToList();

@@ -175,6 +175,7 @@ namespace ParadoxNotion.Design
                 if ( _wrapTextArea == null ) {
                     _wrapTextArea = new GUIStyle(GUI.skin.textArea);
                     _wrapTextArea.wordWrap = true;
+                    _wrapTextArea.richText = true;
                 }
                 return _wrapTextArea;
             }
@@ -196,24 +197,16 @@ namespace ParadoxNotion.Design
         }
 
         private static GUIStyle _buttonLeft;
-        public static GUIStyle buttonLeft {
-            get { return _buttonLeft ?? ( _buttonLeft = new GUIStyle((GUIStyle)"AppCommandLeft") ); }
-        }
+        public static GUIStyle buttonLeft => _buttonLeft ?? ( _buttonLeft = new GUIStyle((GUIStyle)"AppCommandLeft") );
 
         private static GUIStyle _buttonMid;
-        public static GUIStyle buttonMid {
-            get { return _buttonMid ?? ( _buttonMid = new GUIStyle((GUIStyle)"AppCommandMid") ); }
-        }
+        public static GUIStyle buttonMid => _buttonMid ?? ( _buttonMid = new GUIStyle((GUIStyle)"AppCommandMid") );
 
         private static GUIStyle _buttonRight;
-        public static GUIStyle buttonRight {
-            get { return _buttonRight ?? ( _buttonRight = new GUIStyle((GUIStyle)"AppCommandRight") ); }
-        }
+        public static GUIStyle buttonRight => _buttonRight ?? ( _buttonRight = new GUIStyle((GUIStyle)"AppCommandRight") );
 
         private static GUIStyle _highlightBox;
-        public static GUIStyle highlightBox {
-            get { return _highlightBox ?? ( _highlightBox = new GUIStyle((GUIStyle)"LightmapEditorSelectedHighlight") ); }
-        }
+        public static GUIStyle highlightBox => _highlightBox ?? ( _highlightBox = new GUIStyle((GUIStyle)"LightmapEditorSelectedHighlight") );
 
         private static GUIStyle _toolbarSearchField;
         public static GUIStyle toolbarSearchTextField {
@@ -226,16 +219,12 @@ namespace ParadoxNotion.Design
         }
 
         private static GUIStyle _shadowedBackground;
-        public static GUIStyle shadowedBackground {
-            get { return _shadowedBackground ?? ( _shadowedBackground = new GUIStyle((GUIStyle)"CurveEditorBackground") ); }
-        }
+        public static GUIStyle shadowedBackground => _shadowedBackground ?? ( _shadowedBackground = new GUIStyle((GUIStyle)"CurveEditorBackground") );
 
         ///----------------------------------------------------------------------------------------------
 
         ///<summary>Same as box, but saves me the trouble of writing string.empty all the time</summary>
-        public static void Draw(Rect position, GUIStyle style) {
-            GUI.Box(position, string.Empty, style);
-        }
+        public static void Draw(Rect position, GUIStyle style) => GUI.Box(position, string.Empty, style);
 
     }
 }

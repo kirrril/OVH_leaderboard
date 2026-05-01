@@ -53,14 +53,14 @@ namespace NodeCanvas.Framework
 
         ///<summary>Initialize Variables binding from target blackboard</summary>
         public override void Bind(IBlackboard blackboard) {
-            if ( varRef != null ) { varRef.UnBind(); } //unbind if any
+            varRef?.UnBind(); //unbind if any
             varRef = (Variable<T>)blackboard.GetVariableByID(targetVariableID);
-            if ( varRef != null ) { varRef.BindGetSet(GetRawValue, SetRawValue); }
+            varRef?.BindGetSet(GetRawValue, SetRawValue);
         }
 
         ///<summary>Unbind from variable if any</summary>
         public override void UnBind() {
-            if ( varRef != null ) { varRef.UnBind(); }
+            varRef?.UnBind();
         }
 
         T GetRawValue() { return _value; }

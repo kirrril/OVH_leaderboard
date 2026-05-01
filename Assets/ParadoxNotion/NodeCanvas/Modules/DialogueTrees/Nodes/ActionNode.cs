@@ -25,7 +25,7 @@ namespace NodeCanvas.DialogueTrees
             set { action = (ActionTask)value; }
         }
 
-        public override bool requireActorSelection { get { return true; } }
+        public override bool requireActorSelection => true;
 
         protected override Status OnExecute(Component agent, IBlackboard bb) {
 
@@ -34,7 +34,7 @@ namespace NodeCanvas.DialogueTrees
             }
 
             status = Status.Running;
-            StartCoroutine(UpdateAction(finalActor.transform));
+            StartSyncedCoroutine(UpdateAction(finalActor.transform));
             return status;
         }
 
@@ -42,7 +42,7 @@ namespace NodeCanvas.DialogueTrees
             while ( status == Status.Running ) {
                 var actionStatus = action.Execute(actionAgent, graphBlackboard);
                 if ( actionStatus != Status.Running ) {
-                    OnActionEnd(actionStatus == Status.Success ? true : false);
+                    OnActionEnd(actionStatus == Status.Success);
                     yield break;
                 }
 
@@ -63,13 +63,11 @@ namespace NodeCanvas.DialogueTrees
         }
 
         protected override void OnReset() {
-            if ( action != null )
-                action.EndAction(null);
+            action?.EndAction(null);
         }
 
         public override void OnGraphPaused() {
-            if ( action != null )
-                action.Pause();
+            action?.Pause();
         }
     }
 }

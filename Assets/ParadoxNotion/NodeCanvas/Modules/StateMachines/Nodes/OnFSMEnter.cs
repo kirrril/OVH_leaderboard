@@ -8,7 +8,7 @@ namespace NodeCanvas.StateMachines
 
     [Description("Execute a number of Actions when the FSM starts/enters, if Conditions are met. This is not a state.")]
     [Color("ff64cb")]
-    [ParadoxNotion.Design.Icon("MacroIn")]
+    [ParadoxNotion.Design.Icon("Incoming")]
     [Name("On FSM Enter")]
     public class OnFSMEnter : FSMNode, IUpdatable
     {

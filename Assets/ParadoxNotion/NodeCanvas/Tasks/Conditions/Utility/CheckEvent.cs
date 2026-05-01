@@ -14,12 +14,14 @@ namespace NodeCanvas.Tasks.Conditions
         [RequiredField]
         public BBParameter<string> eventName;
 
-        protected override string info { get { return "[" + eventName.ToString() + "]"; } }
+        protected override string info => "[" + eventName.ToString() + "]";
 
         protected override void OnEnable() { router.onCustomEvent += OnCustomEvent; }
         protected override void OnDisable() { router.onCustomEvent -= OnCustomEvent; }
 
-        protected override bool OnCheck() { return false; }
+        protected override bool OnCheck() {
+            return false;
+        }
 
         void OnCustomEvent(string eventName, IEventData data) {
             if ( eventName.Equals(this.eventName.value, System.StringComparison.OrdinalIgnoreCase) ) {
@@ -46,13 +48,15 @@ namespace NodeCanvas.Tasks.Conditions
         protected override void OnEnable() { router.onCustomEvent += OnCustomEvent; }
         protected override void OnDisable() { router.onCustomEvent -= OnCustomEvent; }
 
-        protected override bool OnCheck() { return false; }
+        protected override bool OnCheck() {
+            return false;
+        }
 
         void OnCustomEvent(string eventName, IEventData data) {
             if ( eventName.Equals(this.eventName.value, System.StringComparison.OrdinalIgnoreCase) ) {
-                if ( data is EventData<T> ) { //avoid boxing if able
-                    saveEventValue.value = ( (EventData<T>)data ).value;
-                } else if ( data.valueBoxed is T ) { saveEventValue.value = (T)data.valueBoxed; }
+                if ( data is EventData<T> x ) { //avoid boxing if able
+                    saveEventValue.value = x.value;
+                } else if ( data.valueBoxed is T t ) { saveEventValue.value = t; }
 
                 Logger.Log(string.Format("Event Received from ({0}): '{1}'", agent.gameObject.name, eventName), LogTag.EVENT, this);
                 YieldReturn(true);

@@ -14,9 +14,7 @@ namespace NodeCanvas.Editor
     public class DialogueTreeInspector : GraphInspector
     {
 
-        private DialogueTree dialogue {
-            get { return target as DialogueTree; }
-        }
+        private DialogueTree dialogue => target as DialogueTree;
 
         public override void OnInspectorGUI() {
             base.OnInspectorGUI();
@@ -65,10 +63,10 @@ namespace NodeCanvas.Editor
                     if ( newReference == null ) {
                         reference.actor = null;
                     } else {
-                        if ( newReference is Component ) { newReference = ( newReference as Component ).GetComponent(typeof(IDialogueActor)); }
-                        if ( newReference is GameObject ) { newReference = ( newReference as GameObject ).GetComponent(typeof(IDialogueActor)); }
-                        if ( newReference is IDialogueActor ) {
-                            reference.actor = (IDialogueActor)newReference;
+                        if ( newReference is Component c ) { newReference = c.GetComponent(typeof(IDialogueActor)); }
+                        if ( newReference is GameObject g ) { newReference = g.GetComponent(typeof(IDialogueActor)); }
+                        if ( newReference is IDialogueActor a ) {
+                            reference.actor = a;
                         } else { ParadoxNotion.Services.Logger.LogWarning("Object is not an IDialogueActor and none of the components attached is an IDialogueActor either."); }
                     }
                     UndoUtility.SetDirty(dialogue);

@@ -14,18 +14,12 @@ namespace NodeCanvas.Tasks.Conditions
 
         [RequiredField]
         public BBParameter<string> parameter;
-        public CompareMethod comparison = CompareMethod.EqualTo;
+        public CompareOp comparison = CompareOp.EqualTo;
         public BBParameter<float> value;
 
-        protected override string info {
-            get
-            {
-                return "Mec.Float " + parameter.ToString() + OperationTools.GetCompareString(comparison) + value;
-            }
-        }
+        protected override string info => "Mec.Float " + parameter.ToString() + OperationTools.GetCompareString(comparison) + value;
 
         protected override bool OnCheck() {
-
             return OperationTools.Compare((float)agent.GetFloat(parameter.value), (float)value.value, comparison, 0.1f);
         }
     }

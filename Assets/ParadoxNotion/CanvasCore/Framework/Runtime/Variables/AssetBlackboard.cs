@@ -43,8 +43,8 @@ namespace NodeCanvas.Framework
         Component IBlackboard.propertiesBindTarget => null;
         string IBlackboard.independantVariablesFieldName => null;
 
-        void IBlackboard.TryInvokeOnVariableAdded(Variable variable) { if ( onVariableAdded != null ) onVariableAdded(variable); }
-        void IBlackboard.TryInvokeOnVariableRemoved(Variable variable) { if ( onVariableRemoved != null ) onVariableRemoved(variable); }
+        void IBlackboard.TryInvokeOnVariableAdded(Variable variable) { onVariableAdded?.Invoke(variable); }
+        void IBlackboard.TryInvokeOnVariableRemoved(Variable variable) { onVariableRemoved?.Invoke(variable); }
 
         public string identifier => _identifier;
         public string UID => _UID;

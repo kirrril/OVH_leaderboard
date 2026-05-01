@@ -259,12 +259,12 @@ namespace NodeCanvas.Editor
         ///<summary>Return color based on status</summary>
         public static Color GetStatusColor(Status status) {
             switch ( status ) {
-                case ( Status.Failure ): return new Color(1.0f, 0.3f, 0.3f);
-                case ( Status.Success ): return new Color(0.4f, 0.7f, 0.2f);
-                case ( Status.Running ): return Color.yellow;
-                case ( Status.Resting ): return new Color(0.7f, 0.7f, 1f, 0.8f);
-                case ( Status.Error ): return Color.red;
-                case ( Status.Optional ): return Color.grey;
+                case Status.Failure: return new Color(1.0f, 0.3f, 0.3f);
+                case Status.Success: return new Color(0.4f, 0.7f, 0.2f);
+                case Status.Running: return Color.yellow;
+                case Status.Resting: return new Color(0.7f, 0.7f, 1f, 0.8f);
+                case Status.Error: return Color.red;
+                case Status.Optional: return Color.grey;
             }
             return Color.white;
         }

@@ -7,6 +7,9 @@ using ParadoxNotion.Serialization;
 using System.Collections.Generic;
 using NodeCanvas.DialogueTrees;
 using ParadoxNotion.Design;
+using System.Text;
+using System.Linq;
+using ParadoxNotion;
 
 namespace NodeCanvas.Editor
 {
@@ -34,13 +37,15 @@ namespace NodeCanvas.Editor
         void OnEnable() {
             titleContent = new GUIContent("Localization Editor", StyleSheet.canvasIcon);
 
-            minSize = new Vector2(750, 200);
+            minSize = new Vector2(760, 200);
             wantsMouseMove = true;
             wantsMouseEnterLeaveWindow = true;
             Graph.onGraphSerialized -= OnGraphSerialized;
             Graph.onGraphSerialized += OnGraphSerialized;
             GraphEditor.onCurrentGraphChanged -= OnGraphChanged;
             GraphEditor.onCurrentGraphChanged += OnGraphChanged;
+            Undo.undoRedoPerformed -= OnUndoRedoPerformed;
+            Undo.undoRedoPerformed += OnUndoRedoPerformed;
 
             GatherStatements();
 
@@ -51,6 +56,7 @@ namespace NodeCanvas.Editor
         void OnDisable() {
             Graph.onGraphSerialized -= OnGraphSerialized;
             GraphEditor.onCurrentGraphChanged -= OnGraphChanged;
+            Undo.undoRedoPerformed -= OnUndoRedoPerformed;
         }
 
         //...
@@ -64,6 +70,11 @@ namespace NodeCanvas.Editor
                 GatherStatements();
                 willRepaint = true;
             }
+        }
+
+        //...
+        void OnUndoRedoPerformed() {
+            GatherStatements();
         }
 
         //...
@@ -86,14 +97,19 @@ namespace NodeCanvas.Editor
 
         //...
         void OnGUI() {
-            EditorGUILayout.HelpBox("1) Select the language you wish to view and edit.\n2) If there is no data for the specified language, hit the Append Language button to add the currently selected language.\n3) If you wish to remove the currently selected language, hit the Remove Language.\nNote: The Default language is the one used by default in the graph editor.", MessageType.Info);
-            if ( targetGraph == null ) { return; }
+            EditorGUILayout.HelpBox("1) Select the language you wish to view and edit.\n2) If there is no data for the specified language, hit the Append Language button to add the currently selected language.\n3) If you wish to remove the currently selected language, hit the Remove Language.\n4) Alternatively, you can export a .tsv file and edit all text localizations in an external spreadsheet software then import them back.\nNote: The Default language is the one used by default in the graph editor.", MessageType.Info);
+            if ( targetGraph == null ) {
+                ShowNotification(new GUIContent("No Graph Open in Graph Editor"));
+                return;
+            }
+            RemoveNotification();
 
             GUILayout.BeginHorizontal();
             currentLocale = (Locales)UnityEditor.EditorGUILayout.EnumPopup(currentLocale);
             GUI.enabled = currentLocale != Locales.Default;
             if ( GUILayout.Button("Append Language", GUILayout.Width(150)) ) {
                 if ( currentLocale != Locales.Default ) {
+                    Undo.RecordObject(targetGraph, "Append Language");
                     foreach ( var statement in statements ) {
                         if ( statement.localizations == null ) statement.localizations = new Dictionary<Locales, Statement.Localization>();
                         if ( !statement.localizations.ContainsKey(currentLocale) ) {
@@ -106,6 +122,7 @@ namespace NodeCanvas.Editor
 
             if ( GUILayout.Button("Remove Language", GUILayout.Width(150)) ) {
                 if ( currentLocale != Locales.Default ) {
+                    Undo.RecordObject(targetGraph, "Remove Language");
                     foreach ( var statement in statements ) {
                         if ( statement.localizations != null ) {
                             statement.localizations.Remove(currentLocale);
@@ -118,6 +135,74 @@ namespace NodeCanvas.Editor
             }
             GUI.enabled = true;
             GUILayout.EndHorizontal();
+
+            ///----------------------------------------------------------------------------------------------
+            GUILayout.BeginHorizontal();
+            if ( GUILayout.Button("Export TSV") ) {
+                var path = EditorUtility.SaveFilePanelInProject("Export to TSV", targetGraph.agent ? targetGraph.agent.name : targetGraph.name, "tsv", string.Empty);
+                var delimiter = "\t";
+                if ( !string.IsNullOrEmpty(path) ) {
+                    var sb = new StringBuilder();
+                    sb.Append("UID");
+                    foreach ( var locName in System.Enum.GetNames(typeof(Locales)) ) {
+                        sb.Append(delimiter + locName);
+                    }
+                    foreach ( var statement in statements ) {
+                        sb.Append("\n");
+                        sb.Append(statement.UID);
+                        foreach ( var locName in System.Enum.GetNames(typeof(Locales)) ) {
+                            var locale = System.Enum.Parse<Locales>(locName);
+                            var localized = statement.GetLocalizedText(locale);
+                            if ( localized == statement.text && locale != Locales.Default ) { localized = string.Empty; }
+                            sb.Append(delimiter + "\"" + localized + "\"");
+                        }
+                    }
+                    System.IO.File.WriteAllText(path, sb.ToString());
+                    AssetDatabase.Refresh();
+                }
+            }
+
+            if ( GUILayout.Button("Import TSV") ) {
+                var path = EditorUtility.OpenFilePanel("Import from TSV", "Assets", "tsv");
+                if ( !string.IsNullOrEmpty(path) ) {
+                    Undo.RecordObject(targetGraph, "Import TSV");
+                    //UID   Default     English     Greek
+                    //XXX   Hello       Hello       Καλησπερα
+                    //XXX   This text   This text   Αυτο το κειμενο
+                    var statementsDict = statements.ToDictionary(x => x.UID, x => x);
+                    var lines = System.IO.File.ReadAllLines(path);
+                    var headerLine = lines[0].Split('\t');
+
+                    for ( var i = 1; i < lines.Length; i++ ) {
+                        var cells = lines[i].Split('\t');
+                        if ( statementsDict.TryGetValue(cells[0], out Statement statement) ) {
+                            for ( var j = 1; j < cells.Length; j++ ) {
+                                var locale = System.Enum.Parse<Locales>(headerLine[j]);
+                                var parsedText = cells[j];
+                                //some software keep the quotes, other don't.
+                                if ( parsedText.StartsWith('"') && parsedText.EndsWith('"') ) {
+                                    parsedText = parsedText.Substring(1, parsedText.Length - 2);
+                                }
+                                if ( string.IsNullOrEmpty(parsedText) ) { continue; }
+                                if ( locale == Locales.Default ) {
+                                    //don't or do overwrite default text? Better don't.
+                                    // statement.text = parsedText;
+                                    continue;
+                                }
+                                if ( statement.localizations == null ) { statement.localizations = new Dictionary<Locales, Statement.Localization>(); }
+                                if ( statement.localizations.TryGetValue(locale, out Statement.Localization localization) ) {
+                                    localization.text = parsedText;
+                                } else {
+                                    statement.localizations[locale] = new Statement.Localization() { text = parsedText };
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            GUILayout.EndHorizontal();
+            ///----------------------------------------------------------------------------------------------
+
 
             EditorUtils.BoldSeparator();
 

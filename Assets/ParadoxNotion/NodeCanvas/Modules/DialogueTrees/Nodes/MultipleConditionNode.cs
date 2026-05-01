@@ -9,7 +9,7 @@ namespace NodeCanvas.DialogueTrees
     [ParadoxNotion.Design.Icon("Selector")]
     [Name("Multiple Task Condition")]
     [Category("Branch")]
-    [Description("Will continue with the first child node which condition returns true. The Dialogue Actor selected will be used for the checks")]
+    [Description("Will continue with the first child node which condition returns true. The Dialogue Actor selected will be used for the checks.")]
     [Color("b3ff7f")]
     public class MultipleConditionNode : DTNode
     {
@@ -17,9 +17,7 @@ namespace NodeCanvas.DialogueTrees
         [SerializeField, AutoSortWithChildrenConnections]
         private List<ConditionTask> conditions = new List<ConditionTask>();
 
-        public override int maxOutConnections {
-            get { return -1; }
-        }
+        public override int maxOutConnections => -1;
 
         public override void OnChildConnected(int index) {
             if ( conditions.Count < outConnections.Count ) {
@@ -58,7 +56,7 @@ namespace NodeCanvas.DialogueTrees
         }
 
         public override string GetConnectionInfo(int i) {
-            return conditions[i] != null ? conditions[i].summaryInfo : "TRUE";
+            return conditions[i] != null ? conditions[i].summaryInfo : "Else";
         }
 
 #endif

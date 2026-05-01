@@ -8,104 +8,105 @@ namespace ParadoxNotion
     public static class OperationTools
     {
 
-        public static string GetOperationString(OperationMethod om) {
+        public static string GetOperationString(AssignOp op) {
 
-            if ( om == OperationMethod.Set )
+            if ( op == AssignOp.Set )
                 return " = ";
-            if ( om == OperationMethod.Add )
+            if ( op == AssignOp.Add )
                 return " += ";
-            if ( om == OperationMethod.Subtract )
+            if ( op == AssignOp.Subtract )
                 return " -= ";
-            if ( om == OperationMethod.Multiply )
+            if ( op == AssignOp.Multiply )
                 return " *= ";
-            if ( om == OperationMethod.Divide )
+            if ( op == AssignOp.Divide )
                 return " /= ";
             return string.Empty;
         }
 
-        public static float Operate(float a, float b, OperationMethod om, float delta = 1f) {
-            if ( om == OperationMethod.Set )
+        public static float Operate(float a, float b, AssignOp op, float delta = 1f) {
+            if ( op == AssignOp.Set )
                 return b * delta;
-            if ( om == OperationMethod.Add )
+            if ( op == AssignOp.Add )
                 return a + ( b * delta );
-            if ( om == OperationMethod.Subtract )
+            if ( op == AssignOp.Subtract )
                 return a - ( b * delta );
-            if ( om == OperationMethod.Multiply )
+            if ( op == AssignOp.Multiply )
                 return a * ( b * delta );
-            if ( om == OperationMethod.Divide )
+            if ( op == AssignOp.Divide )
                 return a / ( b * delta );
             return a;
         }
 
-        public static int Operate(int a, int b, OperationMethod om) {
-            if ( om == OperationMethod.Set )
+        public static int Operate(int a, int b, AssignOp op) {
+            if ( op == AssignOp.Set )
                 return b;
-            if ( om == OperationMethod.Add )
+            if ( op == AssignOp.Add )
                 return a + b;
-            if ( om == OperationMethod.Subtract )
+            if ( op == AssignOp.Subtract )
                 return a - b;
-            if ( om == OperationMethod.Multiply )
+            if ( op == AssignOp.Multiply )
                 return a * b;
-            if ( om == OperationMethod.Divide )
+            if ( op == AssignOp.Divide )
                 return a / b;
             return a;
         }
 
-        public static Vector3 Operate(Vector3 a, Vector3 b, OperationMethod om, float delta = 1f) {
-            if ( om == OperationMethod.Set )
+
+        public static Vector3 Operate(Vector3 a, Vector3 b, AssignOp op, float delta = 1f) {
+            if ( op == AssignOp.Set )
                 return b * delta;
-            if ( om == OperationMethod.Add )
+            if ( op == AssignOp.Add )
                 return a + ( b * delta );
-            if ( om == OperationMethod.Subtract )
+            if ( op == AssignOp.Subtract )
                 return a - ( b * delta );
-            if ( om == OperationMethod.Multiply )
+            if ( op == AssignOp.Multiply )
                 return Vector3.Scale(a, ( b * delta ));
-            if ( om == OperationMethod.Divide ) {
+            if ( op == AssignOp.Divide ) {
                 b *= delta;
                 return new Vector3(( a ).x / ( b ).x, ( a ).y / ( b ).y, ( a ).z / ( b ).z);
             }
             return a;
         }
 
-        public static string GetCompareString(CompareMethod cm) {
+        public static string GetCompareString(CompareOp op) {
 
-            if ( cm == CompareMethod.EqualTo )
+            if ( op == CompareOp.EqualTo )
                 return " == ";
-            if ( cm == CompareMethod.GreaterThan )
+            if ( op == CompareOp.GreaterThan )
                 return " > ";
-            if ( cm == CompareMethod.LessThan )
+            if ( op == CompareOp.LessThan )
                 return " < ";
-            if ( cm == CompareMethod.GreaterOrEqualTo )
+            if ( op == CompareOp.GreaterOrEqualTo )
                 return " >= ";
-            if ( cm == CompareMethod.LessOrEqualTo )
+            if ( op == CompareOp.LessOrEqualTo )
                 return " <= ";
             return string.Empty;
         }
 
-        public static bool Compare(float a, float b, CompareMethod cm, float floatingPoint) {
-            if ( cm == CompareMethod.EqualTo )
+        public static bool Compare(float a, float b, CompareOp op, float floatingPoint) {
+            if ( op == CompareOp.EqualTo )
                 return Mathf.Abs(a - b) <= floatingPoint;
-            if ( cm == CompareMethod.GreaterThan )
+            if ( op == CompareOp.GreaterThan )
                 return a > b;
-            if ( cm == CompareMethod.LessThan )
+            if ( op == CompareOp.LessThan )
                 return a < b;
-            if ( cm == CompareMethod.GreaterOrEqualTo )
+            if ( op == CompareOp.GreaterOrEqualTo )
                 return a >= b;
-            if ( cm == CompareMethod.LessOrEqualTo )
+            if ( op == CompareOp.LessOrEqualTo )
                 return a <= b;
             return true;
         }
 
-        public static bool Compare(int a, int b, CompareMethod cm) {
-            if ( cm == CompareMethod.EqualTo )
+        public static bool Compare(int a, int b, CompareOp op) {
+            if ( op == CompareOp.EqualTo )
                 return a == b;
-            if ( cm == CompareMethod.GreaterThan )
+            if ( op == CompareOp.GreaterThan )
                 return a > b;
-            if ( cm == CompareMethod.LessThan )
+            if ( op == CompareOp.LessThan )
                 return a < b;
-            if ( cm == CompareMethod.GreaterOrEqualTo )
+            if ( op == CompareOp.GreaterOrEqualTo )
                 return a >= b;
-            if ( cm == CompareMethod.LessOrEqualTo )
+            if ( op == CompareOp.LessOrEqualTo )
                 return a <= b;
             return true;
         }

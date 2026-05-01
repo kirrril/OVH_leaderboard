@@ -2,7 +2,6 @@
 
 using UnityEngine;
 using UnityEditor;
-using System.Linq;
 
 namespace ParadoxNotion.Design
 {
@@ -49,7 +48,7 @@ namespace ParadoxNotion.Design
         }
     }
 
-    ///<summary>Will show value only if another field or prop is equal to target</summary>
+    ///<summary>Will show control only if another field or prop is equal to target</summary>
 	public class ShowIfDrawer : AttributeDrawer<ShowIfAttribute>
     {
         public override object OnGUI(GUIContent content, object instance) {
@@ -75,7 +74,7 @@ namespace ParadoxNotion.Design
 	public class RequiredFieldDrawer : AttributeDrawer<RequiredFieldAttribute>
     {
         public override object OnGUI(GUIContent content, object instance) {
-            var isNull = instance == null || instance.Equals(null) || ( ( instance is string ) && string.IsNullOrEmpty((string)instance) );
+            var isNull = instance == null || instance.Equals(null) || ( ( instance is string v ) && string.IsNullOrEmpty(v) );
             instance = MoveNextDrawer();
             if ( isNull ) { EditorUtils.MarkLastFieldError("An instance is required."); }
             return instance;
@@ -217,15 +216,10 @@ namespace ParadoxNotion.Design
     ///<summary>Will show a text area for string values</summary>
 	public class TextAreaDrawer : AttributeDrawer<TextAreaFieldAttribute>
     {
-        private static GUIStyle areaStyle;
-        static TextAreaDrawer() {
-            areaStyle = new GUIStyle(GUI.skin.GetStyle("TextArea"));
-            areaStyle.wordWrap = true;
-        }
         public override object OnGUI(GUIContent content, object instance) {
             if ( fieldInfo.FieldType == typeof(string) ) {
                 GUILayout.Label(content);
-                return EditorGUILayout.TextArea((string)instance, areaStyle, GUILayout.Height(attribute.numberOfLines * areaStyle.lineHeight));
+                return EditorGUILayout.TextArea((string)instance, Styles.wrapTextArea, GUILayout.Height(attribute.numberOfLines * Styles.wrapTextArea.lineHeight));
             }
             return MoveNextDrawer();
         }
@@ -234,14 +228,13 @@ namespace ParadoxNotion.Design
     ///<summary>Can be used on an interface to popup select a concrete implementation.<summary>
     public class ReferenceFieldDrawer : AttributeDrawer<ReferenceFieldAttribute>
     {
-        public override object OnGUI(GUIContent content, object instance)
-        {
+        public override object OnGUI(GUIContent content, object instance) {
             var options = ReflectionTools.GetImplementationsOf(fieldInfo.FieldType);
-            var selection = EditorUtils.Popup<System.Type>(content, instance != null? instance.GetType() : fieldInfo.FieldType, options);
-            if (selection == null){ return instance = null; }
+            var selection = EditorUtils.Popup<System.Type>(content, instance != null ? instance.GetType() : fieldInfo.FieldType, options);
+            if ( selection == null ) { return null; }
 
-            if (instance == null || instance.GetType() != selection ) {
-                if (!typeof(UnityEngine.Object).IsAssignableFrom(selection)){
+            if ( instance == null || instance.GetType() != selection ) {
+                if ( !typeof(UnityEngine.Object).IsAssignableFrom(selection) ) {
                     return System.Activator.CreateInstance(selection);
                 }
             }

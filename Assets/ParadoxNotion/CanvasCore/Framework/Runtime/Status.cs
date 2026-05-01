@@ -1,7 +1,7 @@
 ﻿namespace NodeCanvas.Framework
 {
 
-    ///<summary> Core Execution Status enumeration</summary>
+    ///<summary>Core Execution Status enumeration</summary>
     public enum Status
     {
         ///<summary>The operation has failed.</summary>
@@ -18,11 +18,11 @@
         Optional = 5,
     }
 
-    ///<summary> Enumeration for boolean status result</summary>
+    ///<summary>Boolean Status result. Castable to Status</summary>
 	public enum BooleanStatus
     {
         Failure = 0,
-        Success = 1
+        Success = 1,
     }
 
     ///<summary>Usual final Statuses. Castable to Status</summary>

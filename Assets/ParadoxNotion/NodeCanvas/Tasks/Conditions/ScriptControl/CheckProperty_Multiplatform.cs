@@ -21,7 +21,7 @@ namespace NodeCanvas.Tasks.Conditions
         [SerializeField]
         protected BBObjectParameter checkValue;
         [SerializeField]
-        protected CompareMethod comparison;
+        protected CompareOp comparison;
 
         private MethodInfo targetMethod => method;
 
@@ -73,7 +73,7 @@ namespace NodeCanvas.Tasks.Conditions
                 UndoUtility.RecordObject(ownerSystem.contextObject, "Set Reflection Member");
                 this.method = new SerializedMethodInfo(method);
                 this.checkValue.SetType(method.ReturnType);
-                comparison = CompareMethod.EqualTo;
+                comparison = CompareOp.EqualTo;
             }
         }
 
@@ -110,7 +110,7 @@ namespace NodeCanvas.Tasks.Conditions
                 GUILayout.EndVertical();
 
                 GUI.enabled = checkValue.varType == typeof(float) || checkValue.varType == typeof(int);
-                comparison = (CompareMethod)UnityEditor.EditorGUILayout.EnumPopup("Comparison", comparison);
+                comparison = (CompareOp)UnityEditor.EditorGUILayout.EnumPopup("Comparison", comparison);
                 GUI.enabled = true;
                 NodeCanvas.Editor.BBParameterEditor.ParameterField("Value", checkValue);
             }

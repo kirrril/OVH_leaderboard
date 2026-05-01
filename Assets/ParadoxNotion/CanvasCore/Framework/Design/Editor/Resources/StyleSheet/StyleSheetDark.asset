@@ -554,7 +554,7 @@ MonoBehaviour:
       m_Normal:
         m_Background: {fileID: 2800000, guid: ffdae6d737a3f7144b43df3fe24283f4, type: 3}
         m_ScaledBackgrounds: []
-        m_TextColor: {r: 0.7205882, g: 0.7205882, b: 0.7205882, a: 1}
+        m_TextColor: {r: 0.7735849, g: 0.7735849, b: 0.7735849, a: 1}
       m_Hover:
         m_Background: {fileID: 0}
         m_ScaledBackgrounds: []
@@ -1301,7 +1301,7 @@ MonoBehaviour:
     log: {fileID: 2800000, guid: 7002f50ea12a4f2419d3a22cd2931629, type: 3}
     lens: {fileID: 2800000, guid: b70a85fbb4eb7bf46bb6345f7b0ff842, type: 3}
     refactor: {fileID: 2800000, guid: deab6b3165ab396408e7333c5580ef74, type: 3}
-    flag: {fileID: 2800000, guid: 38a8a3c0531011847b034f3cb4e0370e, type: 3}
+    flag: {fileID: 2800000, guid: bf1a36f0446145d40b93b354311f4289, type: 3}
     verboseLevel1: {fileID: 2800000, guid: 54e96ea4c35de7544a6b8f80768337c0, type: 3}
     verboseLevel2: {fileID: 2800000, guid: 3cd33e6f1767ed74aa82280df4fb66b7, type: 3}
     verboseLevel3: {fileID: 2800000, guid: 25a5033cf1bf9a94096ed81195e713e3, type: 3}

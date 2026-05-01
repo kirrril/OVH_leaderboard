@@ -14,9 +14,8 @@ namespace NodeCanvas.Framework
                 return assignable.currentInstance;
             }
 
-            Graph instance = null;
             if ( assignable.instances == null ) { assignable.instances = new System.Collections.Generic.Dictionary<Graph, Graph>(); }
-            if ( !assignable.instances.TryGetValue(assignable.subGraph, out instance) ) {
+            if ( !assignable.instances.TryGetValue(assignable.subGraph, out Graph instance) ) {
                 instance = Graph.Clone(assignable.subGraph, assignable.graph);
                 assignable.instances[assignable.subGraph] = instance;
             }
@@ -35,7 +34,7 @@ namespace NodeCanvas.Framework
                 assignable.currentInstance.StartGraph(agent, assignable.graph.blackboard.parent, Graph.UpdateMode.Manual, (result) =>
                 {
                     if ( assignable.status == Status.Running ) { assignable.TryReadAndUnbindMappedVariables(); }
-                    if ( callback != null ) { callback(result); }
+                    callback?.Invoke(result);
                 });
                 return true;
             }
@@ -122,21 +121,6 @@ namespace NodeCanvas.Framework
             }
         }
 
-        // ///<summary>Link subgraph variables to parent graph variables matching name and type. This is not used.</summary>
-        // public static void AutoLinkByName(this IGraphAssignable assignable) {
-        //     if ( assignable.subGraph == null || assignable.variablesMap == null ) { return; }
-        //     foreach ( var bbParam in assignable.variablesMap ) {
-        //         var thatVariable = assignable.subGraph.blackboard.GetVariableByID(bbParam.targetSubGraphVariableID);
-        //         if ( thatVariable != null && thatVariable.isExposedPublic && !thatVariable.isPropertyBound ) {
-        //             var thisVariable = assignable.graph.blackboard.GetVariable(thatVariable.name, thatVariable.varType);
-        //             if ( thisVariable != null ) {
-        //                 bbParam.SetType(thatVariable.varType);
-        //                 bbParam.name = thatVariable.name;
-        //             }
-        //         }
-        //     }
-        // }
-
         ///----------------------------------------------------------------------------------------------
 
 #if UNITY_EDITOR
@@ -149,12 +133,12 @@ namespace NodeCanvas.Framework
                 return;
             }
 
-            ParadoxNotion.Design.EditorUtils.Separator();
-            ParadoxNotion.Design.EditorUtils.CoolLabel("SubGraph Variables Mapping");
+            EditorUtils.Separator();
+            EditorUtils.CoolLabel("SubGraph Variables Mapping");
 
             var subTreeVariables = assignable.subGraph.blackboard.variables.Values;
             if ( subTreeVariables.Count == 0 || !subTreeVariables.Any(v => v.isExposedPublic) ) {
-                UnityEditor.EditorGUILayout.HelpBox("SubGraph has no exposed public variables. You can make variables exposed public through the 'gear' menu of a variable.", UnityEditor.MessageType.Info);
+                UnityEditor.EditorGUILayout.HelpBox("SubGraph has no exposed public variables. You can make variables exposed public through the 'gear' menu of a variable. Once you expose any variables, they will be listed here and possible to map from/to the variables of this graph.", UnityEditor.MessageType.Info);
                 assignable.variablesMap = null;
                 return;
             }

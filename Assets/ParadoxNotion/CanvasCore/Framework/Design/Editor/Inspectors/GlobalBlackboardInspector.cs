@@ -12,7 +12,7 @@ namespace NodeCanvas.Editor
     public class GlobalBlackboardInspector : UnityEditor.Editor
     {
 
-        private GlobalBlackboard bb { get { return (GlobalBlackboard)target; } }
+        private GlobalBlackboard bb => (GlobalBlackboard)target;
 
         private SerializedProperty dontDestroyProp;
         private SerializedProperty identifierProp;

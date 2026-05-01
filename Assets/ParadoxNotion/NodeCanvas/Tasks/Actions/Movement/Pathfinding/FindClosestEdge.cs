@@ -18,10 +18,8 @@ namespace NodeCanvas.Tasks.Actions
         [BlackboardOnly]
         public BBParameter<Vector3> saveFoundPosition;
 
-        private NavMeshHit hit;
-
         protected override void OnExecute() {
-            if ( NavMesh.FindClosestEdge(targetPosition.value, out hit, -1) ) {
+            if ( NavMesh.FindClosestEdge(targetPosition.value, out NavMeshHit hit, -1) ) {
                 saveFoundPosition.value = hit.position;
                 EndAction(true);
                 return;

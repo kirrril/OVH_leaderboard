@@ -18,9 +18,7 @@ namespace NodeCanvas.Tasks.Actions
         [BlackboardOnly]
         public BBParameter<int> intVariable;
 
-        protected override string info {
-            get { return "Set " + intVariable + " Random(" + minValue + ", " + maxValue + ")"; }
-        }
+        protected override string info => "Set " + intVariable + " Random(" + minValue + ", " + maxValue + ")";
 
         protected override void OnExecute() {
             intVariable.value = Random.Range(minValue.value, maxValue.value + 1);

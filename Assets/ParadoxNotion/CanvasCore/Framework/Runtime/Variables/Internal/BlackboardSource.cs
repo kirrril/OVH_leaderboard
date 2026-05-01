@@ -22,12 +22,12 @@ namespace NodeCanvas.Framework.Internal
         public Component propertiesBindTarget { get; set; }
         string IBlackboard.independantVariablesFieldName => null;
 
-        void IBlackboard.TryInvokeOnVariableAdded(Variable variable) { if ( onVariableAdded != null ) onVariableAdded(variable); }
-        void IBlackboard.TryInvokeOnVariableRemoved(Variable variable) { if ( onVariableRemoved != null ) onVariableRemoved(variable); }
+        void IBlackboard.TryInvokeOnVariableAdded(Variable variable) { onVariableAdded?.Invoke(variable); }
+        void IBlackboard.TryInvokeOnVariableRemoved(Variable variable) { onVariableRemoved?.Invoke(variable); }
 
         //required
         public BlackboardSource() { }
 
-        public override string ToString() { return identifier; }
+        public override string ToString() => identifier;
     }
 }

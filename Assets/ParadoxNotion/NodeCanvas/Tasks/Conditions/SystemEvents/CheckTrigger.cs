@@ -13,7 +13,7 @@ namespace NodeCanvas.Tasks.Conditions
     public class CheckTrigger_Transform : ConditionTask<Transform>
     {
 
-        public TriggerTypes checkType = TriggerTypes.TriggerEnter;
+        public TriggerType checkType = TriggerType.TriggerEnter;
         public bool specifiedTagOnly;
         [TagField, ShowIf("specifiedTagOnly", 1)]
         public string objectTag = "Untagged";
@@ -22,13 +22,10 @@ namespace NodeCanvas.Tasks.Conditions
 
         private bool stay;
 
-        protected override string info {
-            get { return checkType.ToString() + ( specifiedTagOnly ? ( " '" + objectTag + "' tag" ) : "" ); }
-        }
+        protected override string info => checkType.ToString() + ( specifiedTagOnly ? ( " '" + objectTag + "' tag" ) : "" );
 
         protected override bool OnCheck() {
-            if ( checkType == TriggerTypes.TriggerStay ) { return stay; }
-            return false;
+            return checkType == TriggerType.TriggerStay && stay;
         }
 
         protected override void OnEnable() {
@@ -41,20 +38,20 @@ namespace NodeCanvas.Tasks.Conditions
             router.onTriggerExit -= OnTriggerExit;
         }
 
-        public void OnTriggerEnter(ParadoxNotion.EventData<Collider> data) {
+        public void OnTriggerEnter(EventData<Collider> data) {
             if ( !specifiedTagOnly || data.value.gameObject.CompareTag(objectTag) ) {
                 stay = true;
-                if ( checkType == TriggerTypes.TriggerEnter || checkType == TriggerTypes.TriggerStay ) {
+                if ( checkType == TriggerType.TriggerEnter || checkType == TriggerType.TriggerStay ) {
                     saveGameObjectAs.value = data.value.gameObject;
                     YieldReturn(true);
                 }
             }
         }
 
-        public void OnTriggerExit(ParadoxNotion.EventData<Collider> data) {
+        public void OnTriggerExit(EventData<Collider> data) {
             if ( !specifiedTagOnly || data.value.gameObject.CompareTag(objectTag) ) {
                 stay = false;
-                if ( checkType == TriggerTypes.TriggerExit ) {
+                if ( checkType == TriggerType.TriggerExit ) {
                     saveGameObjectAs.value = data.value.gameObject;
                     YieldReturn(true);
                 }
@@ -69,7 +66,7 @@ namespace NodeCanvas.Tasks.Conditions
     public class CheckTrigger : ConditionTask<Collider>
     {
 
-        public TriggerTypes checkType = TriggerTypes.TriggerEnter;
+        public TriggerType checkType = TriggerType.TriggerEnter;
         public bool specifiedTagOnly;
         [TagField, ShowIf("specifiedTagOnly", 1)]
         public string objectTag = "Untagged";
@@ -78,13 +75,10 @@ namespace NodeCanvas.Tasks.Conditions
 
         private bool stay;
 
-        protected override string info {
-            get { return checkType.ToString() + ( specifiedTagOnly ? ( " '" + objectTag + "' tag" ) : "" ); }
-        }
+        protected override string info => checkType.ToString() + ( specifiedTagOnly ? ( " '" + objectTag + "' tag" ) : "" );
 
         protected override bool OnCheck() {
-            if ( checkType == TriggerTypes.TriggerStay ) { return stay; }
-            return false;
+            return checkType == TriggerType.TriggerStay && stay;
         }
 
         protected override void OnEnable() {
@@ -97,20 +91,20 @@ namespace NodeCanvas.Tasks.Conditions
             router.onTriggerExit -= OnTriggerExit;
         }
 
-        public void OnTriggerEnter(ParadoxNotion.EventData<Collider> data) {
+        public void OnTriggerEnter(EventData<Collider> data) {
             if ( !specifiedTagOnly || data.value.gameObject.CompareTag(objectTag) ) {
                 stay = true;
-                if ( checkType == TriggerTypes.TriggerEnter || checkType == TriggerTypes.TriggerStay ) {
+                if ( checkType == TriggerType.TriggerEnter || checkType == TriggerType.TriggerStay ) {
                     saveGameObjectAs.value = data.value.gameObject;
                     YieldReturn(true);
                 }
             }
         }
 
-        public void OnTriggerExit(ParadoxNotion.EventData<Collider> data) {
+        public void OnTriggerExit(EventData<Collider> data) {
             if ( !specifiedTagOnly || data.value.gameObject.CompareTag(objectTag) ) {
                 stay = false;
-                if ( checkType == TriggerTypes.TriggerExit ) {
+                if ( checkType == TriggerType.TriggerExit ) {
                     saveGameObjectAs.value = data.value.gameObject;
                     YieldReturn(true);
                 }

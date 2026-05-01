@@ -21,9 +21,9 @@ namespace NodeCanvas.Tasks.Actions
         //holds the last played animationClip.value for each agent 
         private static Dictionary<Animation, AnimationClip> lastPlayedClips = new Dictionary<Animation, AnimationClip>();
 
-        protected override string info {
-            get { return "Anim " + animationClip.ToString(); }
-        }
+        protected override string info => agentInfo + "." + animationClip.ToString();
+
+        public override float length => !animationClip.isNull ? animationClip.value.length - crossFadeTime : 0;
 
         protected override string OnInit() {
             agent.AddClip(animationClip.value, animationClip.value.name);
@@ -33,8 +33,7 @@ namespace NodeCanvas.Tasks.Actions
 
         protected override void OnExecute() {
 
-            AnimationClip last = null;
-            if ( lastPlayedClips.TryGetValue(agent, out last) && last == animationClip.value ) {
+            if ( lastPlayedClips.TryGetValue(agent, out AnimationClip last) && last == animationClip.value ) {
                 EndAction(true);
                 return;
             }

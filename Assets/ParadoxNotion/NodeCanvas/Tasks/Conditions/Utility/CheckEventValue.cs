@@ -16,14 +16,16 @@ namespace NodeCanvas.Tasks.Conditions
         [Name("Compare Value To")]
         public BBParameter<T> value;
 
-        protected override string info { get { return string.Format("Event [{0}].value == {1}", eventName, value); } }
+        protected override string info => string.Format("Event [{0}].value == {1}", eventName, value);
 
         protected override void OnEnable() { router.onCustomEvent += OnCustomEvent; }
         protected override void OnDisable() { router.onCustomEvent -= OnCustomEvent; }
 
+        protected override bool OnCheck() {
+            return false;
+        }
 
-        protected override bool OnCheck() { return false; }
-        void OnCustomEvent(string eventName, ParadoxNotion.IEventData msg) {
+        void OnCustomEvent(string eventName, IEventData msg) {
             if ( eventName.Equals(this.eventName.value, System.StringComparison.OrdinalIgnoreCase) ) {
                 var receivedValue = msg.valueBoxed;
                 if ( ObjectUtils.AnyEquals(receivedValue, value.value) ) {

@@ -27,7 +27,7 @@ namespace NodeCanvas.Framework
         [System.NonSerialized] private Status _status = Status.Resting;
 
         ///<summary>The Unique ID of the node. One is created only if requested.</summary>
-        public string UID => ( string.IsNullOrEmpty(_UID) ? _UID = System.Guid.NewGuid().ToString() : _UID );
+        public string UID => string.IsNullOrEmpty(_UID) ? _UID = System.Guid.NewGuid().ToString() : _UID;
 
         ///<summary>The source node of the connection</summary>
         public Node sourceNode {
@@ -62,7 +62,7 @@ namespace NodeCanvas.Framework
         }
 
         ///<summary>The graph this connection belongs to taken from the source node.</summary>
-        public Graph graph => ( sourceNode != null ? sourceNode.graph : null );
+        public Graph graph => sourceNode?.graph;
 
         ///----------------------------------------------------------------------------------------------
 

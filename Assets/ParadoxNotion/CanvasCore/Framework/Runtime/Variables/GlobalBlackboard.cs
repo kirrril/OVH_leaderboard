@@ -88,7 +88,7 @@ namespace NodeCanvas.Framework
             }
         }
 
-        public override string ToString() { return identifier; }
+        public override string ToString() => identifier;
 
         ///----------------------------------------------------------------------------------------------
 

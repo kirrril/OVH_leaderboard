@@ -44,6 +44,8 @@ namespace NodeCanvas.Tasks.Actions
         private Vector3 final;
         private bool ponging = false;
 
+        public override float length => time.value;
+
         protected override void OnExecute() {
 
             if ( ponging )

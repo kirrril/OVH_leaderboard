@@ -17,9 +17,7 @@ namespace NodeCanvas.Tasks.Actions
         public BBParameter<float> delay;
         public bool sendGlobal;
 
-        protected override string info {
-            get { return ( sendGlobal ? "Global " : "" ) + "Send Event [" + eventName + "]" + ( delay.value > 0 ? " after " + delay + " sec." : "" ); }
-        }
+        protected override string info => ( sendGlobal ? "Global " : "" ) + "Send Event [" + eventName + "]" + ( delay.value > 0 ? " after " + delay + " sec." : "" );
 
         protected override void OnUpdate() {
             if ( elapsedTime >= delay.value ) {
@@ -46,9 +44,7 @@ namespace NodeCanvas.Tasks.Actions
         public BBParameter<float> delay;
         public bool sendGlobal;
 
-        protected override string info {
-            get { return string.Format("{0} Event [{1}] ({2}){3}", ( sendGlobal ? "Global " : "" ), eventName, eventValue, ( delay.value > 0 ? " after " + delay + " sec." : "" )); }
-        }
+        protected override string info => string.Format("{0} Event [{1}] ({2}){3}", ( sendGlobal ? "Global " : "" ), eventName, eventValue, ( delay.value > 0 ? " after " + delay + " sec." : "" ));
 
         protected override void OnUpdate() {
             if ( elapsedTime >= delay.value ) {

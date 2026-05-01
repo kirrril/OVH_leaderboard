@@ -8,8 +8,8 @@ namespace NodeCanvas.BehaviourTrees
 
     [Name("Step Sequencer")]
     [Category("Composites")]
-    [Description("In comparison to a normal Sequencer which executes all its children until one fails, Step Sequencer executes its children one-by-one per Step Sequencer execution. The executed child status is returned regardless of Success or Failure.")]
-    [ParadoxNotion.Design.Icon("StepIterator")]
+    [Description("In comparison to a normal Sequencer which executes all its children until one fails, the Step Sequencer executes their children in order (like a sequencer), BUT after every child execution, it returns the child status. Then the next time the Step Sequencer executes, the next child in order will execute.")]
+    [ParadoxNotion.Design.Icon("StepSequencer")]
     [Color("bf7fff")]
     public class StepIterator : BTComposite
     {

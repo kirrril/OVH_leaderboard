@@ -46,7 +46,7 @@ public class FightController : MonoBehaviour
                 manAnimator.SetBool("isAttacking", false);
                 manAnimator.SetBool("isSubmissed", true);
                 yield return new WaitForSeconds(2);
-                playerController.ModifyScore(10);
+                GameManager.Instance.ModifyScore(10);
                 playerController.currentState = PlayerController.State.Walking;
                 yield return new WaitForSeconds(2);
                 fightLight.SetActive(false);
@@ -62,7 +62,7 @@ public class FightController : MonoBehaviour
         yield return new WaitForSeconds(2);
         playerController.SufferSubmission();
         yield return new WaitForSeconds(2);
-        playerController.ModifyScore(-10);
+        GameManager.Instance.ModifyScore(-10);
         playerAnimator.SetBool("isSubmissed", false);
         playerController.currentState = PlayerController.State.Dying;
         manAnimator.SetBool("isAttacking", false);

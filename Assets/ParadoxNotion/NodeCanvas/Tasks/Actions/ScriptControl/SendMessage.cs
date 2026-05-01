@@ -14,9 +14,7 @@ namespace NodeCanvas.Tasks.Actions
         [RequiredField]
         public BBParameter<string> methodName;
 
-        protected override string info {
-            get { return string.Format("Message {0}()", methodName); }
-        }
+        protected override string info => string.Format("Message {0}()", methodName);
 
         protected override void OnExecute() {
             agent.SendMessage(methodName.value);
@@ -34,9 +32,7 @@ namespace NodeCanvas.Tasks.Actions
         public BBParameter<string> methodName;
         public BBParameter<T> argument;
 
-        protected override string info {
-            get { return string.Format("Message {0}({1})", methodName, argument.ToString()); }
-        }
+        protected override string info => string.Format("Message {0}({1})", methodName, argument.ToString());
 
         protected override void OnExecute() {
             if ( argument.isNull ) {

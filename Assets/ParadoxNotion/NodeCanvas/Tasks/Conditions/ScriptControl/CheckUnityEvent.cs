@@ -88,7 +88,10 @@ namespace NodeCanvas.Tasks.Conditions
         }
 
         public void Raised() { YieldReturn(true); }
-        protected override bool OnCheck() { return false; }
+
+        protected override bool OnCheck() {
+            return false;
+        }
 
         void SetTargetEvent(MemberInfo newMember) {
             if ( newMember != null ) {
@@ -200,7 +203,9 @@ namespace NodeCanvas.Tasks.Conditions
             YieldReturn(true);
         }
 
-        protected override bool OnCheck() { return false; }
+        protected override bool OnCheck() {
+            return false;
+        }
 
         void SetTargetEvent(MemberInfo newMember) {
             if ( newMember != null ) { _eventInfo = new SerializedUnityEventInfo(newMember); }
@@ -283,7 +288,7 @@ namespace NodeCanvas.Tasks.Conditions
             {
                 if ( _eventInfo == null ) { return "No Event Selected"; }
                 if ( targetMember == null ) { return _eventInfo.AsString().FormatError(); }
-                return string.Format("'{0}' Raised && Value == {1}", targetMember.Name, checkValue);
+                return string.Format("{0}.{1} &= {2}", agentInfo, targetMember.Name, checkValue);
             }
         }
 
@@ -291,7 +296,7 @@ namespace NodeCanvas.Tasks.Conditions
 
         protected override string OnInit() {
             if ( _eventInfo == null ) { return "No Event Selected"; }
-            if ( targetEventField == null ) { return _eventInfo.AsString(); }
+            if ( targetMember == null ) { return string.Format("Event {0} is null", _eventInfo.AsString()); }
             if ( targetEventField != null ) { unityEvent = (UnityEvent<T>)targetEventField.GetValue(agent); }
             if ( targetEventProp != null ) { unityEvent = (UnityEvent<T>)targetEventProp.GetValue(agent); }
             return null;
@@ -311,7 +316,9 @@ namespace NodeCanvas.Tasks.Conditions
             }
         }
 
-        protected override bool OnCheck() { return false; }
+        protected override bool OnCheck() {
+            return false;
+        }
 
         void SetTargetEvent(MemberInfo newMember) {
             if ( newMember != null ) { _eventInfo = new SerializedUnityEventInfo(newMember); }

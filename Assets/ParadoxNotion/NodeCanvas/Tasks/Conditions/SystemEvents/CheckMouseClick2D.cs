@@ -14,11 +14,11 @@ namespace NodeCanvas.Tasks.Conditions
 
         public MouseClickEvent checkType = MouseClickEvent.MouseDown;
 
-        protected override string info {
-            get { return checkType.ToString(); }
-        }
+        protected override string info => checkType.ToString();
 
-        protected override bool OnCheck() { return false; }
+        protected override bool OnCheck() {
+            return false;
+        }
 
         protected override void OnEnable() {
             router.onMouseDown += OnMouseDown;

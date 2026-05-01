@@ -16,17 +16,13 @@ namespace NodeCanvas.Tasks.Actions
         [RequiredField]
         public BBParameter<string> eventName;
 
-        protected override string info {
-            get { return string.Format("Send Event [{0}] to {1}", eventName, targetObjects); }
-        }
+        protected override string info => string.Format("Send Event [{0}] to {1}", eventName, targetObjects);
 
         protected override void OnExecute() {
             foreach ( var target in targetObjects.value ) {
                 if ( target != null ) {
                     var owner = target.GetComponent<GraphOwner>();
-                    if ( owner != null ) {
-                        owner.SendEvent(eventName.value, null, this);
-                    }
+                    owner?.SendEvent(eventName.value, null, this);
                 }
             }
 
@@ -47,16 +43,12 @@ namespace NodeCanvas.Tasks.Actions
         public BBParameter<string> eventName;
         public BBParameter<T> eventValue;
 
-        protected override string info {
-            get { return string.Format("Send Event [{0}]({1}) to {2}", eventName, eventValue, targetObjects); }
-        }
+        protected override string info => string.Format("Send Event [{0}]({1}) to {2}", eventName, eventValue, targetObjects);
 
         protected override void OnExecute() {
             foreach ( var target in targetObjects.value ) {
                 var owner = target.GetComponent<GraphOwner>();
-                if ( owner != null ) {
-                    owner.SendEvent(eventName.value, eventValue.value, this);
-                }
+                owner?.SendEvent(eventName.value, eventValue.value, this);
             }
 
             EndAction();

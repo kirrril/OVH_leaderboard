@@ -30,7 +30,7 @@ namespace NodeCanvas.Editor
                 instance.Set(newTarget);
                 foreach ( var callbackAtt in attributes.OfType<CallbackAttribute>() ) {
                     var m = contextNode.GetType().RTGetMethod(callbackAtt.methodName);
-                    if ( m != null ) { m.Invoke(contextNode, null); }
+                    m?.Invoke(contextNode, null);
                 }
                 UndoUtility.SetDirty(contextUnityObject);
             }

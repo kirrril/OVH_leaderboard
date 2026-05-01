@@ -178,9 +178,7 @@ namespace ParadoxNotion.Design
 
             TrySaveSyncFile(finalTypes);
 
-            if ( onPreferredTypesChanged != null ) {
-                onPreferredTypesChanged();
-            }
+            onPreferredTypesChanged?.Invoke();
         }
 
         ///<summary>Append a type to the list</summary>
@@ -258,8 +256,7 @@ namespace ParadoxNotion.Design
             var type = info is Type ? info as Type : info.ReflectedType;
             if ( type == null ) { return Color.black; }
 
-            Color color;
-            if ( typeColors.TryGetValue(type, out color) ) {
+            if ( typeColors.TryGetValue(type, out Color color) ) {
                 return color;
             }
 
@@ -304,8 +301,7 @@ namespace ParadoxNotion.Design
             var type = info is Type ? info as Type : info.ReflectedType;
             if ( type == null ) { return null; }
 
-            Texture texture = null;
-            if ( typeIcons.TryGetValue(type.FullName, out texture) ) {
+            if ( typeIcons.TryGetValue(type.FullName, out Texture texture) ) {
                 if ( texture != null ) {
                     if ( texture.name != DEFAULT_TYPE_ICON_NAME || fallbackToDefault ) {
                         return texture;
@@ -385,8 +381,7 @@ namespace ParadoxNotion.Design
                 return GetTypeIcon(iconAttribute.fromType, true);
             }
 
-            Texture texture = null;
-            if ( typeIcons.TryGetValue(iconAttribute.iconName, out texture) ) {
+            if ( typeIcons.TryGetValue(iconAttribute.iconName, out Texture texture) ) {
                 return texture;
             }
 
@@ -413,8 +408,7 @@ namespace ParadoxNotion.Design
             var type = info is Type ? info as Type : info.ReflectedType;
             if ( type == null ) { return null; }
 
-            string doc = null;
-            if ( typeDocs.TryGetValue(type.FullName, out doc) ) {
+            if ( typeDocs.TryGetValue(type.FullName, out string doc) ) {
                 return doc;
             }
 

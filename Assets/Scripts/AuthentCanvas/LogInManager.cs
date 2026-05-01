@@ -59,7 +59,7 @@ public class LogInManager : MonoBehaviour
                     PlayerPrefs.SetString("SessionToken", res.session_token);
                     PlayerPrefs.SetString("PlayerName", player_name);
                     PlayerPrefs.Save();
-                    GameManager.isCompeting = true;
+                    RankAndScoreManager.isCompeting = true;
                     SceneManager.LoadScene("GameScene");
                 }
                 else
@@ -85,7 +85,7 @@ public class LogInManager : MonoBehaviour
     public void OnPlayAsGuestButtonClick()
     {
         StopAllCoroutines();
-        GameManager.isCompeting = false;
+        RankAndScoreManager.isCompeting = false;
         SceneManager.LoadScene("GameScene");
     }
 

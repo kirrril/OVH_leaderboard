@@ -1,18 +1,15 @@
 fileFormatVersion: 2
-guid: 97cab2f5df5009045a828151c1d4af72
+guid: dcf40bac689367f4ba07b1a75299e628
 MonoImporter:
-  externalObjects: {}
   serializedVersion: 2
   defaultReferences: []
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 
-  assetBundleName: 
-  assetBundleVariant: 
 AssetOrigin:
   serializedVersion: 1
   productId: 14914
   packageName: NodeCanvas
-  packageVersion: 3.3.3
+  packageVersion: 3.4.1
   assetPath: Assets/ParadoxNotion/NodeCanvas/_DeprecatedFiles/Legacy_FlipSelector.cs
-  uploadId: 754282
+  uploadId: 866614

@@ -54,7 +54,7 @@ public class ConnectionManager : MonoBehaviour
             {
                 connectionStatus.text = $"Welcome back, {res.player_name}!";
                 yield return new WaitForSeconds(1);
-                GameManager.isCompeting = true;
+                RankAndScoreManager.isCompeting = true;
                 SceneManager.LoadScene("GameScene");
             }
             else
@@ -69,7 +69,7 @@ public class ConnectionManager : MonoBehaviour
         {
             connectionStatus.text = $"Connection failed. Play offline!";
             yield return new WaitForSeconds(1);
-            GameManager.isCompeting = false;
+            RankAndScoreManager.isCompeting = false;
             SceneManager.LoadScene("GameScene");
         }
     }

@@ -39,9 +39,7 @@ namespace NodeCanvas.Framework
             {
                 if ( _name != value ) {
                     _name = value;
-                    if ( onNameChanged != null ) {
-                        onNameChanged(value);
-                    }
+                    onNameChanged?.Invoke(value);
                 }
             }
         }
@@ -83,7 +81,7 @@ namespace NodeCanvas.Framework
         public Variable(string name, string ID) { _name = name; _id = ID; }
 
         //...
-        internal void OnDestroy() { if ( onDestroy != null ) { onDestroy(); } }
+        internal void OnDestroy() { onDestroy?.Invoke(); }
 
         ///<summary>Duplicate this Variable into target Blackboard</summary>
         public Variable Duplicate(IBlackboard targetBB) {
@@ -103,7 +101,7 @@ namespace NodeCanvas.Framework
         //we need this since onValueChanged is an event and we can't check != null outside of this class
         protected bool HasValueChangeEvent() { return onValueChanged != null; }
         //invoke value changed event
-        protected void TryInvokeValueChangeEvent(object value) { if ( onValueChanged != null ) { onValueChanged(value); } }
+        protected void TryInvokeValueChangeEvent(object value) { onValueChanged?.Invoke(value); }
 
         ///<summary>Checks whether a convertion to type is possible</summary>
         public bool CanConvertTo(Type toType) { return GetGetConverter(toType) != null; }
@@ -140,7 +138,7 @@ namespace NodeCanvas.Framework
         }
 
         //...
-        public override string ToString() { return name; }
+        public override string ToString() => name;
     }
 
     ///----------------------------------------------------------------------------------------------
@@ -170,14 +168,14 @@ namespace NodeCanvas.Framework
                     var boxed = (object)value;
                     if ( !ObjectUtils.AnyEquals(_value, boxed) ) {
                         this._value = value;
-                        if ( setter != null ) { setter(value); }
+                        setter?.Invoke(value);
                         base.TryInvokeValueChangeEvent(boxed);
                     }
                     return;
                 }
 
                 this._value = value;
-                if ( setter != null ) { setter(value); }
+                setter?.Invoke(value);
             }
         }
 
@@ -239,8 +237,7 @@ namespace NodeCanvas.Framework
 
             var member = type.RTGetFieldOrProp(memberString);
 
-            if ( member is FieldInfo ) {
-                var field = (FieldInfo)member;
+            if ( member is FieldInfo field ) {
                 var instance = field.IsStatic ? null : go.GetComponent(type);
                 if ( instance == null && !field.IsStatic ) {
                     Logger.LogError(string.Format("A Blackboard Variable '{0}' is due to bind to a Component type that is missing '{1}'. Binding ignored", name, typeString), LogTag.VARIABLE, go);
@@ -257,8 +254,7 @@ namespace NodeCanvas.Framework
                 return;
             }
 
-            if ( member is PropertyInfo ) {
-                var prop = (PropertyInfo)member;
+            if ( member is PropertyInfo prop ) {
                 var getMethod = prop.RTGetGetMethod();
                 var setMethod = prop.RTGetSetMethod();
                 var isStatic = ( getMethod != null && getMethod.IsStatic ) || ( setMethod != null && setMethod.IsStatic );

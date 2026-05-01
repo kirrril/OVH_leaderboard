@@ -18,9 +18,7 @@ namespace NodeCanvas.Tasks.Actions
         public float secondsToRun = 1f;
         public BooleanStatus finishStatus = BooleanStatus.Success;
 
-        protected override string info {
-            get { return "Log '" + log + "'" + ( secondsToRun > 0 ? " for " + secondsToRun + " sec." : "" ); }
-        }
+        protected override string info => "Log '" + log + "'" + ( secondsToRun > 0 ? " for " + secondsToRun + " sec." : "" );
 
         protected override void OnExecute() {
             ParadoxNotion.Services.Logger.Log(string.Format("<b>({0}) ({1}) | Var '{2}' = </b> {3}", agent.gameObject.name, prefix.value, log.name, log.value), LogTag.EXECUTION, this);
@@ -28,7 +26,7 @@ namespace NodeCanvas.Tasks.Actions
 
         protected override void OnUpdate() {
             if ( elapsedTime >= secondsToRun ) {
-                EndAction(finishStatus == BooleanStatus.Success ? true : false);
+                EndAction(finishStatus == BooleanStatus.Success);
             }
         }
     }

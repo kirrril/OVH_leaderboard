@@ -9,18 +9,14 @@ namespace NodeCanvas.Tasks.Actions
 {
 
     [System.Obsolete("Execute Function now supports static functions as well")]
-    public class ExecuteStaticFunction : ActionTask, ISubParametersContainer
+    public class ExecuteStaticFunction : ActionTask
     {
 
         [SerializeField]
         protected ReflectedWrapper functionWrapper;
 
-        BBParameter[] ISubParametersContainer.GetSubParameters() {
-            return functionWrapper != null ? functionWrapper.GetVariables() : null;
-        }
-
         private MethodInfo targetMethod {
-            get { return functionWrapper != null ? functionWrapper.GetMethod() : null; }
+            get { return functionWrapper?.GetMethod(); }
         }
 
         protected override string info {

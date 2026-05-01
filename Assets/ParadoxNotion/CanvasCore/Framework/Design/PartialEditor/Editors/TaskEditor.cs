@@ -7,7 +7,6 @@ using ParadoxNotion;
 using ParadoxNotion.Design;
 using NodeCanvas.Framework;
 using NodeCanvas.Framework.Internal;
-using System.Linq;
 
 namespace NodeCanvas.Editor
 {
@@ -19,7 +18,7 @@ namespace NodeCanvas.Editor
         private EditorPropertyWrapper<TaskAgentParameter> agentParameterProp;
         private EditorMethodWrapper onTaskInspectorGUI;
 
-        private Task task { get { return target; } }
+        private Task task => target;
 
         protected override void OnEnable() {
             agentParameterProp = CreatePropertyWrapper<TaskAgentParameter>("_agentParameter");
@@ -61,8 +60,7 @@ namespace NodeCanvas.Editor
 
                 ShowTaskInspectorGUI(task, callback);
 
-                if ( task is ActionList ) {
-                    var list = (ActionList)task;
+                if ( task is ActionList list ) {
                     if ( list.actions.Count == 1 ) {
                         list.actions[0].isUserEnabled = true;
                         callback(list.actions[0]);
@@ -86,8 +84,7 @@ namespace NodeCanvas.Editor
 
                 ShowTaskInspectorGUI(task, callback);
 
-                if ( task is ConditionList ) {
-                    var list = (ConditionList)task;
+                if ( task is ConditionList list ) {
                     if ( list.conditions.Count == 1 ) {
                         list.conditions[0].isUserEnabled = true;
                         callback(list.conditions[0]);
@@ -119,12 +116,11 @@ namespace NodeCanvas.Editor
             var label = "Assign " + baseType.Name.SplitCamelCase();
             if ( GUILayout.Button(label) ) {
 
-                Action<Type> TaskTypeSelected = (t) =>
-                {
+                void TaskTypeSelected(Type t) {
                     var newTask = Task.Create(t, ownerSystem);
                     UndoUtility.RecordObject(ownerSystem.contextObject, "New Task");
                     callback(newTask);
-                };
+                }
 
                 var menu = EditorUtils.GetTypeSelectionMenu(baseType, TaskTypeSelected);
                 if ( CopyBuffer.TryGetCache<Task>(out Task copy) && baseType.IsAssignableFrom(copy.GetType()) ) {

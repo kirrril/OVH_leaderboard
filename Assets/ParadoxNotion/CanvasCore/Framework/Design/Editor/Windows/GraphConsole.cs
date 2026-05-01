@@ -215,11 +215,10 @@ namespace NodeCanvas.Editor
 
         ///<summary>Fetch last logger message of target graph</summary>
         public static Logger.Message GetLastMessageForGraph(Graph graph) {
-            List<Logger.Message> list = null;
-            if ( graphsMap.TryGetValue(graph, out list) ) {
+            if ( graphsMap.TryGetValue(graph, out List<Logger.Message> list) ) {
                 return list.LastOrDefault();
             }
-            return default(Logger.Message);
+            return default;
         }
 
         //...
@@ -258,14 +257,14 @@ namespace NodeCanvas.Editor
             }
 
             IGraphElement element = null;
-            if ( msg.context is IGraphElement ) {
-                element = (IGraphElement)msg.context;
+            if ( msg.context is IGraphElement e ) {
+                element = e;
             }
-            if ( msg.context is Task ) {
-                element = graph.GetTaskParentElement((Task)msg.context);
+            if ( msg.context is Task t ) {
+                element = graph.GetTaskParentElement(t);
             }
-            if ( msg.context is BBParameter ) {
-                element = graph.GetParameterParentElement((BBParameter)msg.context);
+            if ( msg.context is BBParameter p ) {
+                element = graph.GetParameterParentElement(p);
             }
 
             EditorApplication.delayCall += () => GraphEditor.FocusElement(element, true);

@@ -40,9 +40,8 @@ namespace NodeCanvas.Editor
         const int TOP_MARGIN = TAB_HEIGHT + 0;
         const int BOTTOM_MARGIN = 5;
         const int SIDE_MARGIN = 5;
-        const int GRID_SIZE = 20;
-        private static Rect canvasRect; //rect within which the graph is drawn (the window)
-        private static Rect viewRect; //the panning rect that is drawn within canvasRect
+        private static Rect canvasRect; //rect within which the graph is drawn
+        private static Rect viewRect; //the panning rect that is drawn within canvasRect (the window)
         private static Rect minimapRect; //rect to show minimap within
 
         ///----------------------------------------------------------------------------------------------
@@ -54,7 +53,7 @@ namespace NodeCanvas.Editor
         private static bool isDraggingMinimap;
         private static bool willRepaint = true;
         private static bool fullDrawPass = true;
-        private static System.Action OnDoPopup;
+        private static System.Action onDoPopup;
 
         private static Node[] tempCanvasGroupNodes;
         private static CanvasGroup[] tempCanvasGroupGroups;
@@ -83,7 +82,7 @@ namespace NodeCanvas.Editor
             get
             {
                 if ( current._rootGraph == null ) {
-                    current._rootGraph = EditorUtility.InstanceIDToObject(current._rootGraphID) as Graph;
+                    current._rootGraph = InstanceIDToObject(current._rootGraphID) as Graph;
                 }
                 return current._rootGraph;
             }
@@ -103,7 +102,7 @@ namespace NodeCanvas.Editor
                 }
 
                 if ( current._targetOwner == null ) {
-                    current._targetOwner = EditorUtility.InstanceIDToObject(current._targetOwnerID) as GraphOwner;
+                    current._targetOwner = InstanceIDToObject(current._targetOwnerID) as GraphOwner;
                 }
                 return current._targetOwner;
             }
@@ -137,23 +136,24 @@ namespace NodeCanvas.Editor
         }
 
         //The center of the canvas
-        private static Vector2 viewCanvasCenter {
-            get { return viewRect.size / 2; }
-        }
+        private static Vector2 viewCanvasCenter => viewRect.size / 2;
 
         //The mouse position in the canvas
-        private static Vector2 mousePosInCanvas {
-            get { return ViewToCanvas(Event.current.mousePosition); }
-        }
+        private static Vector2 mousePosInCanvas => ViewToCanvas(Event.current.mousePosition);
 
         //window width. Handles retina
-        private static float screenWidth {
-            get { return Screen.width / EditorGUIUtility.pixelsPerPoint; }
-        }
+        private static float screenWidth => Screen.width / EditorGUIUtility.pixelsPerPoint;
 
         //window height. Handles retina
-        private static float screenHeight {
-            get { return Screen.height / EditorGUIUtility.pixelsPerPoint; }
+        private static float screenHeight => Screen.height / EditorGUIUtility.pixelsPerPoint;
+
+        ///----------------------------------------------------------------------------------------------
+        static UnityEngine.Object InstanceIDToObject(int instanceID) {
+#if UNITY_6000_3_OR_NEWER
+            return EditorUtility.EntityIdToObject(instanceID);
+#else
+            return EditorUtility.InstanceIDToObject(instanceID);
+#endif
         }
 
         ///----------------------------------------------------------------------------------------------
@@ -228,7 +228,7 @@ namespace NodeCanvas.Editor
         }
 
         void OnPrefabStageClosing(UnityEditor.SceneManagement.PrefabStage stage) {
-            //when exiting prefab stage we are left with a floating graph instance which can creat confusion
+            //when exiting prefab stage we are left with a floating graph instance which can create confusion
             SetReferences(null, null, null);
         }
 
@@ -239,13 +239,13 @@ namespace NodeCanvas.Editor
                 return;
             }
 
-            if ( Selection.activeObject is GraphOwner ) {
-                SetReferences((GraphOwner)Selection.activeObject);
+            if ( Selection.activeObject is GraphOwner owner ) {
+                SetReferences(owner);
                 return;
             }
 
-            if ( Selection.activeObject is Graph ) {
-                SetReferences((Graph)Selection.activeObject);
+            if ( Selection.activeObject is Graph graph ) {
+                SetReferences(graph);
                 return;
             }
 
@@ -275,9 +275,7 @@ namespace NodeCanvas.Editor
             fullDrawPass = true;
             smoothPan = null;
             smoothZoomFactor = null;
-            if ( onCurrentGraphChanged != null ) {
-                onCurrentGraphChanged(currentGraph);
-            }
+            onCurrentGraphChanged?.Invoke(currentGraph);
         }
 
         //Update the references for editor convenience.
@@ -299,9 +297,9 @@ namespace NodeCanvas.Editor
 
         [UnityEditor.Callbacks.OnOpenAsset(1)]
         public static bool OpenAsset(int instanceID, int line) {
-            var target = EditorUtility.InstanceIDToObject(instanceID) as Graph;
+            var target = InstanceIDToObject(instanceID) as Graph;
             if ( target != null ) {
-                GraphEditor.OpenWindow(target);
+                OpenWindow(target);
                 return true;
             }
             return false;
@@ -319,7 +317,7 @@ namespace NodeCanvas.Editor
             SetReferences(newGraph, owner, blackboard);
             if ( !Prefs.hideWelcomeWindow && !Application.isPlaying && welcomeShown == false ) {
                 welcomeShown = true;
-                var graphType = newGraph != null ? newGraph.GetType() : null;
+                var graphType = newGraph?.GetType();
                 WelcomeWindow.ShowWindow(graphType);
             }
             return window;
@@ -421,8 +419,8 @@ namespace NodeCanvas.Editor
         }
 
         //Show modal quick popup
-        static void DoPopup(System.Action Call) {
-            OnDoPopup = Call;
+        static void DoPopup(System.Action call) {
+            onDoPopup = call;
         }
 
         //Just so that there is some repainting going on
@@ -445,7 +443,7 @@ namespace NodeCanvas.Editor
             e = Event.current;
             GraphEditorUtility.realMousePosition = e.mousePosition;
 
-            //canvas an minimap rects
+            //canvas and minimap rects
             canvasRect = Rect.MinMaxRect(SIDE_MARGIN, TOP_MARGIN, position.width - SIDE_MARGIN, position.height - BOTTOM_MARGIN);
             var aspect = canvasRect.width / canvasRect.height;
             minimapRect = Rect.MinMaxRect(canvasRect.xMax - ( Prefs.minimapSize * aspect ), canvasRect.yMax - Prefs.minimapSize, canvasRect.xMax - 2, canvasRect.yMax - 2);
@@ -466,7 +464,7 @@ namespace NodeCanvas.Editor
                 willRepaint = true;
             }
 
-            ///<summary>should we set dirty? Put in practise at the end</summary>
+            //should we set dirty? Put in practise at the end
             var willDirty = e.rawType == EventType.MouseUp;
 
 
@@ -492,7 +490,7 @@ namespace NodeCanvas.Editor
                 viewRect.position -= pan / zoomFactor;
 
                 //main group
-                GUI.BeginClip(canvasRect, pan / zoomFactor, default(Vector2), false);
+                GUI.BeginClip(canvasRect, pan / zoomFactor, default, false);
                 {
                     DoCanvasGroups();
                     BeginWindows();
@@ -505,7 +503,7 @@ namespace NodeCanvas.Editor
             }
 
             //end zoom
-            if ( zoomFactor != 1 && originalMatrix != default(Matrix4x4) ) {
+            if ( zoomFactor != 1 && originalMatrix != default ) {
                 EndZoomArea(originalMatrix);
                 //set original back
                 canvasRect = originalCanvasRect;
@@ -532,7 +530,7 @@ namespace NodeCanvas.Editor
             }
 
             //repaint?
-            if ( willRepaint || rootGraph.isRunning /*|| e.type == EventType.MouseMove*/ ) {
+            if ( willRepaint || rootGraph.isRunning ) {
                 Repaint();
             }
 
@@ -542,10 +540,10 @@ namespace NodeCanvas.Editor
                 willRepaint = false;
             }
 
-            //hack for quick popups
-            if ( OnDoPopup != null ) {
-                var temp = OnDoPopup;
-                OnDoPopup = null;
+            //quick popups
+            if ( onDoPopup != null ) {
+                var temp = onDoPopup;
+                onDoPopup = null;
                 QuickPopup.Show(temp);
             }
 
@@ -594,7 +592,7 @@ namespace NodeCanvas.Editor
                 OnCurrentGraphChanged();
             }
 
-            if ( currentGraph == null || ReferenceEquals(currentGraph, null) ) {
+            if ( currentGraph == null || currentGraph is null ) {
                 return false;
             }
 
@@ -608,7 +606,7 @@ namespace NodeCanvas.Editor
 
         ///----------------------------------------------------------------------------------------------
 
-        //Recursively get the currenlty showing nested graph starting from the root
+        //Recursively get the currently showing nested graph starting from the root
         static Graph GetCurrentGraph(Graph root) {
             if ( root.GetCurrentChildGraph() == null ) {
                 return root;
@@ -620,9 +618,6 @@ namespace NodeCanvas.Editor
         static Rect StartZoomArea(Rect container, float zoomFactor, out Matrix4x4 oldMatrix) {
             GUI.EndClip();
             container.y += TAB_HEIGHT;
-#if UNITY_6000_0_OR_NEWER
-            container.y += 3;
-#endif
             container.width *= 1 / zoomFactor;
             container.height *= 1 / zoomFactor;
             oldMatrix = GUI.matrix;
@@ -636,9 +631,6 @@ namespace NodeCanvas.Editor
         static void EndZoomArea(Matrix4x4 oldMatrix) {
             GUI.matrix = oldMatrix;
             var recover = new Rect(0, TAB_HEIGHT, screenWidth, screenHeight);
-#if UNITY_6000_0_OR_NEWER
-            recover.y += 3;
-#endif
             GUI.BeginClip(recover);
         }
 
@@ -684,14 +676,14 @@ namespace NodeCanvas.Editor
 
         ///<summary>Ping element</summary>
         public static void PingElement(IGraphElement element) {
-            if ( element is Node ) { PingRect(( element as Node ).rect); }
-            if ( element is Connection ) { PingRect(( element as Connection ).GetMidRect()); }
+            if ( element is Node node ) { PingRect(node.rect); }
+            if ( element is Connection connection ) { PingRect(connection.GetMidRect()); }
         }
 
         ///<summary>Translate the graph to the center of target element (node, connection)</summary>
         public static void FocusElement(IGraphElement element, bool alsoSelect = false) {
-            if ( element is Node ) { FocusNode((Node)element, alsoSelect); }
-            if ( element is Connection ) { FocusConnection((Connection)element, alsoSelect); }
+            if ( element is Node node ) { FocusNode(node, alsoSelect); }
+            if ( element is Connection connection ) { FocusConnection(connection, alsoSelect); }
         }
 
         ///<summary>Translate the graph to the center of the target node</summary>
@@ -763,7 +755,7 @@ namespace NodeCanvas.Editor
                     if ( e.type == EventType.DragPerform ) {
                         var value = DragAndDrop.objectReferences[0];
                         DragAndDrop.AcceptDrag();
-                        graph.CallbackOnDropAccepted(value, canvasMousePos);
+                        graph.CallbackOnObjectDropInGraph(value, canvasMousePos);
                     }
                 }
             }
@@ -772,7 +764,7 @@ namespace NodeCanvas.Editor
         ///<summary>Gets the bound rect for the nodes</summary>
         static Rect GetNodeBounds(List<Node> nodes) {
             if ( nodes == null || nodes.Count == 0 ) {
-                return default(Rect);
+                return default;
             }
 
             var arr = new Rect[nodes.Count];
@@ -842,7 +834,7 @@ namespace NodeCanvas.Editor
 
             Handles.color = Color.black.WithAlpha(0.15f);
 
-            var drawGridSize = zoomFactor > 0.5f ? GRID_SIZE : GRID_SIZE * 5;
+            var drawGridSize = zoomFactor > 0.5f ? Prefs.GRID_SIZE : Prefs.GRID_SIZE * 5;
             var step = drawGridSize * zoomFactor;
 
             var xDiff = offset.x % step;
@@ -925,7 +917,7 @@ namespace NodeCanvas.Editor
             for ( var i = 0; i < currentGraph.canvasGroups.Count; i++ ) {
                 var group = currentGraph.canvasGroups[i];
                 var headerRect = new Rect(group.rect.x, group.rect.y, group.rect.width, 25);
-                var autoRect = new Rect(headerRect.xMax - 48, headerRect.y + 1, 68, headerRect.height);
+                var autoRect = new Rect(headerRect.xMax - 48, headerRect.y + 1, 48, headerRect.height);
                 var scaleRectBR = new Rect(group.rect.xMax - 20, group.rect.yMax - 20, 20, 20);
                 var scaleRectTL = new Rect(group.rect.x, headerRect.yMax, 20, 20);
 
@@ -1083,22 +1075,22 @@ namespace NodeCanvas.Editor
             }
         }
 
-        //Snap all nodes either to grid if option enabled
-        static void SnapNodesToGrid(Graph graph) {
+        //Snap all nodes to grid if option enabled
+        static void SnapNodesAndGroupsToGrid(Graph graph) {
             if ( Prefs.snapToGrid ) {
                 for ( var i = 0; i < graph.allNodes.Count; i++ ) {
                     var node = graph.allNodes[i];
                     var pos = node.position;
-                    pos.x = Mathf.Round(pos.x / GRID_SIZE) * GRID_SIZE;
-                    pos.y = Mathf.Round(pos.y / GRID_SIZE) * GRID_SIZE;
+                    pos.x = Mathf.Round(pos.x / Prefs.GRID_SIZE) * Prefs.GRID_SIZE;
+                    pos.y = Mathf.Round(pos.y / Prefs.GRID_SIZE) * Prefs.GRID_SIZE;
                     node.position = pos;
                 }
 
                 for ( var i = 0; i < graph.canvasGroups.Count; i++ ) {
                     var group = graph.canvasGroups[i];
                     var rect = group.rect;
-                    rect.x = Mathf.Round(rect.x / GRID_SIZE) * GRID_SIZE;
-                    rect.y = Mathf.Round(rect.y / GRID_SIZE) * GRID_SIZE;
+                    rect.x = Mathf.Round(rect.x / Prefs.GRID_SIZE) * Prefs.GRID_SIZE;
+                    rect.y = Mathf.Round(rect.y / Prefs.GRID_SIZE) * Prefs.GRID_SIZE;
                     group.rect = rect;
                 }
             }
@@ -1275,11 +1267,6 @@ namespace NodeCanvas.Editor
             var bWidth = 96;
             var bHeight = 22;
 
-#if !UNITY_2019_3_OR_NEWER // O.o
-            bWidth = 98;
-            bHeight = 25;
-#endif
-
             var buttonsRect = new Rect(0, 0, bWidth, 0);
             buttonsRect.center = new Vector2(canvasRect.width / 2, 0);
             buttonsRect.yMax = canvasRect.yMax - 5;
@@ -1325,17 +1312,17 @@ namespace NodeCanvas.Editor
             GUI.color = Color.white;
         }
 
-        //an idea but it's taking up space i dont like
-        void ShowConsoleLog() {
-            var rect = Rect.MinMaxRect(canvasRect.xMin + 2, canvasRect.yMax + 5, canvasRect.xMax, canvasRect.yMax + 20);
-            var msg = GraphConsole.GetLastMessageForGraph(currentGraph);
-            if ( msg.IsValid() ) {
-                EditorGUIUtility.AddCursorRect(rect, MouseCursor.Link);
-                if ( GUI.Button(rect, GraphConsole.GetFormatedGUIContentForMessage(msg), StyleSheet.labelOnCanvas) ) {
-                    GraphConsole.ShowWindow();
-                }
-            }
-        }
+        // //an idea but it's taking up space i dont like
+        // void ShowConsoleLog() {
+        //     var rect = Rect.MinMaxRect(canvasRect.xMin + 2, canvasRect.yMax + 5, canvasRect.xMax, canvasRect.yMax + 20);
+        //     var msg = GraphConsole.GetLastMessageForGraph(currentGraph);
+        //     if ( msg.IsValid() ) {
+        //         EditorGUIUtility.AddCursorRect(rect, MouseCursor.Link);
+        //         if ( GUI.Button(rect, GraphConsole.GetFormatedGUIContentForMessage(msg), StyleSheet.labelOnCanvas) ) {
+        //             GraphConsole.ShowWindow();
+        //         }
+        //     }
+        // }
 
         //this is shown when root graph is null
         //TODO: Add something like a menu to create graphs from here?

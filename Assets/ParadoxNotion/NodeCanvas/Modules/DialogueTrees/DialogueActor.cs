@@ -20,13 +20,9 @@ namespace NodeCanvas.DialogueTrees
 
         private Sprite _portraitSprite;
 
-        new public string name {
-            get { return _name; }
-        }
+        new public string name => _name;
 
-        public Texture2D portrait {
-            get { return _portrait; }
-        }
+        public Texture2D portrait => _portrait;
 
         public Sprite portraitSprite {
             get
@@ -37,13 +33,9 @@ namespace NodeCanvas.DialogueTrees
             }
         }
 
-        public Color dialogueColor {
-            get { return _dialogueColor; }
-        }
+        public Color dialogueColor => _dialogueColor;
 
-        public Vector3 dialoguePosition {
-            get { return transform.TransformPoint(_dialogueOffset); }
-        }
+        public Vector3 dialoguePosition => transform.TransformPoint(_dialogueOffset);
 
         //IDialogueActor.transform is implemented by inherited MonoBehaviour.transform
 

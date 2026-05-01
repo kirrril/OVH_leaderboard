@@ -28,7 +28,7 @@ namespace NodeCanvas.Tasks.Conditions
 
         private RaycastHit hit;
 
-        protected override string info { get { return "Can See Any " + targetObjects; } }
+        protected override string info => "Can See Any " + targetObjects;
 
         protected override bool OnCheck() {
 

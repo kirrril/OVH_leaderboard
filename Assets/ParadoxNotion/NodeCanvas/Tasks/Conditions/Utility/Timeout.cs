@@ -12,9 +12,7 @@ namespace NodeCanvas.Tasks.Conditions
         private float startTime;
         private float elapsedTime => ownerSystem.elapsedTime - startTime;
 
-        protected override string info {
-            get { return string.Format("Timeout {0}/{1}", elapsedTime.ToString("0.00"), timeout.ToString()); }
-        }
+        protected override string info => string.Format("Timeout {0}/{1}", elapsedTime.ToString("0.00"), timeout.ToString());
 
         protected override void OnEnable() {
             startTime = ownerSystem.elapsedTime;

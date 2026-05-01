@@ -12,7 +12,7 @@ namespace NodeCanvas.BehaviourTrees
 
         ///<summary>Should the assigned BT reset and re-execute after a cycle? Sets the BehaviourTree's repeat</summary>
         public bool repeat {
-            get { return behaviour != null ? behaviour.repeat : true; }
+            get { return behaviour == null || behaviour.repeat; }
             set { if ( behaviour != null ) behaviour.repeat = value; }
         }
 
@@ -23,9 +23,7 @@ namespace NodeCanvas.BehaviourTrees
         }
 
         ///<summary>The last status of the assigned Behaviour Tree's root node (aka Start Node)</summary>
-        public Status rootStatus {
-            get { return behaviour != null ? behaviour.rootStatus : Status.Resting; }
-        }
+        public Status rootStatus => behaviour != null ? behaviour.rootStatus : Status.Resting;
 
         ///<summary>Ticks the assigned Behaviour Tree for this owner agent and returns it's root status</summary>
         public Status Tick() {

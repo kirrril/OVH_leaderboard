@@ -12,9 +12,7 @@ namespace NodeCanvas.Tasks.Conditions
     {
         public BooleanStatus status = BooleanStatus.Success;
 
-        protected override string info {
-            get { return string.Format("State == {0}", status); }
-        }
+        protected override string info => string.Format("State == {0}", status);
 
         protected override bool OnCheck() {
             var fsm = ownerSystem as FSM;

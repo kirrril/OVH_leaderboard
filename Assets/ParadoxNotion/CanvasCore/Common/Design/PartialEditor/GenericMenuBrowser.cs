@@ -7,7 +7,6 @@ using System.Reflection;
 using System.Linq;
 using ParadoxNotion.Serialization;
 using ParadoxNotion.Services;
-using System.Threading.Tasks;
 
 namespace ParadoxNotion.Design
 {
@@ -100,9 +99,10 @@ namespace ParadoxNotion.Design
         ///----------------------------------------------------------------------------------------------
 
         public static GenericMenuBrowser current { get; private set; }
+
         private const string PREFERENCES_KEY = "ParadoxNotion.ContextBrowserPreferences_2";
         private const float HELP_RECT_HEIGHT = 58;
-        private readonly Color hoverColor = new Color(0.5f, 0.5f, 1, 0.3f);
+        private readonly Color HOVER_COLOR = new Color(0.5f, 0.5f, 1, 0.3f);
 
         private static System.Threading.Thread menuGenerationThread;
         private static System.Threading.Thread treeGenerationThread;
@@ -161,7 +161,7 @@ namespace ParadoxNotion.Design
             current = new GenericMenuBrowser(null, title, keyType);
             menuGenerationThread = Threader.StartFunction(menuGenerationThread, getMenu, (m) =>
             {
-                if ( current != null ) { current.SetMenu(m); }
+                current?.SetMenu(m);
                 menuGenerationThread = null;
             });
             PopupWindow.Show(new Rect(pos.x, pos.y, 0, 0), current);
@@ -214,7 +214,6 @@ namespace ParadoxNotion.Design
         public override void OnClose() {
             SavePrefs();
             EditorApplication.update -= OnEditorUpdate;
-            // if ( menuGenerationThread != null && menuGenerationThread.IsAlive ) { menuGenerationThread.Abort(); menuGenerationThread = null; }
             if ( treeGenerationThread != null && treeGenerationThread.IsAlive ) { treeGenerationThread.Abort(); treeGenerationThread = null; }
             if ( searchGenerationThread != null && searchGenerationThread.IsAlive ) { searchGenerationThread.Abort(); searchGenerationThread = null; }
             current = null;
@@ -286,8 +285,7 @@ namespace ParadoxNotion.Design
                 for ( var j = 0; j < parts.Length; j++ ) {
                     var part = parts[j];
                     path += '/' + part;
-                    Node child = null;
-                    if ( !current.children.TryGetValue(part, out child) ) {
+                    if ( !current.children.TryGetValue(part, out Node child) ) {
                         child = new Node { name = part, parent = current };
                         child.fullPath = path;
                         current.children[part] = child;
@@ -378,7 +376,7 @@ namespace ParadoxNotion.Design
                 GUILayout.EndHorizontal();
                 var lastRect = GUILayoutUtility.GetLastRect();
                 if ( lastRect.Contains(e.mousePosition) ) {
-                    GUI.color = hoverColor;
+                    GUI.color = HOVER_COLOR;
                     GUI.DrawTexture(lastRect, EditorGUIUtility.whiteTexture);
                     GUI.color = Color.white;
                     willRepaint = true;
@@ -441,7 +439,7 @@ namespace ParadoxNotion.Design
                 if ( isSearch ) {
                     var searchCategory = lastSearchCategory;
                     if ( memberInfo == null || memberInfo is System.Type ) {
-                        searchCategory = node.parent.fullPath != null ? node.parent.fullPath.Split(new char[] { '/' }, System.StringSplitOptions.RemoveEmptyEntries).FirstOrDefault() : null;
+                        searchCategory = node.parent.fullPath?.Split(new char[] { '/' }, System.StringSplitOptions.RemoveEmptyEntries).FirstOrDefault();
                     } else {
                         searchCategory = memberInfo.ReflectedType.FriendlyName();
                     }
@@ -518,7 +516,7 @@ namespace ParadoxNotion.Design
                 }
 
                 if ( hoveringIndex == i ) {
-                    GUI.color = hoverColor;
+                    GUI.color = HOVER_COLOR;
                     GUI.DrawTexture(elementRect, EditorGUIUtility.whiteTexture);
                     GUI.color = Color.white;
                 }

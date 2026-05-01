@@ -17,9 +17,7 @@ namespace NodeCanvas.Tasks.Conditions
         [SliderField(1, 180)]
         public BBParameter<float> viewAngle = 70f;
 
-        protected override string info {
-            get { return checkTarget + " in view angle"; }
-        }
+        protected override string info => checkTarget + " in view angle";
 
         protected override bool OnCheck() {
             return Vector3.Angle(checkTarget.value.transform.position - agent.position, agent.forward) < viewAngle.value;

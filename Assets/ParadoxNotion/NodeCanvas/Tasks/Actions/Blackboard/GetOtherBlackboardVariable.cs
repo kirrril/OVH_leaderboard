@@ -16,9 +16,7 @@ namespace NodeCanvas.Tasks.Actions
         [BlackboardOnly]
         public BBObjectParameter saveAs;
 
-        protected override string info {
-            get { return string.Format("{0} = {1}", saveAs, targetVariableName); }
-        }
+        protected override string info => string.Format("{0} = {1}", saveAs, targetVariableName);
 
         protected override void OnExecute() {
             var targetVar = agent.GetVariable(targetVariableName.value);

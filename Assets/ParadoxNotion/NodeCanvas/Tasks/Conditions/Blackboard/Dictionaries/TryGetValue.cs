@@ -18,17 +18,14 @@ namespace NodeCanvas.Tasks.Conditions
         [BlackboardOnly]
         public BBParameter<T> saveValueAs;
 
-        protected override string info {
-            get { return string.Format("{0}.TryGetValue({1} as {2})", targetDictionary, key, saveValueAs); }
-        }
+        protected override string info => string.Format("{0}.TryGetValue({1} as {2})", targetDictionary, key, saveValueAs);
 
         protected override bool OnCheck() {
             if ( targetDictionary.value == null ) {
                 return false;
             }
 
-            T result;
-            if ( targetDictionary.value.TryGetValue(key.value, out result) ) {
+            if ( targetDictionary.value.TryGetValue(key.value, out T result) ) {
                 saveValueAs.value = result;
                 return true;
             }

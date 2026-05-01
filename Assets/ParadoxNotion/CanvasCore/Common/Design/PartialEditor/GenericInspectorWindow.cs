@@ -24,30 +24,16 @@ namespace ParadoxNotion.Design
         void OnEnable() {
             titleContent = new GUIContent("Object Editor");
             current = this;
-
-#if UNITY_2017_2_OR_NEWER
             EditorApplication.playModeStateChanged -= PlayModeChange;
             EditorApplication.playModeStateChanged += PlayModeChange;
-#else
-        	EditorApplication.playmodeStateChanged -= PlayModeChange;
-            EditorApplication.playmodeStateChanged += PlayModeChange;
-#endif
         }
 
         //...
         void OnDisable() {
-#if UNITY_2017_2_OR_NEWER
             EditorApplication.playModeStateChanged -= PlayModeChange;
-#else
-        	EditorApplication.playmodeStateChanged -= PlayModeChange;
-#endif
         }
 
-#if UNITY_2017_2_OR_NEWER
         void PlayModeChange(PlayModeStateChange state) { Close(); }
-#else
-        void PlayModeChange(){ Close(); }
-#endif
 
         ///<summary>Open utility window to inspect target object of type in context using read/write delegates.</summary>
         public static void Show(string title, System.Type targetType, Object unityObjectContext, System.Func<object> read, System.Action<object> write) {
@@ -58,14 +44,6 @@ namespace ParadoxNotion.Design
             window.write = write;
             window.read = read;
             window.ShowUtility();
-        }
-
-        //...
-        void Update() {
-            if ( willRepaint ) {
-                willRepaint = false;
-                Repaint();
-            }
         }
 
         //...
@@ -95,8 +73,7 @@ namespace ParadoxNotion.Design
                 write(newValue);
             }
             GUILayout.EndScrollView();
-
-            willRepaint = true;
+            Repaint();
         }
     }
 }

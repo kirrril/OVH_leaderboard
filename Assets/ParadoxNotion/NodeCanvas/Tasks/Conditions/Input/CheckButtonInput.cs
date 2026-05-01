@@ -11,22 +11,20 @@ namespace NodeCanvas.Tasks.Conditions
     public class CheckButtonInput : ConditionTask
     {
 
-        public PressTypes pressType = PressTypes.Down;
+        public PressType pressType = PressType.Down;
         [RequiredField] public BBParameter<string> buttonName = "Fire1";
 
-        protected override string info {
-            get { return pressType.ToString() + " " + buttonName.ToString(); }
-        }
+        protected override string info => pressType.ToString() + " " + buttonName.ToString();
 
         protected override bool OnCheck() {
 
-            if ( pressType == PressTypes.Down )
+            if ( pressType == PressType.Down )
                 return Input.GetButtonDown(buttonName.value);
 
-            if ( pressType == PressTypes.Up )
+            if ( pressType == PressType.Up )
                 return Input.GetButtonUp(buttonName.value);
 
-            if ( pressType == PressTypes.Pressed )
+            if ( pressType == PressType.Pressed )
                 return Input.GetButton(buttonName.value);
 
             return false;

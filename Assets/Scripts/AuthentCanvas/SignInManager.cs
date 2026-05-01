@@ -138,7 +138,7 @@ public class SignInManager : MonoBehaviour
 
     public void SkipAuthentification()
     {
-        GameManager.isCompeting = false;
+        RankAndScoreManager.isCompeting = false;
         SceneManager.LoadScene("GameScene");
     }
 }

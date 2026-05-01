@@ -13,7 +13,7 @@ namespace NodeCanvas.Editor
     public class GraphOwnerInspector : UnityEditor.Editor
     {
 
-        private GraphOwner owner { get { return (GraphOwner)target; } }
+        private GraphOwner owner => (GraphOwner)target;
 
         private SerializedProperty boundGraphSerializationProp;
         private SerializedProperty boundGraphReferencesProp;
@@ -30,25 +30,15 @@ namespace NodeCanvas.Editor
         private SerializedProperty updateModeProp;
         private SerializedProperty exposeParamsProp;
 
-        private string graphTypeName {
-            get { return owner.graphType.Name.SplitCamelCase(); }
-        }
+        private string graphTypeName => owner.graphType.Name.SplitCamelCase();
 
-        private bool isOwnerPeristant {
-            get { return EditorUtility.IsPersistent(owner); }
-        }
+        private bool isOwnerPeristant => EditorUtility.IsPersistent(owner);
 
-        public bool isBoundGraphOnPrefabRoot {
-            get { return isOwnerPeristant && owner.graphIsBound; }
-        }
+        public bool isBoundGraphOnPrefabRoot => isOwnerPeristant && owner.graphIsBound;
 
-        public bool isBoundGraphOnPrefabInstance {
-            get { return !isOwnerPeristant && owner.graphIsBound && PrefabUtility.IsPartOfAnyPrefab(owner); }
-        }
+        public bool isBoundGraphOnPrefabInstance => !isOwnerPeristant && owner.graphIsBound && PrefabUtility.IsPartOfAnyPrefab(owner);
 
-        public bool isBoundGraphPrefabOverridden {
-            get { return boundGraphSerializationProp.prefabOverride; }
-        }
+        public bool isBoundGraphPrefabOverridden => boundGraphSerializationProp.prefabOverride;
 
         ///----------------------------------------------------------------------------------------------
 
@@ -110,7 +100,6 @@ namespace NodeCanvas.Editor
         //Revert bound graph
         public void PrefabRevertBoundGraph() {
             UndoUtility.RecordObject(owner, "Revert Graph From Prefab");
-            var prefabAssetPath = PrefabUtility.GetPrefabAssetPathOfNearestInstanceRoot(owner);
             PrefabUtility.RevertPropertyOverride(boundGraphSerializationProp, InteractionMode.UserAction);
             PrefabUtility.RevertPropertyOverride(boundGraphReferencesProp, InteractionMode.UserAction);
             GraphEditorUtility.activeElement = null;
@@ -198,7 +187,7 @@ namespace NodeCanvas.Editor
         void DoMissingGraphControls() {
             EditorGUILayout.HelpBox(owner.GetType().Name + " needs a " + graphTypeName + ".\nAssign or Create a new one...", MessageType.Info);
             if ( !Application.isPlaying && GUILayout.Button("CREATE NEW") ) {
-                Graph newGraph = null;
+                Graph newGraph;
                 if ( EditorUtility.DisplayDialog("Create Graph", "Create a Bound or an Asset Graph?\n\n" +
                     "Bound Graph is saved with the GraphOwner and you can use direct scene references within it.\n\n" +
                     "Asset Graph is an asset file and can be reused amongst any number of GraphOwners.\n\n" +
@@ -324,7 +313,7 @@ namespace NodeCanvas.Editor
                     GUI.color = Color.white;        
                     continue;            
                 }
-                
+
                 if ( !separatorDrawn ) {
                     separatorDrawn = true;
                     EditorUtils.Separator();

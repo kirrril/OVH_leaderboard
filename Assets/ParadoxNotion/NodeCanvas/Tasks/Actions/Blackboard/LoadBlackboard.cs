@@ -13,9 +13,7 @@ namespace NodeCanvas.Tasks.Actions
         [RequiredField]
         public BBParameter<string> saveKey;
 
-        protected override string info {
-            get { return string.Format("Load Blackboard [{0}]", saveKey.ToString()); }
-        }
+        protected override string info => string.Format("Load Blackboard [{0}]", saveKey.ToString());
 
         protected override void OnExecute() {
             EndAction(agent.Load(saveKey.value));

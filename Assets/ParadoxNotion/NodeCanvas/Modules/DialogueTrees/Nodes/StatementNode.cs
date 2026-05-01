@@ -8,7 +8,7 @@ namespace NodeCanvas.DialogueTrees
 {
 
     [Name("Say")]
-    [Description("Make the selected Dialogue Actor talk. You can make the text more dynamic by using variable names and actor names in square brackets\ne.g. [myVarName] or [Global/myVarName]")]
+    [Description("Make the selected Dialogue Actor talk. You can make the text more dynamic by using variable names and actor parameter names in square brackets\ne.g. [myVarName] or [Global/myVarName]")]
     public class StatementNode : DTNode
     {
         [SerializeField]

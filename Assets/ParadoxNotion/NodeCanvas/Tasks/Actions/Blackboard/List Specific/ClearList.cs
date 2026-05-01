@@ -14,9 +14,7 @@ namespace NodeCanvas.Tasks.Actions
         [BlackboardOnly]
         public BBParameter<IList> targetList;
 
-        protected override string info {
-            get { return string.Format("Clear List {0}", targetList); }
-        }
+        protected override string info => string.Format("Clear List {0}", targetList);
 
         protected override void OnExecute() {
             targetList.value.Clear();

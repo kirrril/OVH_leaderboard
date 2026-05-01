@@ -15,8 +15,7 @@ namespace NodeCanvas.Editor
         private bool willRepaint;
 
         public static void ShowWindow() {
-            var window = GetWindow<ExternalInspectorWindow>();
-            window.Show();
+            GetWindow<ExternalInspectorWindow>().Show();
         }
 
         void OnEnable() {
@@ -49,7 +48,7 @@ namespace NodeCanvas.Editor
                 return;
             }
 
-            if ( EditorApplication.isCompiling && !Application.isPlaying) {
+            if ( EditorApplication.isCompiling && !Application.isPlaying ) {
                 ShowNotification(new GUIContent("...Compiling Please Wait..."));
                 return;
             }

@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 767f59b8899e8044cb54c46e753e991d
+guid: c3057df3705fe2740bb3f1b4e4f2a7ea
 TextureImporter:
   fileIDToRecycleName: {}
   serializedVersion: 4
@@ -100,6 +100,6 @@ AssetOrigin:
   serializedVersion: 1
   productId: 14914
   packageName: NodeCanvas
-  packageVersion: 3.3.3
-  assetPath: Assets/ParadoxNotion/CanvasCore/Framework/Design/Editor/Resources/TypeIcons/Explicit/MacroIn.png
-  uploadId: 754282
+  packageVersion: 3.4.1
+  assetPath: Assets/ParadoxNotion/CanvasCore/Framework/Design/Editor/Resources/TypeIcons/Explicit/Outgoing.png
+  uploadId: 866614

@@ -151,8 +151,8 @@ namespace NodeCanvas.Editor
                 inspectorPanelScrollPos = GUI.BeginScrollView(position, inspectorPanelScrollPos, viewRect, false, false);
                 GUILayout.BeginArea(contentRect);
 
-                if ( inspectedElement is Node ) { Node.ShowNodeInspectorGUI((Node)inspectedElement); }
-                if ( inspectedElement is Connection ) { Connection.ShowConnectionInspectorGUI((Connection)inspectedElement); }
+                if ( inspectedElement is Node node ) { Node.ShowNodeInspectorGUI(node); }
+                if ( inspectedElement is Connection connection ) { Connection.ShowConnectionInspectorGUI(connection); }
 
                 EditorUtils.EndOfInspector();
                 if ( e.type == EventType.Repaint ) {

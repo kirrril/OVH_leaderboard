@@ -2,6 +2,7 @@
 
 using UnityEditor;
 using ParadoxNotion.Serialization;
+using UnityEngine;
 
 namespace NodeCanvas.Editor
 {
@@ -11,6 +12,7 @@ namespace NodeCanvas.Editor
     {
 
         private const string PREFS_KEY_NAME = "NodeCanvas.EditorPreferences";
+        public const int GRID_SIZE = 20;
 
         [System.Serializable]
         partial class SerializedData
@@ -38,7 +40,7 @@ namespace NodeCanvas.Editor
 
             public bool hierarchicalMove = false;
             public bool breakpointPauseEditor = true;
-            public bool collapseGenericTypes = false;
+            public bool collapseGenericTypes = true;
 
             public bool consoleLogInfo = true;
             public bool consoleLogWarning = true;
@@ -94,7 +96,7 @@ namespace NodeCanvas.Editor
         }
 
         public static bool showTaskSummary {
-            get { return data.showTaskSummary; }
+            get { return data.showTaskSummary /* || Event.current.shift*/; }
             set { if ( data.showTaskSummary != value ) { data.showTaskSummary = value; Save(); } }
         }
 

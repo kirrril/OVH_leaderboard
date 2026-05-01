@@ -29,7 +29,7 @@ namespace ParadoxNotion.Design
 
         ///<summary> A simple reorderable list. Pass the list and a function to call for GUI. The callback comes with the current iterated element index in the list</summary>
         public static IList ReorderableList(IList list, ReorderableListCallback GUICallback) {
-            return ReorderableList(list, default(ReorderableListOptions), GUICallback);
+            return ReorderableList(list, default, GUICallback);
         }
 
         ///<summary> A simple reorderable list. Pass the list and a function to call for GUI. The callback comes with the current iterated element index in the list</summary>

@@ -106,9 +106,8 @@ namespace ParadoxNotion.Design
         public static object DrawEditorFieldDirect(GUIContent content, object value, Type t, InspectedFieldInfo info) {
 
             ///----------------------------------------------------------------------------------------------
-            bool handled;
             EditorGUI.BeginChangeCheck();
-            var newValue = DirectFieldControl(content, value, t, info.unityObjectContext, info.attributes, out handled);
+            var newValue = DirectFieldControl(content, value, t, info.unityObjectContext, info.attributes, out bool handled);
             var changed = !object.Equals(newValue, value) || EditorGUI.EndChangeCheck();
             if ( changed ) { UndoUtility.RecordObjectComplete(info.unityObjectContext, content.text + "Field Change"); }
             value = newValue;
@@ -155,11 +154,11 @@ namespace ParadoxNotion.Design
             //Check scene object type for UnityObjects. Consider Interfaces as scene object type. Assume that user uses interfaces with UnityObjects
             if ( typeof(UnityObject).IsAssignableFrom(t) || t.IsInterface ) {
                 if ( value == null || value is UnityObject ) { //check this to avoid case of interface but no unityobject
-                    var isSceneObjectType = ( typeof(Component).IsAssignableFrom(t) || t == typeof(GameObject) || t == typeof(UnityObject) || t.IsInterface );
+                    var isSceneObjectType = typeof(Component).IsAssignableFrom(t) || t == typeof(GameObject) || t == typeof(UnityObject) || t.IsInterface;
                     var newValue = EditorGUILayout.ObjectField(content, (UnityObject)value, t, isSceneObjectType, options);
                     if ( unityObjectContext != null && newValue != null ) {
-                        if ( !Application.isPlaying && EditorUtility.IsPersistent(unityObjectContext) && !EditorUtility.IsPersistent(newValue as UnityEngine.Object) ) {
-                            ParadoxNotion.Services.Logger.LogWarning("Assets can not have scene object references", "Editor", unityObjectContext);
+                        if ( !Application.isPlaying && EditorUtility.IsPersistent(unityObjectContext) && !EditorUtility.IsPersistent(newValue) ) {
+                            Services.Logger.LogWarning("Assets can not have scene object references", "Editor", unityObjectContext);
                             newValue = value as UnityObject;
                         }
                     }
@@ -267,8 +266,8 @@ namespace ParadoxNotion.Design
 
             if ( t == typeof(Color) ) {
                 var att = attributes?.FirstOrDefault(a => a is ColorUsageAttribute) as ColorUsageAttribute;
-                var hdr = att != null ? att.hdr : false;
-                var showAlpha = att != null ? att.showAlpha : true;
+                var hdr = att != null && att.hdr;
+                var showAlpha = att == null || att.showAlpha;
                 return EditorGUILayout.ColorField(content, (Color)value, true, showAlpha, hdr, options);
             }
 

@@ -21,9 +21,8 @@ namespace NodeCanvas.Tasks.Actions
 
         private float currentValue;
 
-        protected override string info {
-            get { return "Set Layer " + layerIndex + ", weight " + layerWeight; }
-        }
+        protected override string info => "Set Layer " + layerIndex + ", weight " + layerWeight;
+        public override float length => transitTime;
 
         protected override void OnExecute() {
 

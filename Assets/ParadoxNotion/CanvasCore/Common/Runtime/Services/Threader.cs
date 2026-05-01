@@ -13,10 +13,8 @@ namespace ParadoxNotion.Services
 #if UNITY_EDITOR
         //this is to be able to call isPlaying in other threads
         [UnityEditor.InitializeOnLoadMethod]
-#if UNITY_2019_3_OR_NEWER
         //the 2nd attribute is used for 'no domain reload'
         [UnityEngine.RuntimeInitializeOnLoadMethod(UnityEngine.RuntimeInitializeLoadType.SubsystemRegistration)]
-#endif        
         static void Init() {
             applicationIsPlaying = UnityEditor.EditorApplication.isPlayingOrWillChangePlaymode;
             UnityEditor.EditorApplication.playModeStateChanged -= PlayModeChanged;
@@ -50,7 +48,7 @@ namespace ParadoxNotion.Services
 
         public static Thread StartFunction<TResult>(Thread thread, Func<TResult> function, Action<TResult> callback = null) {
             if ( thread != null && thread.IsAlive ) thread.Abort();
-            TResult result = default(TResult);
+            TResult result = default;
             thread = new Thread(() => { result = function(); });
             Begin(thread, () => { callback(result); });
             return thread;
@@ -111,9 +109,7 @@ namespace ParadoxNotion.Services
 
             if ( ( thread.ThreadState & ThreadState.AbortRequested ) != ThreadState.AbortRequested ) {
                 thread.Join();
-                if ( callback != null ) {
-                    callback();
-                }
+                callback?.Invoke();
             }
         }
     }

@@ -141,9 +141,6 @@ namespace ParadoxNotion.Serialization.FullSerializer
                 return () => { return System.Runtime.Serialization.FormatterServices.GetSafeUninitializedObject(reflectedType); };
             }
 
-            // var exp = Expression.Lambda<Func<object>>(Expression.New(reflectedType)).Compile();
-            // return () => { return exp(); };
-
             return () => { try { return Activator.CreateInstance(reflectedType, /*nonPublic:*/ true); } catch { return null; } };
         }
 

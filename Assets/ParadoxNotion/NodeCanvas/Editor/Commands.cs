@@ -19,8 +19,8 @@ namespace NodeCanvas.Editor
 
         ///----------------------------------------------------------------------------------------------
 
-        [MenuItem("Assets/Create/ParadoxNotion/NodeCanvas/New Task")]
-        [MenuItem("Tools/ParadoxNotion/NodeCanvas/Create/New Task", false, 90)]
+        [MenuItem("Assets/Create/ParadoxNotion/NodeCanvas/Task Wizard")]
+        [MenuItem("Tools/ParadoxNotion/NodeCanvas/Create/Task Wizard", false, 90)]
         public static void ShowTaskWizard() {
             TaskWizardWindow.ShowWindow();
         }
@@ -50,6 +50,11 @@ namespace NodeCanvas.Editor
         [MenuItem("Tools/ParadoxNotion/NodeCanvas/Graph Refactor")]
         public static void OpenRefactor() {
             GraphRefactor.ShowWindow();
+        }
+
+        [MenuItem("Tools/ParadoxNotion/NodeCanvas/Graph Localization Editor")]
+        public static void OpenLocalization() {
+            GraphLocalization.ShowWindow();
         }
 
         [MenuItem("Tools/ParadoxNotion/NodeCanvas/Active Owners Overview")]

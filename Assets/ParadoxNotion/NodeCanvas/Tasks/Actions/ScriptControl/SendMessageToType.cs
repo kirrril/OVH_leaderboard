@@ -16,9 +16,7 @@ namespace NodeCanvas.Tasks.Actions
         [BlackboardOnly]
         public BBParameter<object> argument;
 
-        protected override string info {
-            get { return string.Format("Message {0}({1}) to all {2}s", message, argument, typeof(T).Name); }
-        }
+        protected override string info => string.Format("Message {0}({1}) to all {2}s", message, argument, typeof(T).Name);
 
         protected override void OnExecute() {
 

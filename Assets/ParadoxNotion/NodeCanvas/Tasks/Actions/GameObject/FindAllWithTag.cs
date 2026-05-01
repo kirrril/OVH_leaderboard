@@ -18,9 +18,7 @@ namespace NodeCanvas.Tasks.Actions
         [BlackboardOnly]
         public BBParameter<List<GameObject>> saveAs;
 
-        protected override string info {
-            get { return "GetObjects '" + searchTag + "' as " + saveAs; }
-        }
+        protected override string info => "GetObjects '" + searchTag + "' as " + saveAs;
 
         protected override void OnExecute() {
             saveAs.value = GameObject.FindGameObjectsWithTag(searchTag.value).ToList();

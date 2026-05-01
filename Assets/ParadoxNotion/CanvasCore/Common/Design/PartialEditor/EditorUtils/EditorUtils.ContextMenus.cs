@@ -35,13 +35,10 @@ namespace ParadoxNotion.Design
             }
 
             if ( subCategory != null ) {
-                subCategory = subCategory + "/";
+                subCategory += "/";
             }
 
-            GenericMenu.MenuFunction2 Selected = delegate (object selectedType)
-            {
-                callback((Type)selectedType);
-            };
+            GenericMenu.MenuFunction2 Selected = delegate (object t) { callback((Type)t); };
 
             var scriptInfos = GetScriptInfosOfType(baseType);
 
@@ -65,7 +62,7 @@ namespace ParadoxNotion.Design
             }
 
             if ( subCategory != null ) {
-                subCategory = subCategory + "/";
+                subCategory += "/";
             }
 
             var constrainType = baseType;
@@ -149,13 +146,10 @@ namespace ParadoxNotion.Design
             }
 
             if ( subMenu != null ) {
-                subMenu = subMenu + "/";
+                subMenu += "/";
             }
 
-            GenericMenu.MenuFunction2 Selected = delegate (object selectedField)
-            {
-                callback((FieldInfo)selectedField);
-            };
+            GenericMenu.MenuFunction2 Selected = delegate (object field) { callback((FieldInfo)field); };
 
             foreach ( var field in type.GetFields(flags).Where(field => fieldType.IsAssignableFrom(field.FieldType)) ) {
                 var inherited = field.DeclaringType != type;
@@ -185,13 +179,10 @@ namespace ParadoxNotion.Design
             }
 
             if ( subMenu != null ) {
-                subMenu = subMenu + "/";
+                subMenu += "/";
             }
 
-            GenericMenu.MenuFunction2 Selected = delegate (object selectedProperty)
-            {
-                callback((PropertyInfo)selectedProperty);
-            };
+            GenericMenu.MenuFunction2 Selected = delegate (object property) { callback((PropertyInfo)property); };
 
             foreach ( var prop in type.GetProperties(flags) ) {
 
@@ -239,7 +230,7 @@ namespace ParadoxNotion.Design
             }
 
             if ( subMenu != null ) {
-                subMenu = subMenu + "/";
+                subMenu += "/";
             }
 
             GenericMenu.MenuFunction2 Selected = delegate (object selectedMethod)
@@ -279,7 +270,7 @@ namespace ParadoxNotion.Design
                 MemberInfo member = method;
                 //get the actual property to check for ObsoleteAttribute
                 if ( method.Name.StartsWith("get_") || method.Name.StartsWith("set_") ) {
-                    member = method.DeclaringType.GetProperty(method.Name.Replace("get_", "").Replace("set_", ""));
+                    member = method.DeclaringType.GetProperty(method.Name.Replace("get_", "").Replace("set_", ""), flags);
                 }
                 if ( member == null || member.RTIsDefined(typeof(System.ObsoleteAttribute), true) ) {
                     continue;
@@ -313,13 +304,10 @@ namespace ParadoxNotion.Design
             }
 
             if ( subMenu != null ) {
-                subMenu = subMenu + "/";
+                subMenu += "/";
             }
 
-            GenericMenu.MenuFunction2 Selected = delegate (object selectedEvent)
-            {
-                callback((EventInfo)selectedEvent);
-            };
+            GenericMenu.MenuFunction2 Selected = delegate (object ev) { callback((EventInfo)ev); };
 
             var eventType = argType == null ? typeof(System.Action) : typeof(System.Action<>).MakeGenericType(new Type[] { argType });
             foreach ( var e in type.GetEvents(flags) ) {
@@ -396,11 +384,6 @@ namespace ParadoxNotion.Design
         ///<summary>Shows the Generic Menu as a browser with CompleteContextMenu.</summary>
         public static void ShowAsBrowser(this GenericMenu menu, string title, System.Type keyType = null) {
             if ( menu != null ) { GenericMenuBrowser.Show(menu, Event.current.mousePosition, title, keyType); }
-        }
-
-        ///<summary>Shortcut</summary>
-        public static void Show(this GenericMenu menu, bool asBrowser, string title, System.Type keyType = null) {
-            if ( asBrowser ) { menu.ShowAsBrowser(title, keyType); } else { menu.ShowAsContext(); Event.current.Use(); }
         }
     }
 }

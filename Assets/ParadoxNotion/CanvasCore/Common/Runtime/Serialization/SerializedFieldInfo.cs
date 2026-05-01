@@ -46,7 +46,7 @@ namespace ParadoxNotion.Serialization
 
         //operator
         public static implicit operator FieldInfo(SerializedFieldInfo value) {
-            return value != null ? value._field : null;
+            return value?._field;
         }
     }
 }

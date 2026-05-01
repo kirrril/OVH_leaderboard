@@ -11,13 +11,13 @@ namespace NodeCanvas.Framework
 {
 
     ///<summary> A Blackboard component to hold variables</summary>
-    [ParadoxNotion.Design.SpoofAOT]
+    [SpoofAOT]
     public class Blackboard : MonoBehaviour, ISerializationCallbackReceiver, IBlackboard
     {
 
         //Remark: We serialize the whole blackboard as normal which is the previous behaviour.
         //To support prefab overrides we now also serialize each variable individually.
-        //Each serialized variable has it's own list of references since it can be an object with multiple
+        //Each serialized variable has its own list of references since it can be an object with multiple
         //UnityObject fields, or simply a list of UnityObjects.
         //We keep both old and new serializations. If something goes wrong or needs change with the new one,
         //there is still the old one to fallback to.
@@ -76,7 +76,7 @@ namespace NodeCanvas.Framework
         public void SelfDeserialize() {
 
             _blackboard = new BlackboardSource();
-            if ( !string.IsNullOrEmpty(_serializedBlackboard) /*&& ( _serializedVariables == null || _serializedVariables.Length == 0 )*/ ) {
+            if ( !string.IsNullOrEmpty(_serializedBlackboard) ) {
                 JSONSerializer.TryDeserializeOverwrite<BlackboardSource>(_blackboard, _serializedBlackboard, _objectReferences);
             }
 
@@ -116,29 +116,28 @@ namespace NodeCanvas.Framework
         IBlackboard IBlackboard.parent => _parentBlackboard;
         string IBlackboard.independantVariablesFieldName => nameof(_serializedVariables);
 
-        void IBlackboard.TryInvokeOnVariableAdded(Variable variable) { if ( onVariableAdded != null ) onVariableAdded(variable); }
-        void IBlackboard.TryInvokeOnVariableRemoved(Variable variable) { if ( onVariableRemoved != null ) onVariableRemoved(variable); }
+        void IBlackboard.TryInvokeOnVariableAdded(Variable variable) { onVariableAdded?.Invoke(variable); }
+        void IBlackboard.TryInvokeOnVariableRemoved(Variable variable) { onVariableRemoved?.Invoke(variable); }
 
         ///----------------------------------------------------------------------------------------------
 
         //...
         virtual protected void Awake() {
-            _identifier = gameObject.name;
             this.InitializePropertiesBinding(( (IBlackboard)this ).propertiesBindTarget, false);
         }
 
         ///----------------------------------------------------------------------------------------------
 
-        //These exist here only for backward compatibility in case ppl used these methods in any reflection
+        //These exist here only for backward compatibility, or in case ppl used these methods in any reflection
 
         ///<summary>Add a new variable of name and type</summary>
-        public Variable AddVariable(string name, System.Type type) { return IBlackboardExtensions.AddVariable(this, name, type); }
+        public Variable AddVariable(string name, Type type) { return IBlackboardExtensions.AddVariable(this, name, type); }
         ///<summary>Add a new variable of name and value</summary>
         public Variable AddVariable(string name, object value) { return IBlackboardExtensions.AddVariable(this, name, value); }
         ///<summary>Delete the variable with specified name</summary>
         public Variable RemoveVariable(string name) { return IBlackboardExtensions.RemoveVariable(this, name); }
         ///<summary>Get a Variable of name and optionaly type</summary>
-        public Variable GetVariable(string name, System.Type ofType = null) { return IBlackboardExtensions.GetVariable(this, name, ofType); }
+        public Variable GetVariable(string name, Type ofType = null) { return IBlackboardExtensions.GetVariable(this, name, ofType); }
         ///<summary>Get a Variable of ID and optionaly type</summary>
         public Variable GetVariableByID(string ID) { return IBlackboardExtensions.GetVariableByID(this, ID); }
         //Generic version of get variable
@@ -148,11 +147,6 @@ namespace NodeCanvas.Framework
         ///<summary>Set the variable value of name</summary>
         public Variable SetVariableValue(string name, object value) { return IBlackboardExtensions.SetVariableValue(this, name, value); }
 
-        [System.Obsolete("Use GetVariableValue")]
-        public T GetValue<T>(string name) { return GetVariableValue<T>(name); }
-        [System.Obsolete("Use SetVariableValue")]
-        public Variable SetValue(string name, object value) { return SetVariableValue(name, value); }
-
         ///----------------------------------------------------------------------------------------------
 
         [ContextMenu("Show Json")]
@@ -160,7 +154,7 @@ namespace NodeCanvas.Framework
 
         ///----------------------------------------------------------------------------------------------
 
-        ///<summary>Saves the Blackboard in PlayerPrefs with saveKey being it's name. You can use this for a Save system</summary>
+        ///<summary>Saves the Blackboard in PlayerPrefs with saveKey being its name. You can use this for a Save system</summary>
         public string Save() { return Save(this.name); }
         ///<summary>Saves the Blackboard in PlayerPrefs in the provided saveKey. You can use this for a Save system</summary>
         public string Save(string saveKey) {
@@ -169,7 +163,7 @@ namespace NodeCanvas.Framework
             return json;
         }
 
-        ///<summary>Loads back the Blackboard from PlayerPrefs saveKey same as it's name. You can use this for a Save system</summary>
+        ///<summary>Loads back the Blackboard from PlayerPrefs saveKey same as its name. You can use this for a Save system</summary>
         public bool Load() { return Load(this.name); }
         ///<summary>Loads back the Blackboard from PlayerPrefs of the provided saveKey. You can use this for a Save system</summary>
         public bool Load(string saveKey) {
@@ -185,20 +179,8 @@ namespace NodeCanvas.Framework
 
         virtual protected void OnValidate() {
             _identifier = gameObject.name;
-            // if ( UnityEditor.PrefabUtility.IsPartOfPrefabInstance(this) ) {
-            //     var serializedContext = new UnityEditor.SerializedObject(this);
-            //     var variablesProperty = serializedContext.FindProperty(nameof(_serializedVariables));
-            //     var prefabAssetPath = UnityEditor.PrefabUtility.GetPrefabAssetPathOfNearestInstanceRoot(this);
-            //     var prefab = UnityEditor.AssetDatabase.LoadAssetAtPath<Blackboard>(prefabAssetPath);
-            //     for ( var i = 0; i < _serializedVariables.Length; i++ ) {
-            //         if ( i >= prefab._serializedVariables.Length ) { break; }
-            //         var varProp = variablesProperty.GetArrayElementAtIndex(i);
-            //         var instVariable = JSONSerializer.Deserialize<Variable>(_serializedVariables[i]._json);
-            //         var prefVariable = JSONSerializer.Deserialize<Variable>(prefab._serializedVariables[i]._json);
-            //     }
-            // }
         }
 
-        public override string ToString() { return _identifier; }
+        public override string ToString() => _identifier;
     }
 }

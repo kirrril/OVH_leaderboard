@@ -14,24 +14,18 @@ namespace ParadoxNotion.Design
     {
 
         ///<summary>Create asset of type T with a dialog prompt to chose path</summary>
-        public static T CreateAsset<T>() where T : ScriptableObject {
-            return (T)CreateAsset(typeof(T));
-        }
+        public static T CreateAsset<T>() where T : ScriptableObject => (T)CreateAsset(typeof(T));
 
         ///<summary>Create asset of type T at target path</summary>
-        public static T CreateAsset<T>(string path) where T : ScriptableObject {
-            return (T)CreateAsset(typeof(T), path);
-        }
+        public static T CreateAsset<T>(string path) where T : ScriptableObject => (T)CreateAsset(typeof(T), path);
 
         ///<summary>Create asset of type and show or not the File Panel</summary>
         public static ScriptableObject CreateAsset(System.Type type) {
-            ScriptableObject asset = null;
             var path = EditorUtility.SaveFilePanelInProject(
                         "Create Asset of type " + type.ToString(),
                            type.Name + ".asset",
                         "asset", "");
-            asset = CreateAsset(type, path);
-            return asset;
+            return CreateAsset(type, path);
         }
 
         ///<summary>Create asset of type at target path</summary>
@@ -39,26 +33,13 @@ namespace ParadoxNotion.Design
             if ( string.IsNullOrEmpty(path) ) {
                 return null;
             }
-            ScriptableObject data = null;
-            data = ScriptableObject.CreateInstance(type);
+            var data = ScriptableObject.CreateInstance(type);
             AssetDatabase.CreateAsset(data, path);
             AssetDatabase.SaveAssets();
             return data;
         }
 
         ///----------------------------------------------------------------------------------------------
-
-        ///<summary>Get a unique path at current project selection for creating an asset, providing the "filename.type"</summary>
-        public static string GetAssetUniquePath(string fileName) {
-            var path = AssetDatabase.GetAssetPath(Selection.activeObject);
-            if ( path == "" ) {
-                path = "Assets";
-            }
-            if ( System.IO.Path.GetExtension(path) != "" ) {
-                path = path.Replace(System.IO.Path.GetFileName(AssetDatabase.GetAssetPath(Selection.activeObject)), "");
-            }
-            return AssetDatabase.GenerateUniqueAssetPath(path + "/" + fileName);
-        }
 
         ///<summary>Get MonoScript reference from type if able</summary>
         public static MonoScript MonoScriptFromType(System.Type targetType) {
@@ -81,7 +62,7 @@ namespace ParadoxNotion.Design
                 AssetDatabase.OpenAsset(mono);
                 return true;
             }
-            ParadoxNotion.Services.Logger.Log(string.Format("Can't open script of type '{0}', because a script with the same name does not exist.", type.FriendlyName()));
+            Services.Logger.Log(string.Format("Can't open script of type '{0}', because a script with the same name does not exist.", type.FriendlyName()));
             return false;
         }
 
@@ -109,7 +90,6 @@ namespace ParadoxNotion.Design
                     allSceneNames.Add(name);
                 }
             }
-
             return allSceneNames;
         }
 

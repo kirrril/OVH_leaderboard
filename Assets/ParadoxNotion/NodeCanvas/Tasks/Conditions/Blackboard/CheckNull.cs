@@ -11,11 +11,9 @@ namespace NodeCanvas.Tasks.Conditions
     {
 
         [BlackboardOnly]
-        public BBParameter<System.Object> variable;
+        public BBParameter<object> variable;
 
-        protected override string info {
-            get { return variable + " == null"; }
-        }
+        protected override string info => variable + " == null";
 
         protected override bool OnCheck() {
             return ParadoxNotion.ObjectUtils.AnyEquals(variable.value, null);

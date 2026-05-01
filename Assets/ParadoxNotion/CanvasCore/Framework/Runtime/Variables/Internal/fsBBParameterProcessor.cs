@@ -11,7 +11,6 @@ namespace NodeCanvas.Framework.Internal
     {
         //...
         public override void OnBeforeDeserializeAfterInstanceCreation(Type storageType, object instance, ref fsData data) {
-
             if ( ParadoxNotion.Services.Threader.applicationIsPlaying ) {
                 return;
             }
@@ -26,8 +25,7 @@ namespace NodeCanvas.Framework.Internal
                 }
             }
 
-            var bbParam = instance as BBParameter;
-            if ( bbParam != null && bbParam.GetType().RTIsGenericType() ) {
+            if ( instance is BBParameter bbParam && bbParam.GetType().RTIsGenericType() ) {
                 var varType = bbParam.varType;
                 var serializer = new fsSerializer();
                 object prevInstance = null;

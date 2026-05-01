@@ -9,7 +9,7 @@ namespace NodeCanvas.DialogueTrees
     [ParadoxNotion.Design.Icon("Condition")]
     [Name("Task Condition")]
     [Category("Branch")]
-    [Description("Execute the first child node if a Condition is true, or the second one if that Condition is false. The Actor selected is used for the Condition check")]
+    [Description("Execute the first child node if a Condition is true, or the second one if that Condition is false. The Actor selected is used for the Condition check.")]
     [Color("b3ff7f")]
     public class ConditionNode : DTNode, ITaskAssignable<ConditionTask>
     {
@@ -27,8 +27,8 @@ namespace NodeCanvas.DialogueTrees
             set { condition = (ConditionTask)value; }
         }
 
-        public override int maxOutConnections { get { return 2; } }
-        public override bool requireActorSelection { get { return true; } }
+        public override int maxOutConnections => 2;
+        public override bool requireActorSelection => true;
 
         protected override Status OnExecute(Component agent, IBlackboard bb) {
 

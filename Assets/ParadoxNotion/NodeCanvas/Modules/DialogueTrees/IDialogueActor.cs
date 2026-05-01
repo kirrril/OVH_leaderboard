@@ -23,29 +23,17 @@ namespace NodeCanvas.DialogueTrees
         private string _name;
         private Transform _transform;
 
-        public string name {
-            get { return _name; }
-        }
+        public string name => _name;
 
-        public Texture2D portrait {
-            get { return null; }
-        }
+        public Texture2D portrait => null;
 
-        public Sprite portraitSprite {
-            get { return null; }
-        }
+        public Sprite portraitSprite => null;
 
-        public Color dialogueColor {
-            get { return Color.white; }
-        }
+        public Color dialogueColor => Color.white;
 
-        public Vector3 dialoguePosition {
-            get { return Vector3.zero; }
-        }
+        public Vector3 dialoguePosition => Vector3.zero;
 
-        public Transform transform {
-            get { return _transform; }
-        }
+        public Transform transform => _transform;
 
         public ProxyDialogueActor(string name, Transform transform) {
             this._name = name;

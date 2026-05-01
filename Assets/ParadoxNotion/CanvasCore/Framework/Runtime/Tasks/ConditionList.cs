@@ -26,7 +26,7 @@ namespace NodeCanvas.Framework
         public ConditionsCheckMode checkMode;
         public List<ConditionTask> conditions = new List<ConditionTask>();
 
-        private bool allTrueRequired { get { return checkMode == ConditionsCheckMode.AllTrueRequired; } }
+        private bool allTrueRequired => checkMode == ConditionsCheckMode.AllTrueRequired;
 
 
         protected override string info {

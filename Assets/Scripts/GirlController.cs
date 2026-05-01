@@ -251,7 +251,7 @@ public class GirlController : MonoBehaviour
         agent.ResetPath();
         agent.isStopped = true;
         Debug.Log(message);
-        playerController.ModifyScore(scoreDelta);
+        GameManager.Instance.ModifyScore(scoreDelta);
         yield return new WaitForSeconds(0.1f);
         agent.isStopped = false;
         isPerformingInteraction = false;

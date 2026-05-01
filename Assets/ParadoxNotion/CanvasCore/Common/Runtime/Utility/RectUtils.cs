@@ -81,18 +81,18 @@ namespace ParadoxNotion
 
 #if UNITY_EDITOR
         ///<summary>A debug rect with values</summary>
-        public static void DrawDebugRect(Rect rect, string label = "", Color color = default(Color)) {
-            GUI.color = color == default(Color) ? Color.yellow : color;
+        public static void DrawDebugRect(Rect rect, string label = "", Color color = default) {
+            GUI.color = color == default ? Color.yellow : color;
             GUI.DrawTexture(rect, Texture2D.whiteTexture);
             GUI.color = Color.white;
             rect = rect.ExpandBy(-5);
             GUI.DrawTexture(rect, Texture2D.whiteTexture);
             GUI.color = Color.black;
-            GUI.Label(rect, rect.x.ToString(), ParadoxNotion.Design.Styles.leftLabel);
-            GUI.Label(rect, rect.y.ToString(), ParadoxNotion.Design.Styles.topCenterLabel);
-            GUI.Label(rect, string.Format("{0}\nWidth:{1}", rect.xMax.ToString(), rect.width.ToString()), ParadoxNotion.Design.Styles.rightLabel);
-            GUI.Label(rect, string.Format("{0}\nHeight:{1}", rect.yMax.ToString(), rect.height.ToString()), ParadoxNotion.Design.Styles.bottomCenterLabel);
-            GUI.Label(rect, label, ParadoxNotion.Design.Styles.centerLabel);
+            GUI.Label(rect, rect.x.ToString(), Design.Styles.leftLabel);
+            GUI.Label(rect, rect.y.ToString(), Design.Styles.topCenterLabel);
+            GUI.Label(rect, string.Format("{0}\nWidth:{1}", rect.xMax.ToString(), rect.width.ToString()), Design.Styles.rightLabel);
+            GUI.Label(rect, string.Format("{0}\nHeight:{1}", rect.yMax.ToString(), rect.height.ToString()), Design.Styles.bottomCenterLabel);
+            GUI.Label(rect, label, Design.Styles.centerLabel);
             GUI.color = Color.white;
         }
 #endif

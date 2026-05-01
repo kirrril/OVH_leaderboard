@@ -1,18 +1,15 @@
 fileFormatVersion: 2
-guid: 861c440c95aa4b340af5c9b507321cdf
+guid: fb5ec2484dff28347b4302b59cdb3139
 MonoImporter:
-  externalObjects: {}
   serializedVersion: 2
   defaultReferences: []
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 
-  assetBundleName: 
-  assetBundleVariant: 
 AssetOrigin:
   serializedVersion: 1
   productId: 14914
   packageName: NodeCanvas
-  packageVersion: 3.3.3
+  packageVersion: 3.4.1
   assetPath: Assets/ParadoxNotion/NodeCanvas/_DeprecatedFiles/Legacy_Filter.cs
-  uploadId: 754282
+  uploadId: 866614

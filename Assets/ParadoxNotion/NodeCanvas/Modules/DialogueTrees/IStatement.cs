@@ -34,6 +34,7 @@ namespace NodeCanvas.DialogueTrees
         [SerializeField] private AudioClip _audio;
         [SerializeField] private string _meta = string.Empty;
         [SerializeField] private Dictionary<Locales, Localization> _localizations;
+        [SerializeField] private string _uid;
 
         public string text {
             get => _text;
@@ -55,6 +56,8 @@ namespace NodeCanvas.DialogueTrees
             set => _localizations = value;
         }
 
+        public string UID => string.IsNullOrEmpty(_uid) ? _uid = System.Guid.NewGuid().ToString() : _uid;
+
         //required
         public Statement() { }
         public Statement(string text) {
@@ -74,7 +77,7 @@ namespace NodeCanvas.DialogueTrees
 
         ///<summary>Returns the localized text for provided language. If it doesn't exist, returns the default text.</summary>
         public string GetLocalizedText(Locales lang) {
-            if ( lang != Locales.Default && localizations.TryGetValue(lang, out Localization loc) ) {
+            if ( lang != Locales.Default && localizations != null && localizations.TryGetValue(lang, out Localization loc) ) {
                 return loc.text;
             }
             return text;
@@ -82,7 +85,7 @@ namespace NodeCanvas.DialogueTrees
 
         ///<summary>Returns the localized AudioClip for provided language. If it doesn't exist, returns the default AudioClip.</summary>
         public AudioClip GetLocalizedAudio(Locales lang) {
-            if ( lang != Locales.Default && localizations.TryGetValue(lang, out Localization loc) ) {
+            if ( lang != Locales.Default && localizations != null && localizations.TryGetValue(lang, out Localization loc) ) {
                 return loc.audio;
             }
             return audio;

@@ -25,11 +25,9 @@ namespace NodeCanvas.Tasks.Actions
         [BlackboardOnly]
         public BBParameter<List<Vector3>> saveNormalsAs;
 
-        private RaycastHit2D[] hits;
-
         protected override void OnExecute() {
 
-            hits = Physics2D.LinecastAll(agent.position, target.value.transform.position, mask);
+            var hits = Physics2D.LinecastAll(agent.position, target.value.transform.position, mask);
 
             if ( hits.Length > 0 ) {
                 saveHitGameObjectsAs.value = hits.Select(h => h.collider.gameObject).ToList();

@@ -14,9 +14,7 @@ namespace NodeCanvas.Tasks.Actions
         public BBParameter<GameObject> targetPosition;
         public BBParameter<float> targetWeight;
 
-        protected override string info {
-            get { return "Mec.SetLookAt " + targetPosition; }
-        }
+        protected override string info => "Mec.SetLookAt " + targetPosition;
 
         protected override void OnExecute() {
             router.onAnimatorIK += OnAnimatorIK;

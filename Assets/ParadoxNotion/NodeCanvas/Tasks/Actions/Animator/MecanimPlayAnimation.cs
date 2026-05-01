@@ -21,9 +21,9 @@ namespace NodeCanvas.Tasks.Actions
         private AnimatorStateInfo stateInfo;
         private bool played;
 
-        protected override string info {
-            get { return "Anim '" + stateName.ToString() + "'"; }
-        }
+        protected override string info => "Anim '" + stateName.ToString() + "'";
+
+        public override float length => transitTime;
 
         protected override void OnExecute() {
             if ( string.IsNullOrEmpty(stateName.value) ) {

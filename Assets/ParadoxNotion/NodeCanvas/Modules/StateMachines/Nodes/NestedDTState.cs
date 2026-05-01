@@ -41,9 +41,7 @@ namespace NodeCanvas.StateMachines
         }
 
         protected override void OnExit() {
-            if ( currentInstance != null ) {
-                currentInstance.Stop();
-            }
+            currentInstance?.Stop();
         }
 
         void OnDialogueFinished(bool success) {

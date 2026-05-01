@@ -41,12 +41,12 @@ namespace ParadoxNotion.Serialization
         }
 
         public MemberInfo AsMemberInfo() { return _event; }
-        public string AsString() { return _baseInfo != null ? _baseInfo.Replace("|", ".") : null; }
+        public string AsString() { return _baseInfo?.Replace("|", "."); }
         public override string ToString() { return AsString(); }
 
         //operator
         public static implicit operator EventInfo(SerializedEventInfo value) {
-            return value != null ? value._event : null;
+            return value?._event;
         }
     }
 }

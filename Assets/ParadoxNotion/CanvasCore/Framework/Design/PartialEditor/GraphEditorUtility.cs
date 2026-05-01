@@ -66,9 +66,7 @@ namespace NodeCanvas.Editor
                         lastConnectionID = ( value as Connection ).sourceNode.outConnections.IndexOf(value as Connection);
                     }
                     UnityEditor.SceneView.RepaintAll();
-                    if ( onActiveElementChanged != null ) {
-                        onActiveElementChanged(value);
-                    }
+                    onActiveElementChanged?.Invoke(value);
                 }
             }
         }
@@ -88,14 +86,10 @@ namespace NodeCanvas.Editor
         }
 
         ///<summary>Selected Node if any</summary>
-        public static Node activeNode {
-            get { return activeElement as Node; }
-        }
+        public static Node activeNode => activeElement as Node;
 
         ///<summary>Selected Connection if any</summary>
-        public static Connection activeConnection {
-            get { return activeElement as Connection; }
-        }
+        public static Connection activeConnection => activeElement as Connection;
 
         ///----------------------------------------------------------------------------------------------
 
@@ -112,7 +106,7 @@ namespace NodeCanvas.Editor
         ///----------------------------------------------------------------------------------------------
 
         //Find nodes of type (T) having the [DropReferenceType] attribute pointing to target unity object type
-        public static IEnumerable<System.Type> GetDropedReferenceNodeTypes<T>(UnityEngine.Object obj) where T : IGraphElement {
+        public static IEnumerable<Type> GetDropedReferenceNodeTypes<T>(UnityEngine.Object obj) where T : IGraphElement {
             var targetType = obj.GetType();
             foreach ( var type in ReflectionTools.GetImplementationsOf(typeof(T)) ) {
                 var att = type.RTGetAttribute<DropReferenceType>(true);
@@ -140,7 +134,7 @@ namespace NodeCanvas.Editor
         public static void ScanForStructTypesAndAppendThem(Graph graph) {
 
             var serializedTypes = new List<Type>();
-            JSONSerializer.SerializeAndExecuteNoCycles(typeof(NodeCanvas.Framework.Internal.GraphSource), graph.GetGraphSource(), (o, d) =>
+            JSONSerializer.SerializeAndExecuteNoCycles(typeof(Framework.Internal.GraphSource), graph.GetGraphSource(), (o, d) =>
             {
                 if ( o != null ) { serializedTypes.Add(o.GetType()); }
             });
@@ -148,7 +142,7 @@ namespace NodeCanvas.Editor
             serializedTypes = serializedTypes.Concat(serializedTypes.Where(t => t.IsGenericType).Select(t => t.RTGetGenericArguments().First())).ToList();
 
             var preferredTypes = TypePrefs.GetPreferedTypesList();
-            var resultTypes = new List<System.Type>();
+            var resultTypes = new List<Type>();
             for ( var i = 0; i < serializedTypes.Count; i++ ) {
                 var t = serializedTypes[i];
                 if ( preferredTypes.Contains(t) ) { continue; }

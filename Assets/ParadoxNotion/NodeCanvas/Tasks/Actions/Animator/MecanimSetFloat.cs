@@ -20,10 +20,8 @@ namespace NodeCanvas.Tasks.Actions
 
         private float currentValue;
 
-        protected override string info {
-            get { return string.Format("Mec.SetFloat {0} to {1}", string.IsNullOrEmpty(parameter.value) && !parameter.useBlackboard ? parameterHashID.ToString() : parameter.ToString(), setTo); }
-        }
-
+        protected override string info => string.Format("Mec.SetFloat {0} to {1}", string.IsNullOrEmpty(parameter.value) && !parameter.useBlackboard ? parameterHashID.ToString() : parameter.ToString(), setTo);
+        public override float length => transitTime;
 
         protected override void OnExecute() {
 

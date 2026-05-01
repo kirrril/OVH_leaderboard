@@ -20,7 +20,7 @@ namespace NodeCanvas.Tasks.Conditions
         private Dictionary<string, BBObjectParameter> argumentsMap = new Dictionary<string, BBObjectParameter>();
         private object[] args;
 
-        protected override string info { get { return signalDefinition.ToString(); } }
+        protected override string info => signalDefinition.ToString();
 
         protected override string OnInit() {
             if ( signalDefinition.isNoneOrNull ) { return "Missing Definition"; }
@@ -46,8 +46,7 @@ namespace NodeCanvas.Tasks.Conditions
             var parameters = signalDefinition.value.parameters;
             EditorUtils.Separator();
             foreach ( var parameter in parameters ) {
-                BBObjectParameter bbParam = null;
-                if ( !argumentsMap.TryGetValue(parameter.ID, out bbParam) ) {
+                if ( !argumentsMap.TryGetValue(parameter.ID, out BBObjectParameter bbParam) ) {
                     bbParam = argumentsMap[parameter.ID] = new BBObjectParameter(parameter.type) { bb = ownerSystemBlackboard };
                 }
                 NodeCanvas.Editor.BBParameterEditor.ParameterField(parameter.name, bbParam);
