@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: e2caa5b63998d62459eb7d5d55a09a40
+guid: 23a003a6cd64f3f4aa9693401542fb16
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 3614952818415441474
-    second: Show_0
+      213: -2520071786502460176
+    second: Hide_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -109,17 +109,43 @@ TextureImporter:
     ignorePlatformSupport: 0
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: WebGL
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: iOS
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
   spriteSheet:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Show_0
+      name: Hide_0
       rect:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 115
-        height: 63
+        width: 113
+        height: 35
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -128,8 +154,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 246137d7f64ea2230800000000000000
-      internalID: 3614952818415441474
+      spriteID: 0fc6905ef08e60dd0800000000000000
+      internalID: -2520071786502460176
       vertices: []
       indices: 
       edges: []
@@ -148,7 +174,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      Show_0: 3614952818415441474
+      Hide_0: -2520071786502460176
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

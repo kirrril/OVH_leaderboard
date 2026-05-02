@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: ecf81e50ea80bb44990dc2273473b142
+guid: 888489bc1f261084db550a317d469a52
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 6337757556742298555
-    second: Forward_0
+      213: 5142469705158552154
+    second: Desc_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -109,17 +109,43 @@ TextureImporter:
     ignorePlatformSupport: 0
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: WebGL
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: iOS
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
   spriteSheet:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Forward_0
+      name: Desc_0
       rect:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 32
-        height: 61
+        width: 61
+        height: 32
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -128,8 +154,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: bbb1c224bec34f750800000000000000
-      internalID: 6337757556742298555
+      spriteID: a5aee2c63f8bd5740800000000000000
+      internalID: 5142469705158552154
       vertices: []
       indices: 
       edges: []
@@ -148,7 +174,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      Forward_0: 6337757556742298555
+      Desc_0: 5142469705158552154
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

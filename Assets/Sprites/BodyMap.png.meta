@@ -1,10 +1,19 @@
 fileFormatVersion: 2
-guid: dbb01022a79dbf844bd90292e7333912
+guid: 15ef7168fe1cd0c448966fed351915f1
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 6304284374572319229
-    second: TropheeLogo_0
+      213: -4524216085237102371
+    second: BodyMap_0
+  - first:
+      213: 6098935796735462324
+    second: BodyMap_1
+  - first:
+      213: 5628207697466944205
+    second: BodyMap_2
+  - first:
+      213: 37896271211232401
+    second: BodyMap_3
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -109,27 +118,97 @@ TextureImporter:
     ignorePlatformSupport: 0
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: WebGL
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: iOS
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
   spriteSheet:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: TropheeLogo_0
+      name: Body
       rect:
         serializedVersion: 2
-        x: 127
-        y: 110
-        width: 974
-        height: 877
+        x: 28
+        y: 355
+        width: 238
+        height: 273
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: df1cd65bc315d7750800000000000000
-      internalID: 6304284374572319229
+      spriteID: dd88558d071c631c0800000000000000
+      internalID: -4524216085237102371
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Core
+      rect:
+        serializedVersion: 2
+        x: 48
+        y: 189
+        width: 102
+        height: 115
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4bbc4582bc5c3a450800000000000000
+      internalID: 6098935796735462324
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Legs
+      rect:
+        serializedVersion: 2
+        x: 33
+        y: 30
+        width: 238
+        height: 116
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: dcae2a1d4196b1e40800000000000000
+      internalID: 5628207697466944205
       vertices: []
       indices: 
       edges: []
@@ -138,7 +217,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 
+    spriteID: ca14d965b8ac54548a1bb17d8b61e81c
     internalID: 0
     vertices: []
     indices: 
@@ -148,7 +227,10 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      TropheeLogo_0: 6304284374572319229
+      Body: -4524216085237102371
+      Core: 6098935796735462324
+      Legs: 5628207697466944205
+      Legs_2: 37896271211232401
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
