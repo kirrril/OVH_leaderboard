@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: a784d3708accafd47aea43daa58da516
+guid: e36b2710f9d3bd34e8fe5221116e8f1a
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 7233969532671586833
-    second: HintButton_0
+      213: 5699374197052373070
+    second: Asset 26@4x_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -139,13 +139,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: HintButton_0
+      name: Asset 26@4x_0
       rect:
         serializedVersion: 2
         x: 0
         y: 0
         width: 926
-        height: 925
+        height: 926
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -154,8 +154,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 11273e676f8346460800000000000000
-      internalID: 7233969532671586833
+      spriteID: e487559b2ae381f40800000000000000
+      internalID: 5699374197052373070
       vertices: []
       indices: 
       edges: []
@@ -174,7 +174,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      HintButton_0: 7233969532671586833
+      Asset 26@4x_0: 5699374197052373070
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

@@ -1,19 +1,16 @@
 fileFormatVersion: 2
-guid: f6ae03c5c801f4d43af976361bf2a4b5
+guid: 33798908bab81f749b9752f3f2c949e4
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 2348497106968948862
-    second: Asset 23@4x_0
+      213: 6878683916349502823
+    second: Asset 27@4x_0
   - first:
-      213: -2562522682699921955
-    second: Asset 23@4x_1
+      213: 5201742763965176831
+    second: Asset 27@4x_1
   - first:
-      213: -2270365891821729704
-    second: Asset 23@4x_2
-  - first:
-      213: 4155428074630750849
-    second: Asset 23@4x_3
+      213: -6824006080074093072
+    second: Asset 27@4x_2
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -148,79 +145,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Asset 23@4x_0
+      name: Asset 27@4x_0
       rect:
         serializedVersion: 2
         x: 0
-        y: 2066
-        width: 1714
-        height: 514
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: e70bae80da9879020800000000000000
-      internalID: 2348497106968948862
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Asset 23@4x_1
-      rect:
-        serializedVersion: 2
-        x: 204
-        y: 1281
-        width: 598
-        height: 650
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: dd54ac86237107cd0800000000000000
-      internalID: -2562522682699921955
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Asset 23@4x_2
-      rect:
-        serializedVersion: 2
-        x: 912
-        y: 1281
-        width: 598
-        height: 650
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 8588dc3104a0e70e0800000000000000
-      internalID: -2270365891821729704
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Asset 23@4x_3
-      rect:
-        serializedVersion: 2
-        x: 166
         y: 0
-        width: 1382
-        height: 1171
+        width: 419
+        height: 668
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -229,8 +160,52 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 1822d0641db0ba930800000000000000
-      internalID: 4155428074630750849
+      spriteID: 765743cb39ef57f50800000000000000
+      internalID: 6878683916349502823
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Asset 27@4x_1
+      rect:
+        serializedVersion: 2
+        x: 490
+        y: 142
+        width: 152
+        height: 396
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ffb5a1bdb7d403840800000000000000
+      internalID: 5201742763965176831
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Asset 27@4x_2
+      rect:
+        serializedVersion: 2
+        x: 551
+        y: 8
+        width: 229
+        height: 663
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0fde31410a24c41a0800000000000000
+      internalID: -6824006080074093072
       vertices: []
       indices: 
       edges: []
@@ -249,10 +224,9 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      Asset 23@4x_0: 2348497106968948862
-      Asset 23@4x_1: -2562522682699921955
-      Asset 23@4x_2: -2270365891821729704
-      Asset 23@4x_3: 4155428074630750849
+      Asset 27@4x_0: 6878683916349502823
+      Asset 27@4x_1: 5201742763965176831
+      Asset 27@4x_2: -6824006080074093072
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
