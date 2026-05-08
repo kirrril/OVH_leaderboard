@@ -5,9 +5,11 @@ using UnityEngine.UI;
 public class GameSceneHUD : MonoBehaviour
 {
     [SerializeField] private Image water;
+    [SerializeField] private Image healthPointsImage;
     [SerializeField] private Image thirstyDeathScreen;
     [SerializeField] private Image fallingDownScreen;
     [SerializeField] private PlayerController playerController;
+    [SerializeField] private Sprite[] healthPointsSprites;
     private bool isVoidFalling;
     private bool isDyingOfThirst;
 
@@ -16,6 +18,29 @@ public class GameSceneHUD : MonoBehaviour
     {
         UpdateWaterLevel();
         VoidFallingScreen();
+        UpdateHealthPoints();
+    }
+
+    private void UpdateHealthPoints()
+    {
+        switch (GameManager.Instance.health)
+        {
+            case 5:
+                healthPointsImage.sprite = healthPointsSprites[0];
+                break;
+            case 4:
+                healthPointsImage.sprite = healthPointsSprites[1];
+                break;
+            case 3:
+                healthPointsImage.sprite = healthPointsSprites[2];
+                break;
+            case 2:
+                healthPointsImage.sprite = healthPointsSprites[3];
+                break;
+            case 1:
+                healthPointsImage.sprite = healthPointsSprites[4];
+                break;
+        }
     }
 
     private void VoidFallingScreen()
@@ -90,7 +115,7 @@ public class GameSceneHUD : MonoBehaviour
         }
         color.a = 1f;
         thirstyDeathScreen.color = color;
-        yield return new WaitForSeconds(1f);        
+        yield return new WaitForSeconds(1f);
         color.a = 0f;
         thirstyDeathScreen.color = color;
 

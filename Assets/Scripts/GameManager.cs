@@ -8,6 +8,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] private PlayerController playerController;
 
     public int health = 5;
+    private bool isLosingHealth;
     public int currentScore = 0;
 
     public float water = 0.5f;
@@ -131,33 +132,45 @@ public class GameManager : MonoBehaviour
 
         if (water <= 0)
         {
+            if (!isLosingHealth)
+            {
+                isLosingHealth = true;
+                StartCoroutine(LoseHealthOfThirst());
+            }
             playerController.currentState = PlayerController.State.DyingOfThirst;
         }
     }
 
-    private void FallingDownManagement()
+    private IEnumerator LoseHealthOfThirst()
     {
-        if (playerController.transform.position.y < -15f)
-        {
-            playerController.HandleLosingHealth();
-            LoseHealth();
-        }
+        yield return new WaitForSeconds(4f);
+        LoseHealth();
+        isLosingHealth = false;
     }
 
-    public void YouWin()
+private void FallingDownManagement()
+{
+    if (playerController.transform.position.y < -15f)
     {
-        StartCoroutine(YouWinTransitionCorout());
+        playerController.HandleLosingHealth();
+        LoseHealth();
     }
+}
 
-    IEnumerator YouWinTransitionCorout()
-    {
-        yield return new WaitForSeconds(3f);
+public void YouWin()
+{
+    StartCoroutine(YouWinTransitionCorout());
+}
 
-        SceneManager.LoadScene("YouWinScene");
-    }
+IEnumerator YouWinTransitionCorout()
+{
+    yield return new WaitForSeconds(3f);
 
-    public void YouLoose()
-    {
-        SceneManager.LoadScene("YouLoseScene");
-    }
+    SceneManager.LoadScene("YouWinScene");
+}
+
+public void YouLoose()
+{
+    SceneManager.LoadScene("YouLoseScene");
+}
 }
