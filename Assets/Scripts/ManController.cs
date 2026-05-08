@@ -50,7 +50,7 @@ public class ManController : MonoBehaviour
     void Update()
     {
         UpdateWalkingAnimation();
-        blackboard.SetVariableValue("playerScore", PlayerData.Instance.currentScore);
+        blackboard.SetVariableValue("playerScore", GameManager.Instance.currentScore);
     }
 
     private void UpdateWalkingAnimation()

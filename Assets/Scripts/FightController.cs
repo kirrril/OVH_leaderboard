@@ -63,6 +63,7 @@ public class FightController : MonoBehaviour
         playerController.SufferSubmission();
         yield return new WaitForSeconds(2);
         GameManager.Instance.ModifyScore(-10);
+        GameManager.Instance.LoseHealth();
         playerAnimator.SetBool("isSubmissed", false);
         playerController.currentState = PlayerController.State.Dying;
         manAnimator.SetBool("isAttacking", false);

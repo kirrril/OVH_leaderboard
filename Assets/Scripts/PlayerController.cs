@@ -10,7 +10,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private Animator animator;
     [SerializeField] private Transform cameraTarget;
     public Transform cameraPlace;
-    [SerializeField] private GameObject stopTrainingButton;
+    [SerializeField] private GameObject stopTrainingControl;
     public Transform entryPoint;
     private Vector2 playerMovement;
     private Vector2 mouseDelta;
@@ -29,8 +29,11 @@ public class PlayerController : MonoBehaviour
     public bool playerAttack;
     private bool playerInteract;
     private bool playerJump;
+    bool cameraFreezed = false;
+    Vector3 frozenCameraLocalPlace = new Vector3(0f, 0f, 0f);
+    private bool isDyingOfThirst;
 
-    public enum State { Walking, Training, Fighting, BeingSubmissed, Jumping, PushingTheDoor, ClimbingThePole, Dying, MakingDoubleSelfie };
+    public enum State { Walking, Training, Fighting, Falling, DyingOfThirst, BeingSubmissed, Jumping, PushingTheDoor, ClimbingThePole, Dying, MakingDoubleSelfie };
     public State currentState = State.Walking;
 
 
@@ -46,6 +49,12 @@ public class PlayerController : MonoBehaviour
                 break;
             case State.Fighting:
                 HandleFighting();
+                break;
+            case State.Falling:
+                HandleFalling();
+                break;
+            case State.DyingOfThirst:
+                HandleDyingOfThirst();
                 break;
             case State.Jumping:
                 HandleJumping();
@@ -78,14 +87,15 @@ public class PlayerController : MonoBehaviour
         CheckIfMoving();
         // Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
-        stopTrainingButton.SetActive(false);
+        stopTrainingControl.SetActive(false);
+        cameraFreezed = false;
     }
 
     private void HandleTraining()
     {
         // Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = true;
-        stopTrainingButton.SetActive(true);
+        stopTrainingControl.SetActive(true);
     }
 
     private void HandleFighting()
@@ -114,9 +124,39 @@ public class PlayerController : MonoBehaviour
         rb.angularVelocity = Vector3.zero;
     }
 
-    private void HandleLosingHealth()
+    private void HandleFalling()
     {
-        GameManager.Instance.LoseHealth();
+        if (!cameraFreezed)
+        {
+            frozenCameraLocalPlace = cameraPlace.localPosition;
+            cameraFreezed =true;
+        }
+        frozenCameraLocalPlace += Vector3.forward * Time.deltaTime * 3;
+        frozenCameraLocalPlace.z = Mathf.Min(frozenCameraLocalPlace.z, 0f);
+        cameraPlace.localPosition = frozenCameraLocalPlace;
+
+        rb.angularVelocity = Vector3.zero;
+    }
+
+    public void HandleDyingOfThirst()
+    {
+        if (isDyingOfThirst) return;
+        isDyingOfThirst = true;
+        // rb.angularVelocity = Vector3.zero;
+        StartCoroutine(DyingOfThirstCoroutine());
+    }
+
+    private IEnumerator DyingOfThirstCoroutine()
+    {
+        yield return new WaitForSeconds(2f);
+        GameManager.Instance.water = 0.5f;
+        isDyingOfThirst = false;
+        StopTraining();
+        HandleLosingHealth();
+    }
+
+    public void HandleLosingHealth()
+    {
         transform.position = entryPoint.position;
         transform.rotation = entryPoint.rotation;
         SetCamera(reinitCameraTarget, reinitCameraPlace);
@@ -130,9 +170,12 @@ public class PlayerController : MonoBehaviour
 
     private void MovePlayer()
     {
+        float moveSpeed = 1.5f;
         Vector2 movementInput = playerMovement.normalized;
-        Vector3 targetVelocity = transform.forward * movementInput.y * 1.5f + transform.right * movementInput.x * 1.5f;
-        rb.linearVelocity = targetVelocity;
+
+        Vector3 horizontalVelocity = transform.forward * movementInput.y * moveSpeed + transform.right * movementInput.x * moveSpeed;
+
+        rb.linearVelocity = new Vector3(horizontalVelocity.x, rb.linearVelocity.y, horizontalVelocity.z);
     }
 
     private void RotatePlayer()
@@ -194,6 +237,10 @@ public class PlayerController : MonoBehaviour
         if (tag == "Water") return;
         if (tag == "Protein") return;
         if (tag == "Level") return;
+        if (tag == "FallingZone")
+        {
+            currentState = State.Falling;
+        }
 
         trainingSpot = other.transform;
         trainingPos = trainingSpot.Find("TrainingPos");
@@ -236,13 +283,13 @@ public class PlayerController : MonoBehaviour
         var isAvailableField = spotController.GetType().GetField("isAvailable");
         if (isAvailableField == null) return;
         isAvailableField.SetValue(spotController, false);
-        stopTrainingButton.SetActive(true);
+        stopTrainingControl.SetActive(true);
         Cursor.visible = true;
     }
 
     public void StopTraining()
     {
-        stopTrainingButton.SetActive(false);
+        stopTrainingControl.SetActive(false);
         Cursor.visible = false;
         animator.SetBool(animationBool, false);
         animationBool = "";

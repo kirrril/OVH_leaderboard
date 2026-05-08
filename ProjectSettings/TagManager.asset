@@ -17,6 +17,7 @@ TagManager:
   - Girl
   - Man
   - Interactor
+  - FallingZone
   layers:
   - Default
   - TransparentFX

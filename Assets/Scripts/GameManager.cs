@@ -5,6 +5,12 @@ using UnityEngine.SceneManagement;
 public class GameManager : MonoBehaviour
 {
     public static GameManager Instance;
+    [SerializeField] private PlayerController playerController;
+
+    public int health = 5;
+    public int currentScore = 0;
+
+    public float water = 0.5f;
 
     public float legsTraining;
     public float chestTraining;
@@ -63,12 +69,14 @@ public class GameManager : MonoBehaviour
     void Update()
     {
         TrainingManagement();
+        WaterManagement();
+        FallingDownManagement();
     }
 
     void ResetGame()
     {
-        PlayerData.Instance.health = 5;
-        PlayerData.Instance.currentScore = 0;
+        health = 5;
+        currentScore = 0;
 
         legsTraining = 0;
         chestTraining = 0;
@@ -91,14 +99,14 @@ public class GameManager : MonoBehaviour
 
     public void ModifyScore(int delta)
     {
-        PlayerData.Instance.currentScore = Mathf.Max(0, PlayerData.Instance.currentScore + delta);
+        currentScore = Mathf.Max(0, currentScore + delta);
     }
 
     public void LoseHealth()
     {
-        PlayerData.Instance.health -= 1;
+        health -= 1;
 
-        if (PlayerData.Instance.health < 1) YouLoose();
+        if (health < 1) YouLoose();
     }
 
     public void TrainingManagement()
@@ -111,6 +119,29 @@ public class GameManager : MonoBehaviour
         // legsTraining = 1.05f;
         // chestTraining = 1.05f;
         // backTraining = 0.5f;
+    }
+
+    private void WaterManagement()
+    {
+        if (playerController.currentState == PlayerController.State.Training)
+        {
+            float waterLoss = Time.deltaTime / 20;
+            water -= waterLoss;
+        }
+
+        if (water <= 0)
+        {
+            playerController.currentState = PlayerController.State.DyingOfThirst;
+        }
+    }
+
+    private void FallingDownManagement()
+    {
+        if (playerController.transform.position.y < -15f)
+        {
+            playerController.HandleLosingHealth();
+            LoseHealth();
+        }
     }
 
     public void YouWin()
