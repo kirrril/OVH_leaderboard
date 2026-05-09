@@ -5,7 +5,10 @@ using UnityEngine.SceneManagement;
 public class GameManager : MonoBehaviour
 {
     public static GameManager Instance;
-    [SerializeField] private PlayerController playerController;
+    private GameObject playerPrefab;
+    private PlayerController playerController;
+
+    private bool gameSceneLoaded;
 
     public int health = 5;
     private bool isLosingHealth;
@@ -47,7 +50,7 @@ public class GameManager : MonoBehaviour
     {
         if (Instance == this)
         {
-            SceneManager.sceneLoaded += HandleSceneLoaded;
+            SceneManager.sceneLoaded += HandleGameSceneLoaded;
         }
     }
 
@@ -55,20 +58,32 @@ public class GameManager : MonoBehaviour
     {
         if (Instance == this)
         {
-            SceneManager.sceneLoaded -= HandleSceneLoaded;
+            SceneManager.sceneLoaded -= HandleGameSceneLoaded;
         }
     }
 
-    private void HandleSceneLoaded(Scene scene, LoadSceneMode mode)
+    private void HandleGameSceneLoaded(Scene scene, LoadSceneMode mode)
     {
-        if (scene.name != "GameScene") return;
-        if (PlayerData.Instance == null) return;
+        gameSceneLoaded = false;
 
+        if (scene.name != "GameScene")
+        {
+            return;
+        }
+
+        playerPrefab = GameObject.Find("PlayerPrefab");
+        if (playerPrefab == null) return;
+        playerController = playerPrefab.GetComponent<PlayerController>();
+        if (playerController == null) return;
+        
+        gameSceneLoaded = true;
         ResetGame();
     }
 
     void Update()
     {
+        if (!gameSceneLoaded) return;
+        
         TrainingManagement();
         WaterManagement();
         FallingDownManagement();
@@ -78,6 +93,7 @@ public class GameManager : MonoBehaviour
     {
         health = 5;
         currentScore = 0;
+        water = 0.5f;
 
         legsTraining = 0;
         chestTraining = 0;
@@ -137,40 +153,41 @@ public class GameManager : MonoBehaviour
                 isLosingHealth = true;
                 StartCoroutine(LoseHealthOfThirst());
             }
-            playerController.currentState = PlayerController.State.DyingOfThirst;
         }
     }
 
     private IEnumerator LoseHealthOfThirst()
     {
-        yield return new WaitForSeconds(4f);
+        yield return new WaitForSeconds(2f);
         LoseHealth();
+        water = 0.5f;
+        playerController.currentState = PlayerController.State.DyingOfThirst;
         isLosingHealth = false;
     }
 
-private void FallingDownManagement()
-{
-    if (playerController.transform.position.y < -15f)
+    private void FallingDownManagement()
     {
-        playerController.HandleLosingHealth();
-        LoseHealth();
+        if (playerController.transform.position.y < -15f)
+        {
+            playerController.HandleComeBack();
+            LoseHealth();
+        }
     }
-}
 
-public void YouWin()
-{
-    StartCoroutine(YouWinTransitionCorout());
-}
+    public void YouWin()
+    {
+        StartCoroutine(YouWinTransitionCorout());
+    }
 
-IEnumerator YouWinTransitionCorout()
-{
-    yield return new WaitForSeconds(3f);
+    IEnumerator YouWinTransitionCorout()
+    {
+        yield return new WaitForSeconds(3f);
 
-    SceneManager.LoadScene("YouWinScene");
-}
+        SceneManager.LoadScene("YouWinScene");
+    }
 
-public void YouLoose()
-{
-    SceneManager.LoadScene("YouLoseScene");
-}
+    public void YouLoose()
+    {
+        SceneManager.LoadScene("YouLoseScene");
+    }
 }

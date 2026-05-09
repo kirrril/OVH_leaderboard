@@ -31,7 +31,6 @@ public class PlayerController : MonoBehaviour
     private bool playerJump;
     bool cameraFreezed = false;
     Vector3 frozenCameraLocalPlace = new Vector3(0f, 0f, 0f);
-    private bool isDyingOfThirst;
 
     public enum State { Walking, Training, Fighting, Falling, DyingOfThirst, BeingSubmissed, Jumping, PushingTheDoor, ClimbingThePole, Dying, MakingDoubleSelfie };
     public State currentState = State.Walking;
@@ -69,7 +68,7 @@ public class PlayerController : MonoBehaviour
                 HandleBeingSubmissed();
                 break;
             case State.Dying:
-                HandleLosingHealth();
+                HandleComeBack();
                 break;
             case State.MakingDoubleSelfie:
                 HandleMakingDoubleSelfie();
@@ -134,28 +133,19 @@ public class PlayerController : MonoBehaviour
         frozenCameraLocalPlace += Vector3.forward * Time.deltaTime * 3;
         frozenCameraLocalPlace.z = Mathf.Min(frozenCameraLocalPlace.z, 0f);
         cameraPlace.localPosition = frozenCameraLocalPlace;
+        // animationBool = "isFalling";
+        animator.SetBool("isFalling", true);
 
         rb.angularVelocity = Vector3.zero;
     }
 
     public void HandleDyingOfThirst()
     {
-        if (isDyingOfThirst) return;
-        isDyingOfThirst = true;
-        // rb.angularVelocity = Vector3.zero;
-        StartCoroutine(DyingOfThirstCoroutine());
-    }
-
-    private IEnumerator DyingOfThirstCoroutine()
-    {
-        yield return new WaitForSeconds(2f);
-        GameManager.Instance.water = 0.5f;
-        isDyingOfThirst = false;
         StopTraining();
-        HandleLosingHealth();
+        HandleComeBack();
     }
 
-    public void HandleLosingHealth()
+    public void HandleComeBack()
     {
         transform.position = entryPoint.position;
         transform.rotation = entryPoint.rotation;
@@ -303,6 +293,16 @@ public class PlayerController : MonoBehaviour
         if (isAvailableField == null) return;
         isAvailableField.SetValue(spotController, true);
         currentState = State.Walking;
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        string tag = other.tag;
+
+        if (tag == "FallingZone")
+        {
+            animator.SetBool("isFalling", false);
+        }
     }
 
     private void SetCamera(Vector3 target, Vector3 place)
