@@ -76,6 +76,7 @@ public class GirlController : MonoBehaviour
                 break;
 
             case State.Training:
+                HandleTraining();
                 break;
         }
     }
@@ -100,6 +101,11 @@ public class GirlController : MonoBehaviour
         {
             SetNewTarget();
         }
+    }
+
+    private void HandleTraining()
+    {
+
     }
 
     private void HandleFleeing()
@@ -169,76 +175,25 @@ public class GirlController : MonoBehaviour
         agent.SetDestination(trainingSpots[newSpotIndex].position);
     }
 
-    private void OnTriggerEnter(Collider other)
+    public void StartTraining(TrainingSpot trainingSpot)
     {
-        if (currentState == State.Training || isPerformingInteraction) return;
-
-        string tag = other.tag;
-
-        Transform spot = other.transform;
-        Transform trainingPos = spot.Find("TrainingPos");
-        Transform exitPos = spot.Find("ExitPos");
-        GameObject wall = spot.Find("Wall")?.gameObject;
-
-        if (trainingPos == null || exitPos == null) return;
-
-        string animBool = "";
-        int duration = 0;
-
-        switch (tag)
-        {
-            case "Treadmill": animBool = "isJogging"; duration = 8; break;
-            case "Bike": animBool = "isCycling"; duration = 10; break;
-            case "JumpBox": animBool = "isBoxJumping"; duration = 7; break;
-            default: return;
-        }
-
-        var spotController = other.GetComponent(tag);
-        if (spotController == null) return;
-
-        FieldInfo isAvailableField = spotController.GetType().GetField("isAvailable");
-        if (isAvailableField == null) return;
-
-        if (!(bool)isAvailableField.GetValue(spotController))
-        {
-            agent.ResetPath();
-            SetNewTarget();
-            return;
-        }
-
         currentState = State.Training;
-        agent.ResetPath();
         agent.isStopped = true;
+        agent.ResetPath();
         agent.enabled = false;
-
-        isAvailableField.SetValue(spotController, false);
-
-        StartCoroutine(DoTraining(wall, trainingPos, exitPos, animBool, duration, spotController, isAvailableField));
+        transform.position = trainingSpot.trainingPos.position;
+        transform.rotation = trainingSpot.trainingPos.rotation;
+        hasInteracted = false;
+        animator.SetBool(trainingSpot.userAnimatorBool, true);
     }
 
-    private IEnumerator DoTraining(GameObject wall, Transform trainingPos, Transform exitPos, string animBool, int duration, object spotController, FieldInfo isAvailableField)
+    public void StopTraining(TrainingSpot trainingSpot)
     {
-        transform.position = trainingPos.position;
-        transform.rotation = trainingPos.rotation;
-
-        if (wall) wall.SetActive(true);
-        animator.SetBool(animBool, true);
-
-        hasInteracted = false;
-
-        yield return new WaitForSeconds(duration);
-
-        if (wall) wall.SetActive(false);
-        animator.SetBool(animBool, false);
-
-        transform.position = exitPos.position;
-        transform.rotation = exitPos.rotation;
-
-        isAvailableField?.SetValue(spotController, true);
-
+        animator.SetBool(trainingSpot.userAnimatorBool, false);
+        transform.position = trainingSpot.exitPos.position;
+        transform.rotation = trainingSpot.exitPos.rotation;
         agent.enabled = true;
         agent.isStopped = false;
-
         currentState = State.MovingToTarget;
     }
 

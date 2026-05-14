@@ -1,22 +1,61 @@
+using System.Collections;
 using UnityEngine;
 
 public class ChestMachine1 : MonoBehaviour
 {
-    [SerializeField]
-    private Animator animator;
-    public bool isAvailable = true;
+    [SerializeField] private Animator selfAnimator;
+    [SerializeField] private GameObject occupiedWall;
+    [SerializeField] private TrainingSpot trainingSpot;
+    private PlayerController playerController;
+    private ManController manController;
+    private GirlController girlController;
+    private bool isAvailable = true;
 
     void OnTriggerEnter(Collider other)
     {
-        // if (!other.CompareTag("Player")) return;
-        // isAvailable = false;
-        animator.SetBool("chestMachineIsMoving", true);
+        if (!isAvailable) return;
+
+        isAvailable = false;
+
+        if (other.CompareTag("Man"))
+        {
+            StartCoroutine(TrainMan(other.gameObject));
+            return;
+        }
+
+        if (other.CompareTag("Girl"))
+        {
+            StartCoroutine(TrainGirl(other.gameObject));
+            return;
+        }
+
+        playerController = other.GetComponent<PlayerController>();
+        playerController.Train(trainingSpot);
     }
 
-    void OnTriggerExit(Collider other)
+    private IEnumerator TrainMan(GameObject agent)
     {
-        // if (!other.CompareTag("Player")) return;
+        manController = agent.GetComponent<ManController>();
+        manController.StartTraining(trainingSpot);
+        selfAnimator.SetBool(trainingSpot.selfAnimatorBool, true);
+        if (occupiedWall) occupiedWall.SetActive(true);
+        yield return new WaitForSeconds(trainingSpot.trainingDuration);
+        manController.StopTraining(trainingSpot);
+        selfAnimator.SetBool(trainingSpot.selfAnimatorBool, false);
+        if (occupiedWall) occupiedWall.SetActive(false);
         isAvailable = true;
-        animator.SetBool("chestMachineIsMoving", false);
+    }
+
+    private IEnumerator TrainGirl(GameObject agent)
+    {
+        girlController = agent.GetComponent<GirlController>();
+        girlController.StartTraining(trainingSpot);
+        selfAnimator.SetBool(trainingSpot.selfAnimatorBool, true);
+        if (occupiedWall) occupiedWall.SetActive(true);
+        yield return new WaitForSeconds(trainingSpot.trainingDuration);
+        girlController.StopTraining(trainingSpot);
+        selfAnimator.SetBool(trainingSpot.selfAnimatorBool, false);
+        if (occupiedWall) occupiedWall.SetActive(false);
+        isAvailable = true;
     }
 }

@@ -12,7 +12,7 @@ public class ManController : MonoBehaviour
     public PlayerController playerController;
     public Animator animator;
     private Transform targetSpot;
-    private int level = 1;
+    private int level = 2;
     [SerializeField] private Transform[] spotsManLegs;
     [SerializeField] private Transform[] spotsManChest;
     [SerializeField] private Transform[] spotsManBack;
@@ -20,13 +20,6 @@ public class ManController : MonoBehaviour
     int lastSpotIndex = -1;
     public GameObject fightZone;
 
-    Transform spot;
-    Transform trainingPos;
-    Transform exitPos;
-    GameObject wall;
-    private string animBool = "";
-    public float duration;
-    private string scriptName;
 
     void Awake()
     {
@@ -73,17 +66,6 @@ public class ManController : MonoBehaviour
         return newSpotIndex;
     }
 
-    public bool CheckIfAvailable(Transform spot)
-    {
-        var spotController = spot.GetComponent(spot.tag);
-        if (spotController == null) return false;
-
-        var isAvailableField = spotController.GetType().GetField("isAvailable");
-        if (isAvailableField == null) return false;
-
-        return (bool)isAvailableField.GetValue(spotController);
-    }
-
     public void MoveToSpot()
     {
         if (!agent.hasPath)
@@ -95,112 +77,24 @@ public class ManController : MonoBehaviour
 
             agent.SetDestination(targetSpot.position);
         }
-
-        if (agent.remainingDistance < 0.2f)
-        {
-            if (!CheckIfAvailable(targetSpot))
-            {
-                agent.ResetPath();
-                targetSpot = null;
-                return;
-            }
-        }
     }
 
-    private void OnTriggerEnter(Collider other)
-    {
-        string enteringTag = other.tag;
-
-        switch (enteringTag)
-        {
-            case "Treadmill":
-                animBool = "isJogging";
-                duration = 8f;
-                break;
-
-            case "Bike":
-                animBool = "isCycling";
-                duration = 10f;
-                break;
-
-            case "JumpBox":
-                animBool = "isBoxJumping";
-                duration = 7f;
-                break;
-
-            default:
-                return;
-        }
-
-        Transform enteringSpot = other.transform;
-        Transform enteringTrainingPos = enteringSpot.Find("TrainingPos");
-        Transform enteringExitPos = enteringSpot.Find("ExitPos");
-        GameObject enteringWall = enteringSpot.Find("Wall")?.gameObject;
-
-        var spotController = other.GetComponent(enteringTag);
-        if (spotController == null) return;
-
-        var isAvailableField = spotController.GetType().GetField("isAvailable");
-        if (isAvailableField == null) return;
-
-        if (!(bool)isAvailableField.GetValue(spotController))
-        {
-            agent.ResetPath();
-            MoveToSpot();
-            return;
-        }
-
-        spot = enteringSpot;
-        trainingPos = enteringTrainingPos;
-        exitPos = enteringExitPos;
-        wall = enteringWall;
-        scriptName = enteringTag;
-
-        agent.ResetPath();
-        blackboard.SetVariableValue("isTraining", true);
-        blackboard.SetVariableValue("trainingDuration", duration);
-        isAvailableField.SetValue(spotController, false);
-    }
-
-    private void OnTriggerExit(Collider other)
-    {
-        string exitingTag = other.tag;
-
-        switch (exitingTag)
-        {
-            case "Treadmill":
-            case "Bike":
-            case "JumpBox":
-                break;
-            default:
-                return;
-        }
-
-        var spotController = other.GetComponent(exitingTag);
-        if (spotController == null) return;
-
-        var isAvailableField = spotController.GetType().GetField("isAvailable");
-        if (isAvailableField == null) return;
-
-        isAvailableField.SetValue(spotController, true);
-    }
-
-    public void StartTraining()
+    public void StartTraining(TrainingSpot trainingSpot)
     {
         agent.isStopped = true;
         agent.enabled = false;
-        transform.position = trainingPos.position;
-        transform.rotation = trainingPos.rotation;
-        if (wall) wall.SetActive(true);
-        animator.SetBool(animBool, true);
+        blackboard.SetVariableValue("isTraining", true);
+        blackboard.SetVariableValue("hasInteracted", false);
+        transform.position = trainingSpot.trainingPos.position;
+        transform.rotation = trainingSpot.trainingPos.rotation;
+        animator.SetBool(trainingSpot.userAnimatorBool, true);
     }
 
-    public void StopTraining()
+    public void StopTraining(TrainingSpot trainingSpot)
     {
-        if (wall) wall.SetActive(false);
-        animator.SetBool(animBool, false);
-        transform.position = exitPos.position;
-        transform.rotation = exitPos.rotation;
+        animator.SetBool(trainingSpot.userAnimatorBool, false);
+        transform.position = trainingSpot.exitPos.position;
+        transform.rotation = trainingSpot.exitPos.rotation;
         agent.enabled = true;
         agent.isStopped = false;
         blackboard.SetVariableValue("isTraining", false);

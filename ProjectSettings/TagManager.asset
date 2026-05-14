@@ -18,6 +18,7 @@ TagManager:
   - Man
   - Interactor
   - FallingZone
+  - Training
   layers:
   - Default
   - TransparentFX

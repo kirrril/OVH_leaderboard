@@ -1,22 +1,47 @@
+using System.Collections;
+using NUnit.Framework;
 using UnityEngine;
 
 public class Barbell : MonoBehaviour
 {
-    [SerializeField]
-    private Animator animator;
-    public bool isAvailable = true;
+    [SerializeField] private GameObject occupiedWall;
+    [SerializeField] private TrainingSpot trainingSpot;
+    [SerializeField] private Animator selfAnimator;
+    private PlayerController playerController;
+    private ManController manController;
+    private bool isAvailable = true;
 
     void OnTriggerEnter(Collider other)
     {
-        // if (!other.CompareTag("Player")) return;
-        // isAvailable = false;
-        animator.SetBool("barbellisMoving", true);
+        if (!isAvailable) return;
+
+        if (other.CompareTag("Girl"))
+        {
+            return;
+        }
+
+        isAvailable = false;
+
+        if (other.CompareTag("Man"))
+        {
+            StartCoroutine(TrainMan(other.gameObject));
+            return;
+        }
+
+        playerController = other.GetComponent<PlayerController>();
+        playerController.Train(trainingSpot);
     }
 
-    void OnTriggerExit(Collider other)
+    private IEnumerator TrainMan(GameObject agent)
     {
-        // if (!other.CompareTag("Player")) return;
+        manController = agent.GetComponent<ManController>();
+        manController.StartTraining(trainingSpot);
+        selfAnimator.SetBool(trainingSpot.selfAnimatorBool, true);
+        if (occupiedWall) occupiedWall.SetActive(true);
+        yield return new WaitForSeconds(trainingSpot.trainingDuration);
+        selfAnimator.SetBool(trainingSpot.selfAnimatorBool, false);
+        manController.StopTraining(trainingSpot);
+        if (occupiedWall) occupiedWall.SetActive(false);
         isAvailable = true;
-        animator.SetBool("barbellisMoving", false);
     }
 }

@@ -16,12 +16,8 @@ public class PlayerController : MonoBehaviour
     private Vector2 mouseDelta;
     private Vector3 reinitCameraPlace = new Vector3(0f, 1.9f, -1f);
     private Vector3 reinitCameraTarget = new Vector3(0f, 1.7f, 0f);
-    Transform trainingSpot;
-    Transform trainingPos;
-    Transform exitPos;
-    GameObject wall;
-    string scriptName;
-    string animationBool = "";
+
+    private TrainingSpot trainingSpot;
 
     public bool isBeingAttacked;
     private Transform enemy;
@@ -29,10 +25,27 @@ public class PlayerController : MonoBehaviour
     public bool playerAttack;
     private bool playerInteract;
     private bool playerJump;
+    string trainingAnimationBool;
+
     bool cameraFreezed = false;
     Vector3 frozenCameraLocalPlace = new Vector3(0f, 0f, 0f);
 
     public enum State { Walking, Training, Fighting, Falling, DyingOfThirst, BeingSubmissed, Jumping, PushingTheDoor, ClimbingThePole, Dying, MakingDoubleSelfie };
+    private string[] exclusiveAnimatorBools =
+    {
+        "isFalling",
+        "isSubmissed",
+        "isGaming",
+        "isJogging",
+        "isCycling",
+        "isBoxJumping",
+        "isPullingRower",
+        "isMakingDips",
+        "isPushingBarbell",
+        "isTrainingChest_1",
+        "isTrainingChest_2"
+    };
+
     public State currentState = State.Walking;
 
 
@@ -78,6 +91,49 @@ public class PlayerController : MonoBehaviour
 
     }
 
+    public void ChangeState(State nextState)
+    {
+        if (currentState == nextState) return;
+
+        currentState = nextState;
+        ApplyStateAnimation(nextState);
+    }
+
+    private void ApplyStateAnimation(State state)
+    {
+        switch (state)
+        {
+            case State.Walking:
+                ApplyExclusiveAnimatorBool();
+                break;
+
+            case State.Training:
+                ApplyExclusiveAnimatorBool(trainingAnimationBool);
+                break;
+
+            case State.Falling:
+                ApplyExclusiveAnimatorBool("isFalling");
+                break;
+
+            case State.BeingSubmissed:
+                ApplyExclusiveAnimatorBool("isSubmissed");
+                break;
+        }
+    }
+
+    private void ApplyExclusiveAnimatorBool(string newBool = null)
+    {
+        foreach (string param in exclusiveAnimatorBools)
+        {
+            animator.SetBool(param, false);
+        }
+
+        if (!string.IsNullOrEmpty(newBool))
+        {
+            animator.SetBool(newBool, true);
+        }
+    }
+
     private void HandleWalking()
     {
         MovePlayer();
@@ -87,6 +143,7 @@ public class PlayerController : MonoBehaviour
         // Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
         stopTrainingControl.SetActive(false);
+        SetCamera(reinitCameraTarget, reinitCameraPlace);
         cameraFreezed = false;
     }
 
@@ -128,12 +185,11 @@ public class PlayerController : MonoBehaviour
         if (!cameraFreezed)
         {
             frozenCameraLocalPlace = cameraPlace.localPosition;
-            cameraFreezed =true;
+            cameraFreezed = true;
         }
         frozenCameraLocalPlace += Vector3.forward * Time.deltaTime * 3;
         frozenCameraLocalPlace.z = Mathf.Min(frozenCameraLocalPlace.z, 0f);
         cameraPlace.localPosition = frozenCameraLocalPlace;
-        // animationBool = "isFalling";
         animator.SetBool("isFalling", true);
 
         rb.angularVelocity = Vector3.zero;
@@ -149,8 +205,7 @@ public class PlayerController : MonoBehaviour
     {
         transform.position = entryPoint.position;
         transform.rotation = entryPoint.rotation;
-        SetCamera(reinitCameraTarget, reinitCameraPlace);
-        currentState = State.Walking;
+        ChangeState(State.Walking);
     }
 
     private void HandleMakingDoubleSelfie()
@@ -224,85 +279,38 @@ public class PlayerController : MonoBehaviour
     {
         string tag = other.tag;
 
+
         if (tag == "Water") return;
         if (tag == "Protein") return;
         if (tag == "Level") return;
         if (tag == "FallingZone")
         {
-            currentState = State.Falling;
+            ChangeState(State.Falling);
+            return;
         }
-
-        trainingSpot = other.transform;
-        trainingPos = trainingSpot.Find("TrainingPos");
-        exitPos = trainingSpot.Find("ExitPos");
-        wall = trainingSpot.Find("Wall")?.gameObject;
-        scriptName = tag;
-        Vector3 cameraPlacePosition;
-        Vector3 cameraTargetPosition;
-
-        switch (tag)
-        {
-            case "Desk": animationBool = "isGaming"; cameraPlacePosition = new Vector3(-1f, 1.5f, 0.5f); cameraTargetPosition = new Vector3(0, 1.04f, 1f); break;
-            case "Treadmill": animationBool = "isJogging"; cameraPlacePosition = new Vector3(0.8f, 1.8f, -1.6f); cameraTargetPosition = new Vector3(0, 1.3f, 1f); break;
-            case "Bike": animationBool = "isCycling"; cameraPlacePosition = new Vector3(-0.8f, 1.8f, 1.6f); cameraTargetPosition = new Vector3(0, 1.3f, 1f); break;
-            case "JumpBox": animationBool = "isBoxJumping"; cameraPlacePosition = new Vector3(0f, 2f, 2f); cameraTargetPosition = new Vector3(0, 1.3f, 1f); break;
-            case "Rower": animationBool = "isPullingRower"; cameraPlacePosition = new Vector3(-1f, 1.5f, 0.5f); cameraTargetPosition = new Vector3(0, 1.04f, 1f); break;
-            case "Dips": animationBool = "isMakingDips"; cameraPlacePosition = new Vector3(0.8f, 1.8f, -1.6f); cameraTargetPosition = new Vector3(0, 1.3f, 1f); break;
-            case "Barbell": animationBool = "isPushingBarbell"; cameraPlacePosition = new Vector3(0f, 2f, 0f); cameraTargetPosition = new Vector3(0, 0.5f, -0.7f); break;
-            case "ChestMachine1": animationBool = "isTrainingChest_1"; cameraPlacePosition = new Vector3(0f, 1.8f, 1.6f); cameraTargetPosition = new Vector3(0, 1.3f, 1f); break;
-            case "ChestMachine2": animationBool = "isTrainingChest_2"; cameraPlacePosition = new Vector3(0f, 1.8f, 2f); cameraTargetPosition = new Vector3(0, 1.3f, 1f); break;
-            default: return;
-        }
-
-        currentState = State.Training;
-
-        Train(cameraTargetPosition, cameraPlacePosition);
 
         if (tag == "Desk") PlaceCameraLookingAtSreen();
     }
 
-    private void Train(Vector3 cameraTargetPosition, Vector3 cameraPlacePosition)
+    public void Train(TrainingSpot spot)
     {
+        trainingSpot = spot;
         rb.isKinematic = true;
-        transform.position = trainingPos.position;
-        transform.rotation = trainingPos.rotation;
-        animator.SetBool(animationBool, true);
-        SetCamera(cameraTargetPosition, cameraPlacePosition);
-        if (wall != null) wall.SetActive(true);
-        var spotController = trainingSpot.GetComponent(scriptName);
-        var isAvailableField = spotController.GetType().GetField("isAvailable");
-        if (isAvailableField == null) return;
-        isAvailableField.SetValue(spotController, false);
-        stopTrainingControl.SetActive(true);
+        transform.position = trainingSpot.trainingPos.position;
+        transform.rotation = trainingSpot.trainingPos.rotation;
+        SetCamera(trainingSpot.cameraTargetLocalPosition, trainingSpot.cameraPlaceLocalPosition);
+        trainingAnimationBool = trainingSpot.userAnimatorBool;
+        ChangeState(State.Training);
         Cursor.visible = true;
     }
 
     public void StopTraining()
     {
-        stopTrainingControl.SetActive(false);
         Cursor.visible = false;
-        animator.SetBool(animationBool, false);
-        animationBool = "";
         rb.isKinematic = false;
-        transform.position = exitPos.position;
-        transform.rotation = exitPos.rotation;
-        SetCamera(reinitCameraTarget, reinitCameraPlace);
-        if (wall != null) wall.SetActive(false);
-        var spotController = trainingSpot.GetComponent(scriptName);
-        var isAvailableField = spotController.GetType().GetField("isAvailable");
-        if (isAvailableField == null) return;
-        isAvailableField.SetValue(spotController, true);
-        currentState = State.Walking;
-    }
-
-    private void OnTriggerExit(Collider other)
-    {
-        string tag = other.tag;
-
-        if (tag == "FallingZone")
-        {
-            animator.SetBool("isFalling", false);
-        }
+        transform.position = trainingSpot.exitPos.position;
+        transform.rotation = trainingSpot.exitPos.rotation;
+        ChangeState(State.Walking);
     }
 
     private void SetCamera(Vector3 target, Vector3 place)
@@ -336,8 +344,7 @@ public class PlayerController : MonoBehaviour
 
     public void SufferSubmission()
     {
-        currentState = State.BeingSubmissed;
+        ChangeState(State.BeingSubmissed);
         SetCamera(new Vector3(0, 0, 0), new Vector3(0, 2, 1));
-        animator.SetBool("isSubmissed", true);
     }
 }

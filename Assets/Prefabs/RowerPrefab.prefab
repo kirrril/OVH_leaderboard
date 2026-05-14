@@ -72,10 +72,11 @@ GameObject:
   m_Component:
   - component: {fileID: 1957484125100694831}
   - component: {fileID: 7727904610632884278}
+  - component: {fileID: 793228380872103646}
   - component: {fileID: 5541062250709707774}
   m_Layer: 0
   m_Name: RowerPrefab
-  m_TagString: Rower
+  m_TagString: Training
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -119,6 +120,25 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1.5, y: 1, z: 2.5}
   m_Center: {x: 0, y: 0.5, z: 0.66}
+--- !u!114 &793228380872103646
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6993455632577447857}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e4beeac904d17834c8be1210c7cc750e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TrainingSpot
+  userAnimatorBool: isPullingRower
+  cameraTargetLocalPosition: {x: 0, y: 1.04, z: 1}
+  cameraPlaceLocalPosition: {x: -1, y: 1.5, z: 0.5}
+  trainingPos: {fileID: 2170740073470483615}
+  exitPos: {fileID: 6827804131030211021}
+  trainingDuration: 8
+  selfAnimatorBool: RowerIsMoving
 --- !u!114 &5541062250709707774
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -132,6 +152,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   animator: {fileID: 8873969778895187492}
+  isAvailable: 1
 --- !u!1001 &4349224246066908197
 PrefabInstance:
   m_ObjectHideFlags: 0
