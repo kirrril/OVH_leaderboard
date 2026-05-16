@@ -69,7 +69,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4bea7ea5736045341a05777339462ee7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  occupiedWall: {fileID: 7234754067963226854}
+  occupiedObstacle: {fileID: 7234754067963226854}
   trainingSpot: {fileID: 438798591925937385}
 --- !u!65 &4230296603452714756
 BoxCollider:
@@ -148,7 +148,7 @@ Transform:
   m_GameObject: {fileID: 6312364759079913990}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.756, y: 0, z: 1.819}
+  m_LocalPosition: {x: -0.756, y: 0, z: 1.388}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -164,11 +164,19 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 3000228039985351171, guid: cc49c7741cc765d49882e44cb3139793, type: 3}
       propertyPath: m_Name
-      value: OccupiedWall
+      value: OccupiedObstacle
       objectReference: {fileID: 0}
     - target: {fileID: 3000228039985351171, guid: cc49c7741cc765d49882e44cb3139793, type: 3}
       propertyPath: m_IsActive
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3292393885590186232, guid: cc49c7741cc765d49882e44cb3139793, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3292393885590186232, guid: cc49c7741cc765d49882e44cb3139793, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3292393885590186232, guid: cc49c7741cc765d49882e44cb3139793, type: 3}
       propertyPath: m_LocalPosition.x

@@ -168,8 +168,8 @@ GameObject:
   m_Component:
   - component: {fileID: 6053233165578693244}
   - component: {fileID: 5393831414950159796}
-  - component: {fileID: 8990555620686741109}
   - component: {fileID: 1709664366852682714}
+  - component: {fileID: 8990555620686741109}
   m_Layer: 0
   m_Name: DeskPrefab
   m_TagString: Desk
@@ -218,19 +218,6 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 2, y: 1, z: 2}
   m_Center: {x: 0, y: 0.5, z: 0}
---- !u!114 &8990555620686741109
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8684853781709179577}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: df19d2fd0b01bdd4ea44b98b96094797, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  trainingSpot: {fileID: 1709664366852682714}
 --- !u!114 &1709664366852682714
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -250,6 +237,19 @@ MonoBehaviour:
   exitPos: {fileID: 0}
   trainingDuration: 0
   selfAnimatorBool: 
+--- !u!114 &8990555620686741109
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8684853781709179577}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: df19d2fd0b01bdd4ea44b98b96094797, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  trainingSpot: {fileID: 1709664366852682714}
 --- !u!1 &8947871940796759102
 GameObject:
   m_ObjectHideFlags: 0

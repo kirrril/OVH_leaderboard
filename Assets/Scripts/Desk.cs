@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class Desk : MonoBehaviour
+public class Desk : MonoBehaviour, IPlayerTrainingHost
 {
     [SerializeField] private TrainingSpot trainingSpot;
     private PlayerController playerController;
@@ -8,6 +8,11 @@ public class Desk : MonoBehaviour
     void OnTriggerEnter(Collider other)
     {
         playerController = other.GetComponent<PlayerController>();
-        playerController.Train(trainingSpot);
+        playerController.Train(trainingSpot, this);
+    }
+
+    public void ReleaseTrainingSpot()
+    {
+
     }
 }

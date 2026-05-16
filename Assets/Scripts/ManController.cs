@@ -4,7 +4,7 @@ using NodeCanvas.Framework;
 using UnityEngine;
 using UnityEngine.AI;
 
-public class ManController : MonoBehaviour
+public class ManController : MonoBehaviour, IAgent
 {
     public Blackboard blackboard;
     public NavMeshAgent agent;
@@ -77,6 +77,11 @@ public class ManController : MonoBehaviour
 
             agent.SetDestination(targetSpot.position);
         }
+    }
+
+    public void ResetPath()
+    {
+        agent.ResetPath();
     }
 
     public void StartTraining(TrainingSpot trainingSpot)

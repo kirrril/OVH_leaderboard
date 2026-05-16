@@ -58,8 +58,10 @@ MonoBehaviour:
   agents: {fileID: 0}
   playerController: {fileID: 0}
   animator: {fileID: 943044358114683227}
+  spotsManLegs: []
+  spotsManChest: []
+  spotsManBack: []
   fightZone: {fileID: 7962898486275547059}
-  duration: 0
 --- !u!54 &5813664415521966954
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -134,6 +136,7 @@ MonoBehaviour:
     mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]"},"hasInteracted":{"_name":"hasInteracted","_id":"ce9dcba3-b438-40e8-896f-ae603ca212fd","$type":"NodeCanvas.Framework.Variable`1[[System.Boolean,
     mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]"},"trainingSpots":{"_value":[],"_name":"trainingSpots","_id":"3583eb08-81ef-4fc7-884c-6290224eb13d","$type":"NodeCanvas.Framework.Variable`1[[System.Collections.Generic.List`1[[UnityEngine.GameObject,
     UnityEngine.CoreModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null]],
+    mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]"},"isTraining":{"_name":"isTraining","_id":"fc963272-453f-4e41-99d1-42d3cb8f6414","$type":"NodeCanvas.Framework.Variable`1[[System.Boolean,
     mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]"}}}'
   _objectReferences: []
   _serializedVariables:
@@ -148,6 +151,9 @@ MonoBehaviour:
     _references: []
   - _json: '{"_value":[],"_name":"trainingSpots","_id":"3583eb08-81ef-4fc7-884c-6290224eb13d","$type":"NodeCanvas.Framework.Variable`1[[System.Collections.Generic.List`1[[UnityEngine.GameObject,
       UnityEngine.CoreModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null]],
+      mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]"}'
+    _references: []
+  - _json: '{"_name":"isTraining","_id":"fc963272-453f-4e41-99d1-42d3cb8f6414","$type":"NodeCanvas.Framework.Variable`1[[System.Boolean,
       mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]"}'
     _references: []
 --- !u!114 &8444587195515330547

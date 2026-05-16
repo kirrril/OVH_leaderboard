@@ -1,48 +1,80 @@
 using System.Collections;
 using UnityEngine;
 
-public class ChestMachine2 : MonoBehaviour
+public class ChestMachine2 : MonoBehaviour, IPlayerTrainingHost
 {
     [SerializeField] private Animator selfAnimator;
-    [SerializeField] private GameObject noEntryWall;
-    [SerializeField] private GameObject occupiedWall;
+    [SerializeField] private GameObject accessObstacle;
+    [SerializeField] private GameObject occupiedObstacle;
     [SerializeField] private TrainingSpot trainingSpot;
     private PlayerController playerController;
-    private ManController manController;
     private bool isAvailable = true;
+
+    void OnEnable()
+    {
+        occupiedObstacle.SetActive(false);
+        accessObstacle.SetActive(true);
+    }
 
     void OnTriggerEnter(Collider other)
     {
-        if (!isAvailable) return;
-
-        if (other.CompareTag("Girl"))
+        if (other.CompareTag("Girl") || other.CompareTag("Man"))
         {
-            return;
+            IAgent agent;
+            agent = other.gameObject.GetComponent<IAgent>();
+
+            if (other.CompareTag("Girl"))
+            {
+                agent.ResetPath();
+                return;
+            }
+
+            if (other.CompareTag("Man"))
+            {
+                StartCoroutine(TrainAgent(agent));
+                return;
+            }
         }
 
-        isAvailable = false;
-        noEntryWall.SetActive(false);
-
-        if (other.CompareTag("Man"))
+        if (other.CompareTag("Player"))
         {
-            StartCoroutine(TrainMan(other.gameObject));
-            return;
+            TrainPlayer(other.gameObject);
         }
-
-        playerController = other.GetComponent<PlayerController>();
-        playerController.Train(trainingSpot);
     }
 
-    private IEnumerator TrainMan(GameObject agent)
+    private IEnumerator TrainAgent(IAgent agent)
     {
-        manController = agent.GetComponent<ManController>();
-        manController.StartTraining(trainingSpot);
+        if (!isAvailable) yield break;
+        isAvailable = false;
+        accessObstacle.SetActive(false);
+        agent.StartTraining(trainingSpot);
         selfAnimator.SetBool(trainingSpot.selfAnimatorBool, true);
-        if (occupiedWall) occupiedWall.SetActive(true);
+        occupiedObstacle.SetActive(true);
         yield return new WaitForSeconds(trainingSpot.trainingDuration);
-        manController.StopTraining(trainingSpot);
+        agent.StopTraining(trainingSpot);
         selfAnimator.SetBool(trainingSpot.selfAnimatorBool, false);
-        if (occupiedWall) occupiedWall.SetActive(false);
+        occupiedObstacle.SetActive(false);
+        accessObstacle.SetActive(true);
         isAvailable = true;
+    }
+
+    private void TrainPlayer(GameObject player)
+    {
+        if (!isAvailable) return;
+
+        isAvailable = false;
+        accessObstacle.SetActive(false);
+        playerController = player.GetComponent<PlayerController>();
+        playerController.Train(trainingSpot, this);
+        selfAnimator.SetBool(trainingSpot.selfAnimatorBool, true);
+        occupiedObstacle.SetActive(true);
+    }
+
+    public void ReleaseTrainingSpot()
+    {
+        selfAnimator.SetBool(trainingSpot.selfAnimatorBool, false);
+        occupiedObstacle.SetActive(false);
+        isAvailable = true;
+        accessObstacle.SetActive(true);
     }
 }

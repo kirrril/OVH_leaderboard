@@ -56,7 +56,7 @@ Transform:
   m_GameObject: {fileID: 2009006543037058060}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 1.831}
+  m_LocalPosition: {x: -0, y: 0, z: 1.997}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -133,8 +133,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   selfAnimator: {fileID: 9049511634360366351}
-  noEntryWall: {fileID: 6913772103715876535}
-  occupiedWall: {fileID: 8887650785164795560}
+  accessObstacle: {fileID: 6913772103715876535}
+  occupiedObstacle: {fileID: 8887650785164795560}
   trainingSpot: {fileID: 3370094077894796760}
 --- !u!65 &4843813646962594210
 BoxCollider:
@@ -155,8 +155,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 1.8, y: 1, z: 2}
-  m_Center: {x: 0, y: 0.5, z: 0.19}
+  m_Size: {x: 2, y: 1, z: 2.3}
+  m_Center: {x: 0, y: 0.5, z: 0.44}
 --- !u!1 &6913772103715876535
 GameObject:
   m_ObjectHideFlags: 0
@@ -166,10 +166,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6701454798906250525}
-  - component: {fileID: 3703062310619542006}
-  - component: {fileID: 6243530647857261329}
+  - component: {fileID: 8454546566347339348}
   m_Layer: 0
-  m_Name: NoEntryWall
+  m_Name: AccessObstacle
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -190,48 +189,22 @@ Transform:
   m_Children: []
   m_Father: {fileID: 4819015238887158657}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!65 &3703062310619542006
-BoxCollider:
+--- !u!208 &8454546566347339348
+NavMeshObstacle:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6913772103715876535}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 1.626674, y: 1.4787047, z: 0.8675911}
-  m_Center: {x: 0.007497549, y: 0.73935235, z: -0.1069451}
---- !u!65 &6243530647857261329
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6913772103715876535}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 0.35861197, y: 0.42453623, z: 1.3062261}
-  m_Center: {x: 0.004951209, y: 0.21226811, z: 0.295035}
+  m_Shape: 1
+  m_Extents: {x: 0.5, y: 0.1, z: 1}
+  m_MoveThreshold: 0.1
+  m_Carve: 1
+  m_CarveOnlyStationary: 1
+  m_Center: {x: 0, y: 0.1, z: 0}
+  m_TimeToStationary: 0.5
 --- !u!1001 &1148294057095961654
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -332,13 +305,37 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 4819015238887158657}
     m_Modifications:
-    - target: {fileID: 2260789996906081309, guid: cc49c7741cc765d49882e44cb3139793, type: 3}
-      propertyPath: m_Enabled
+    - target: {fileID: 1394067349227623593, guid: cc49c7741cc765d49882e44cb3139793, type: 3}
+      propertyPath: m_Carve
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1394067349227623593, guid: cc49c7741cc765d49882e44cb3139793, type: 3}
+      propertyPath: m_Center.z
+      value: -0.23
+      objectReference: {fileID: 0}
+    - target: {fileID: 1394067349227623593, guid: cc49c7741cc765d49882e44cb3139793, type: 3}
+      propertyPath: m_Extents.x
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 1394067349227623593, guid: cc49c7741cc765d49882e44cb3139793, type: 3}
+      propertyPath: m_Extents.z
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3000228039985351171, guid: cc49c7741cc765d49882e44cb3139793, type: 3}
       propertyPath: m_Name
-      value: OccupiedWall
+      value: OccupiedObstacle
+      objectReference: {fileID: 0}
+    - target: {fileID: 3000228039985351171, guid: cc49c7741cc765d49882e44cb3139793, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3292393885590186232, guid: cc49c7741cc765d49882e44cb3139793, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3292393885590186232, guid: cc49c7741cc765d49882e44cb3139793, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3292393885590186232, guid: cc49c7741cc765d49882e44cb3139793, type: 3}
       propertyPath: m_LocalPosition.x

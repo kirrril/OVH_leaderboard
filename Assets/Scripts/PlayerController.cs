@@ -18,6 +18,7 @@ public class PlayerController : MonoBehaviour
     private Vector3 reinitCameraTarget = new Vector3(0f, 1.7f, 0f);
 
     private TrainingSpot trainingSpot;
+    private IPlayerTrainingHost trainingHost;
 
     public bool isBeingAttacked;
     private Transform enemy;
@@ -143,7 +144,6 @@ public class PlayerController : MonoBehaviour
         // Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
         stopTrainingControl.SetActive(false);
-        SetCamera(reinitCameraTarget, reinitCameraPlace);
         cameraFreezed = false;
     }
 
@@ -292,9 +292,10 @@ public class PlayerController : MonoBehaviour
         if (tag == "Desk") PlaceCameraLookingAtSreen();
     }
 
-    public void Train(TrainingSpot spot)
+    public void Train(TrainingSpot spot, IPlayerTrainingHost host)
     {
         trainingSpot = spot;
+        trainingHost = host;
         rb.isKinematic = true;
         transform.position = trainingSpot.trainingPos.position;
         transform.rotation = trainingSpot.trainingPos.rotation;
@@ -310,6 +311,10 @@ public class PlayerController : MonoBehaviour
         rb.isKinematic = false;
         transform.position = trainingSpot.exitPos.position;
         transform.rotation = trainingSpot.exitPos.rotation;
+        SetCamera(reinitCameraTarget, reinitCameraPlace);
+        trainingHost?.ReleaseTrainingSpot();
+        trainingHost = null;
+        trainingSpot = null;
         ChangeState(State.Walking);
     }
 

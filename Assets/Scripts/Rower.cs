@@ -1,49 +1,57 @@
 using System.Collections;
 using UnityEngine;
 
-public class Rower : MonoBehaviour
+public class Rower : MonoBehaviour, IPlayerTrainingHost
 {
-    [SerializeField] private Animator selfAnimator;
-    [SerializeField] private GameObject noEntryWall;
-    [SerializeField] private GameObject occupiedWall;
+    [SerializeField] private GameObject occupiedObstacle;
+    [SerializeField] private GameObject accessObstacle;
     [SerializeField] private TrainingSpot trainingSpot;
+    [SerializeField] private Animator selfAnimator;
     private PlayerController playerController;
     private GirlController girlController;
     private bool isAvailable = true;
 
     void OnTriggerEnter(Collider other)
     {
+        if (!isAvailable) return;
+
         if (other.CompareTag("Man"))
         {
             return;
         }
 
-        if (!isAvailable) return;
-
         isAvailable = false;
-        noEntryWall.SetActive(false);
 
-        if (other.CompareTag("Player"))
+        if (other.CompareTag("Girl"))
         {
-            playerController = other.GetComponent<PlayerController>();
-            playerController.Train(trainingSpot);
+            StartCoroutine(TrainGirl(other.gameObject));
             return;
         }
 
-        StartCoroutine(TrainAgent(other.gameObject));
+        accessObstacle.SetActive(false);
+        playerController = other.GetComponent<PlayerController>();
+        playerController.Train(trainingSpot, this);
     }
 
-    private IEnumerator TrainAgent(GameObject agent)
+    public void ReleaseTrainingSpot()
     {
+        occupiedObstacle.SetActive(false);
+        isAvailable = true;
+        accessObstacle.SetActive(true);
+    }
+
+    private IEnumerator TrainGirl(GameObject agent)
+    {
+        accessObstacle.SetActive(false);
         girlController = agent.GetComponent<GirlController>();
         girlController.StartTraining(trainingSpot);
-        if (occupiedWall) occupiedWall.SetActive(true);
         selfAnimator.SetBool(trainingSpot.selfAnimatorBool, true);
+        occupiedObstacle.SetActive(true);
         yield return new WaitForSeconds(trainingSpot.trainingDuration);
-        girlController.StopTraining(trainingSpot);
         selfAnimator.SetBool(trainingSpot.selfAnimatorBool, false);
-        if (occupiedWall) occupiedWall.SetActive(false);
+        girlController.StopTraining(trainingSpot);
+        occupiedObstacle.SetActive(false);
         isAvailable = true;
-        noEntryWall.SetActive(false);
+        accessObstacle.SetActive(true);
     }
 }

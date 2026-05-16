@@ -1,9 +1,9 @@
 using System.Collections;
 using UnityEngine;
 
-public class JumpBox : MonoBehaviour
+public class JumpBox : MonoBehaviour, IPlayerTrainingHost
 {
-    [SerializeField] private GameObject occupiedWall;
+    [SerializeField] private GameObject occupiedObstacle;
     [SerializeField] private TrainingSpot trainingSpot;
     private PlayerController playerController;
     private ManController manController;
@@ -29,17 +29,17 @@ public class JumpBox : MonoBehaviour
         }
 
         playerController = other.GetComponent<PlayerController>();
-        playerController.Train(trainingSpot);
+        playerController.Train(trainingSpot, this);
     }
 
     private IEnumerator TrainMan(GameObject agent)
     {
         manController = agent.GetComponent<ManController>();
         manController.StartTraining(trainingSpot);
-        if (occupiedWall) occupiedWall.SetActive(true);
+        occupiedObstacle.SetActive(true);
         yield return new WaitForSeconds(trainingSpot.trainingDuration);
         manController.StopTraining(trainingSpot);
-        if (occupiedWall) occupiedWall.SetActive(false);
+        occupiedObstacle.SetActive(false);
         isAvailable = true;
     }
 
@@ -47,10 +47,16 @@ public class JumpBox : MonoBehaviour
     {
         girlController = agent.GetComponent<GirlController>();
         girlController.StartTraining(trainingSpot);
-        if (occupiedWall) occupiedWall.SetActive(true);
+        occupiedObstacle.SetActive(true);
         yield return new WaitForSeconds(trainingSpot.trainingDuration);
         girlController.StopTraining(trainingSpot);
-        if (occupiedWall) occupiedWall.SetActive(false);
+        occupiedObstacle.SetActive(false);
+        isAvailable = true;
+    }
+
+    public void ReleaseTrainingSpot()
+    {
+        occupiedObstacle.SetActive(false);
         isAvailable = true;
     }
 }

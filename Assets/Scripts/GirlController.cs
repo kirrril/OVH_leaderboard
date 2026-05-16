@@ -4,7 +4,7 @@ using UnityEngine.SceneManagement;
 using System.Collections;
 using System.Reflection;
 
-public class GirlController : MonoBehaviour
+public class GirlController : MonoBehaviour, IAgent
 {
     private enum SceneMode { Gameplay, YouWin }
     private enum State { MovingToTarget, Training, Fleeing, Welcoming }
@@ -101,6 +101,11 @@ public class GirlController : MonoBehaviour
         {
             SetNewTarget();
         }
+    }
+
+    public void ResetPath()
+    {
+        agent.ResetPath();
     }
 
     private void HandleTraining()

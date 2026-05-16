@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 1868259459424282340}
   - component: {fileID: 8607356971263438182}
   m_Layer: 0
-  m_Name: OccupiedWall
+  m_Name: OccupiedObstacle
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -257,7 +257,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5e1636078c39db4429e1e4673cdbb7d5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  occupiedWall: {fileID: 3119868674264329303}
+  occupiedObstacle: {fileID: 3119868674264329303}
   trainingSpot: {fileID: 2166333200769507870}
 --- !u!1 &9031991662503719229
 GameObject:
