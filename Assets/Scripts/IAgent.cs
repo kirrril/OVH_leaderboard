@@ -1,6 +1,6 @@
 public interface IAgent
 {
-    void StartTraining(TrainingSpot trainingSpot);
-    void StopTraining(TrainingSpot trainingSpot);
-    void ResetPath();
+    void StartTraining(TrainingData trainingData);
+    void StopTraining(TrainingData trainingData);
+    void CancelTraining();
 }

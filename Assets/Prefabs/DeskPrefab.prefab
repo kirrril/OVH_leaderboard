@@ -169,7 +169,7 @@ GameObject:
   - component: {fileID: 6053233165578693244}
   - component: {fileID: 5393831414950159796}
   - component: {fileID: 1709664366852682714}
-  - component: {fileID: 8990555620686741109}
+  - component: {fileID: 7961749108940865764}
   m_Layer: 0
   m_Name: DeskPrefab
   m_TagString: Desk
@@ -237,7 +237,7 @@ MonoBehaviour:
   exitPos: {fileID: 0}
   trainingDuration: 0
   selfAnimatorBool: 
---- !u!114 &8990555620686741109
+--- !u!114 &7961749108940865764
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -246,10 +246,14 @@ MonoBehaviour:
   m_GameObject: {fileID: 8684853781709179577}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: df19d2fd0b01bdd4ea44b98b96094797, type: 3}
+  m_Script: {fileID: 11500000, guid: 83ce90be8c066c745b60e62c8a30d28e, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: 
-  trainingSpot: {fileID: 1709664366852682714}
+  m_EditorClassIdentifier: Assembly-CSharp::TrainingLogic
+  excludedUserKind: 5
+  selfAnimator: {fileID: 0}
+  accessObstacle: {fileID: 0}
+  occupiedObstacle: {fileID: 0}
+  trainingData: {fileID: 1709664366852682714}
 --- !u!1 &8947871940796759102
 GameObject:
   m_ObjectHideFlags: 0

@@ -41,7 +41,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7860711402627944050}
   - component: {fileID: 4801898339520928375}
-  - component: {fileID: 3471368530090073758}
+  - component: {fileID: 8658150647686281947}
   - component: {fileID: 7199838452381701948}
   m_Layer: 0
   m_Name: BarbellStandPrefab
@@ -89,7 +89,7 @@ MonoBehaviour:
   exitPos: {fileID: 7563305085105777249}
   trainingDuration: 10
   selfAnimatorBool: barbellStandIsMoving
---- !u!114 &3471368530090073758
+--- !u!114 &8658150647686281947
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -98,13 +98,14 @@ MonoBehaviour:
   m_GameObject: {fileID: 3489850058250856020}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1f54dd6e72263d848af5b24a27882fe4, type: 3}
+  m_Script: {fileID: 11500000, guid: 83ce90be8c066c745b60e62c8a30d28e, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: 
+  m_EditorClassIdentifier: Assembly-CSharp::TrainingLogic
+  excludedUserKind: 4
   selfAnimator: {fileID: 597425198841350667}
   accessObstacle: {fileID: 7372871142268234471}
   occupiedObstacle: {fileID: 6919378836132109685}
-  trainingSpot: {fileID: 4801898339520928375}
+  trainingData: {fileID: 4801898339520928375}
 --- !u!65 &7199838452381701948
 BoxCollider:
   m_ObjectHideFlags: 0

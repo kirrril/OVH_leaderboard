@@ -2597,32 +2597,6 @@ Transform:
   - {fileID: 1279259646}
   m_Father: {fileID: 453830794}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &108011869 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 8978599590689698282, guid: f16991c7b391b144384cb242ae94c146, type: 3}
-  m_PrefabInstance: {fileID: 5279089687740937901}
-  m_PrefabAsset: {fileID: 0}
---- !u!65 &108011872
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 108011869}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 1
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 3.5, y: 1.8, z: 1.5}
-  m_Center: {x: 0, y: 0.9, z: 0}
 --- !u!4 &108011874 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 2185578237163256362, guid: f16991c7b391b144384cb242ae94c146, type: 3}
@@ -36900,10 +36874,7 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 8978599590689698282, guid: f16991c7b391b144384cb242ae94c146, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 108011872}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f16991c7b391b144384cb242ae94c146, type: 3}
 --- !u!95 &5279089687740937903 stripped
 Animator:
@@ -37180,6 +37151,10 @@ PrefabInstance:
     m_TransformParent: {fileID: 1148489591}
     m_Modifications:
     - target: {fileID: 3201787814804281160, guid: 608b71ab62a981148872e9d0d49ca61e, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3201787814804281160, guid: 608b71ab62a981148872e9d0d49ca61e, type: 3}
       propertyPath: noEntryWall
       value: 
       objectReference: {fileID: 5875282860110091468}
@@ -37259,7 +37234,8 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 3201787814804281160, guid: 608b71ab62a981148872e9d0d49ca61e, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []

@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4154494216244934134}
   - component: {fileID: 438798591925937385}
-  - component: {fileID: 3804257500112023556}
+  - component: {fileID: 2485896959257352051}
   - component: {fileID: 4230296603452714756}
   m_Layer: 0
   m_Name: BikePrefab
@@ -57,7 +57,7 @@ MonoBehaviour:
   exitPos: {fileID: 3510417796451996684}
   trainingDuration: 8
   selfAnimatorBool: 
---- !u!114 &3804257500112023556
+--- !u!114 &2485896959257352051
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -66,11 +66,14 @@ MonoBehaviour:
   m_GameObject: {fileID: 399171713909146219}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4bea7ea5736045341a05777339462ee7, type: 3}
+  m_Script: {fileID: 11500000, guid: 83ce90be8c066c745b60e62c8a30d28e, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: 
+  m_EditorClassIdentifier: Assembly-CSharp::TrainingLogic
+  excludedUserKind: 5
+  selfAnimator: {fileID: 0}
+  accessObstacle: {fileID: 0}
   occupiedObstacle: {fileID: 7234754067963226854}
-  trainingSpot: {fileID: 438798591925937385}
+  trainingData: {fileID: 438798591925937385}
 --- !u!65 &4230296603452714756
 BoxCollider:
   m_ObjectHideFlags: 0

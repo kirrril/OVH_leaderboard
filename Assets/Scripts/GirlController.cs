@@ -103,7 +103,7 @@ public class GirlController : MonoBehaviour, IAgent
         }
     }
 
-    public void ResetPath()
+    public void CancelTraining()
     {
         agent.ResetPath();
     }
@@ -180,23 +180,23 @@ public class GirlController : MonoBehaviour, IAgent
         agent.SetDestination(trainingSpots[newSpotIndex].position);
     }
 
-    public void StartTraining(TrainingSpot trainingSpot)
+    public void StartTraining(TrainingData trainingData)
     {
         currentState = State.Training;
         agent.isStopped = true;
         agent.ResetPath();
         agent.enabled = false;
-        transform.position = trainingSpot.trainingPos.position;
-        transform.rotation = trainingSpot.trainingPos.rotation;
+        transform.position = trainingData.trainingPos.position;
+        transform.rotation = trainingData.trainingPos.rotation;
         hasInteracted = false;
-        animator.SetBool(trainingSpot.userAnimatorBool, true);
+        animator.SetBool(trainingData.userAnimatorBool, true);
     }
 
-    public void StopTraining(TrainingSpot trainingSpot)
+    public void StopTraining(TrainingData trainingData)
     {
-        animator.SetBool(trainingSpot.userAnimatorBool, false);
-        transform.position = trainingSpot.exitPos.position;
-        transform.rotation = trainingSpot.exitPos.rotation;
+        animator.SetBool(trainingData.userAnimatorBool, false);
+        transform.position = trainingData.exitPos.position;
+        transform.rotation = trainingData.exitPos.rotation;
         agent.enabled = true;
         agent.isStopped = false;
         currentState = State.MovingToTarget;

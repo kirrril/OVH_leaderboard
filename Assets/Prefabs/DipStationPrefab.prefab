@@ -200,7 +200,7 @@ GameObject:
   - component: {fileID: 510204768312297634}
   - component: {fileID: 3286846442452129158}
   - component: {fileID: 1708748146728931243}
-  - component: {fileID: 7660236907852142354}
+  - component: {fileID: 8030483707892457904}
   m_Layer: 0
   m_Name: Dips2
   m_TagString: Untagged
@@ -267,7 +267,7 @@ MonoBehaviour:
   exitPos: {fileID: 5271373700011380067}
   trainingDuration: 6
   selfAnimatorBool: 
---- !u!114 &7660236907852142354
+--- !u!114 &8030483707892457904
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -276,12 +276,14 @@ MonoBehaviour:
   m_GameObject: {fileID: 7258145137678155140}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a6025dabf503eb5499b2d2e68ae25b50, type: 3}
+  m_Script: {fileID: 11500000, guid: 83ce90be8c066c745b60e62c8a30d28e, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: 
+  m_EditorClassIdentifier: Assembly-CSharp::TrainingLogic
+  excludedUserKind: 2
+  selfAnimator: {fileID: 0}
   accessObstacle: {fileID: 2444758784146787907}
   occupiedObstacle: {fileID: 4168980903598646485}
-  trainingSpot: {fileID: 1708748146728931243}
+  trainingData: {fileID: 1708748146728931243}
 --- !u!1 &7383387717403756740
 GameObject:
   m_ObjectHideFlags: 0
@@ -293,7 +295,7 @@ GameObject:
   - component: {fileID: 230134361655688394}
   - component: {fileID: 6030560058157251505}
   - component: {fileID: 647265804900912669}
-  - component: {fileID: 6948660497408656963}
+  - component: {fileID: 308838698552342007}
   m_Layer: 0
   m_Name: Dips1
   m_TagString: Untagged
@@ -360,7 +362,7 @@ MonoBehaviour:
   exitPos: {fileID: 3373579990471864753}
   trainingDuration: 6
   selfAnimatorBool: 
---- !u!114 &6948660497408656963
+--- !u!114 &308838698552342007
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -369,12 +371,14 @@ MonoBehaviour:
   m_GameObject: {fileID: 7383387717403756740}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a6025dabf503eb5499b2d2e68ae25b50, type: 3}
+  m_Script: {fileID: 11500000, guid: 83ce90be8c066c745b60e62c8a30d28e, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: 
+  m_EditorClassIdentifier: Assembly-CSharp::TrainingLogic
+  excludedUserKind: 2
+  selfAnimator: {fileID: 0}
   accessObstacle: {fileID: 1700044621913834102}
   occupiedObstacle: {fileID: 4636483524029625595}
-  trainingSpot: {fileID: 647265804900912669}
+  trainingData: {fileID: 647265804900912669}
 --- !u!1 &8206652743028808718
 GameObject:
   m_ObjectHideFlags: 0

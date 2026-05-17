@@ -5,7 +5,7 @@ public class Dips : MonoBehaviour, IPlayerTrainingHost
 {
     [SerializeField] private GameObject accessObstacle;
     [SerializeField] private GameObject occupiedObstacle;
-    [SerializeField] private TrainingSpot trainingSpot;
+    [SerializeField] private TrainingData trainingData;
     private PlayerController playerController;
     private bool isAvailable = true;
 
@@ -24,7 +24,7 @@ public class Dips : MonoBehaviour, IPlayerTrainingHost
 
             if (other.CompareTag("Girl"))
             {
-                agent.ResetPath();
+                agent.CancelTraining();
                 return;
             }
 
@@ -32,7 +32,7 @@ public class Dips : MonoBehaviour, IPlayerTrainingHost
             {
                 if (!isAvailable)
                 {
-                    agent.ResetPath();
+                    agent.CancelTraining();
                     return;
                 }
                 isAvailable = false;
@@ -50,10 +50,10 @@ public class Dips : MonoBehaviour, IPlayerTrainingHost
 
     private IEnumerator TrainAgent(IAgent agent)
     {
-        agent.StartTraining(trainingSpot);
+        agent.StartTraining(trainingData);
         occupiedObstacle.SetActive(true);
-        yield return new WaitForSeconds(trainingSpot.trainingDuration);
-        agent.StopTraining(trainingSpot);
+        yield return new WaitForSeconds(trainingData.trainingDuration);
+        agent.StopTraining(trainingData);
         occupiedObstacle.SetActive(false);
         accessObstacle.SetActive(true);
         isAvailable = true;
@@ -66,7 +66,7 @@ public class Dips : MonoBehaviour, IPlayerTrainingHost
         isAvailable = false;
         accessObstacle.SetActive(false);
         playerController = player.GetComponent<PlayerController>();
-        playerController.Train(trainingSpot, this);
+        playerController.StartTraining(trainingData, this);
     }
 
     public void ReleaseTrainingSpot()

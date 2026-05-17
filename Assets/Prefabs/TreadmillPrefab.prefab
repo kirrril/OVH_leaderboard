@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 4142275542012324745}
   - component: {fileID: 2474137702738241342}
   - component: {fileID: 7940600903756345591}
-  - component: {fileID: 3171590373406954976}
+  - component: {fileID: 931201532799781058}
   m_Layer: 0
   m_Name: TreadmillPrefab
   m_TagString: Training
@@ -78,7 +78,7 @@ MonoBehaviour:
   exitPos: {fileID: 8486564695511368729}
   trainingDuration: 8
   selfAnimatorBool: 
---- !u!114 &3171590373406954976
+--- !u!114 &931201532799781058
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -87,11 +87,14 @@ MonoBehaviour:
   m_GameObject: {fileID: 3543238111659303088}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ec57fba184eaa7a4ebc5042149d50f98, type: 3}
+  m_Script: {fileID: 11500000, guid: 83ce90be8c066c745b60e62c8a30d28e, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: 
+  m_EditorClassIdentifier: Assembly-CSharp::TrainingLogic
+  excludedUserKind: 5
+  selfAnimator: {fileID: 0}
+  accessObstacle: {fileID: 0}
   occupiedObstacle: {fileID: 5385008424041990606}
-  trainingSpot: {fileID: 7940600903756345591}
+  trainingData: {fileID: 7940600903756345591}
 --- !u!1 &5373532989431509442
 GameObject:
   m_ObjectHideFlags: 0

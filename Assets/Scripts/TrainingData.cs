@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class TrainingSpot : MonoBehaviour
+public class TrainingData : MonoBehaviour
 {
     public string userAnimatorBool;
     public Vector3 cameraTargetLocalPosition;

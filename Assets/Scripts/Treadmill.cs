@@ -4,7 +4,7 @@ using UnityEngine;
 public class Treadmill : MonoBehaviour, IPlayerTrainingHost
 {
     [SerializeField] private GameObject occupiedObstacle;
-    [SerializeField] private TrainingSpot trainingSpot;
+    [SerializeField] private TrainingData trainingData;
     private PlayerController playerController;
     private ManController manController;
     private GirlController girlController;
@@ -29,16 +29,16 @@ public class Treadmill : MonoBehaviour, IPlayerTrainingHost
         }
 
         playerController = other.GetComponent<PlayerController>();
-        playerController.Train(trainingSpot, this);
+        playerController.StartTraining(trainingData, this);
     }
 
     private IEnumerator TrainMan(GameObject agent)
     {
         manController = agent.GetComponent<ManController>();
-        manController.StartTraining(trainingSpot);
+        manController.StartTraining(trainingData);
         occupiedObstacle.SetActive(true);
-        yield return new WaitForSeconds(trainingSpot.trainingDuration);
-        manController.StopTraining(trainingSpot);
+        yield return new WaitForSeconds(trainingData.trainingDuration);
+        manController.StopTraining(trainingData);
         occupiedObstacle.SetActive(false);
         isAvailable = true;
     }
@@ -46,10 +46,10 @@ public class Treadmill : MonoBehaviour, IPlayerTrainingHost
     private IEnumerator TrainGirl(GameObject agent)
     {
         girlController = agent.GetComponent<GirlController>();
-        girlController.StartTraining(trainingSpot);
+        girlController.StartTraining(trainingData);
         occupiedObstacle.SetActive(true);
-        yield return new WaitForSeconds(trainingSpot.trainingDuration);
-        girlController.StopTraining(trainingSpot);
+        yield return new WaitForSeconds(trainingData.trainingDuration);
+        girlController.StopTraining(trainingData);
         occupiedObstacle.SetActive(false);
         isAvailable = true;
     }

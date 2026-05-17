@@ -1,6 +1,4 @@
 using System.Collections;
-using System.Threading.Tasks;
-using Cinemachine;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -17,7 +15,7 @@ public class PlayerController : MonoBehaviour
     private Vector3 reinitCameraPlace = new Vector3(0f, 1.9f, -1f);
     private Vector3 reinitCameraTarget = new Vector3(0f, 1.7f, 0f);
 
-    private TrainingSpot trainingSpot;
+    private TrainingData trainingData;
     private IPlayerTrainingHost trainingHost;
 
     public bool isBeingAttacked;
@@ -292,15 +290,15 @@ public class PlayerController : MonoBehaviour
         if (tag == "Desk") PlaceCameraLookingAtSreen();
     }
 
-    public void Train(TrainingSpot spot, IPlayerTrainingHost host)
+    public void StartTraining(TrainingData data, IPlayerTrainingHost host)
     {
-        trainingSpot = spot;
+        trainingData = data;
         trainingHost = host;
         rb.isKinematic = true;
-        transform.position = trainingSpot.trainingPos.position;
-        transform.rotation = trainingSpot.trainingPos.rotation;
-        SetCamera(trainingSpot.cameraTargetLocalPosition, trainingSpot.cameraPlaceLocalPosition);
-        trainingAnimationBool = trainingSpot.userAnimatorBool;
+        transform.position = trainingData.trainingPos.position;
+        transform.rotation = trainingData.trainingPos.rotation;
+        SetCamera(trainingData.cameraTargetLocalPosition, trainingData.cameraPlaceLocalPosition);
+        trainingAnimationBool = trainingData.userAnimatorBool;
         ChangeState(State.Training);
         Cursor.visible = true;
     }
@@ -309,12 +307,12 @@ public class PlayerController : MonoBehaviour
     {
         Cursor.visible = false;
         rb.isKinematic = false;
-        transform.position = trainingSpot.exitPos.position;
-        transform.rotation = trainingSpot.exitPos.rotation;
+        transform.position = trainingData.exitPos.position;
+        transform.rotation = trainingData.exitPos.rotation;
         SetCamera(reinitCameraTarget, reinitCameraPlace);
         trainingHost?.ReleaseTrainingSpot();
         trainingHost = null;
-        trainingSpot = null;
+        trainingData = null;
         ChangeState(State.Walking);
     }
 

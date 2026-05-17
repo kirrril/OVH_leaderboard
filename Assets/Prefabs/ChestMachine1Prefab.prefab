@@ -42,7 +42,7 @@ GameObject:
   - component: {fileID: 1608264584488339221}
   - component: {fileID: 6455194061818592645}
   - component: {fileID: 5128465729788759202}
-  - component: {fileID: 7501334091368718331}
+  - component: {fileID: 8387636059319022611}
   m_Layer: 0
   m_Name: ChestMachine1Prefab
   m_TagString: Training
@@ -109,7 +109,7 @@ MonoBehaviour:
   exitPos: {fileID: 2202314327555709445}
   trainingDuration: 10
   selfAnimatorBool: chestMachineIsMoving
---- !u!114 &7501334091368718331
+--- !u!114 &8387636059319022611
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -118,12 +118,14 @@ MonoBehaviour:
   m_GameObject: {fileID: 2365988193202311609}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a8ad18e5eb489d34ab97b2e993b13a6c, type: 3}
+  m_Script: {fileID: 11500000, guid: 83ce90be8c066c745b60e62c8a30d28e, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: 
-  occupiedObstacle: {fileID: 3540818344653697746}
-  trainingSpot: {fileID: 5128465729788759202}
+  m_EditorClassIdentifier: Assembly-CSharp::TrainingLogic
+  excludedUserKind: 5
   selfAnimator: {fileID: 3696997975119837099}
+  accessObstacle: {fileID: 0}
+  occupiedObstacle: {fileID: 3540818344653697746}
+  trainingData: {fileID: 5128465729788759202}
 --- !u!1 &3133873647573467604
 GameObject:
   m_ObjectHideFlags: 0

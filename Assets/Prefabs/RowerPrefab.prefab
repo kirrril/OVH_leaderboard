@@ -73,7 +73,7 @@ GameObject:
   - component: {fileID: 1957484125100694831}
   - component: {fileID: 7727904610632884278}
   - component: {fileID: 793228380872103646}
-  - component: {fileID: 5541062250709707774}
+  - component: {fileID: 5799148117813070270}
   m_Layer: 0
   m_Name: RowerPrefab
   m_TagString: Training
@@ -141,7 +141,7 @@ MonoBehaviour:
   exitPos: {fileID: 6827804131030211021}
   trainingDuration: 8
   selfAnimatorBool: RowerIsMoving
---- !u!114 &5541062250709707774
+--- !u!114 &5799148117813070270
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -150,13 +150,14 @@ MonoBehaviour:
   m_GameObject: {fileID: 6993455632577447857}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0e7d73e59132d6b40a51c060492ee788, type: 3}
+  m_Script: {fileID: 11500000, guid: 83ce90be8c066c745b60e62c8a30d28e, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: 
-  occupiedObstacle: {fileID: 8581423956080291720}
-  accessObstacle: {fileID: 1385892488276318998}
-  trainingSpot: {fileID: 793228380872103646}
+  m_EditorClassIdentifier: Assembly-CSharp::TrainingLogic
+  excludedUserKind: 1
   selfAnimator: {fileID: 8873969778895187492}
+  accessObstacle: {fileID: 1385892488276318998}
+  occupiedObstacle: {fileID: 8581423956080291720}
+  trainingData: {fileID: 793228380872103646}
 --- !u!1001 &4349224246066908197
 PrefabInstance:
   m_ObjectHideFlags: 0

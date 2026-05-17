@@ -7,7 +7,7 @@ public class Barbell : MonoBehaviour, IPlayerTrainingHost
     [SerializeField] private Animator selfAnimator;
     [SerializeField] private GameObject accessObstacle;
     [SerializeField] private GameObject occupiedObstacle;
-    [SerializeField] private TrainingSpot trainingSpot;
+    [SerializeField] private TrainingData trainingData;
     private PlayerController playerController;
     private bool isAvailable = true;
 
@@ -26,7 +26,7 @@ public class Barbell : MonoBehaviour, IPlayerTrainingHost
 
             if (other.CompareTag("Girl"))
             {
-                agent.ResetPath();
+                agent.CancelTraining();
                 return;
             }
 
@@ -34,7 +34,7 @@ public class Barbell : MonoBehaviour, IPlayerTrainingHost
             {
                 if (!isAvailable)
                 {
-                    agent.ResetPath();
+                    agent.CancelTraining();
                     return;
                 }
                 isAvailable = false;
@@ -52,12 +52,12 @@ public class Barbell : MonoBehaviour, IPlayerTrainingHost
 
     private IEnumerator TrainAgent(IAgent agent)
     {
-        agent.StartTraining(trainingSpot);
-        selfAnimator.SetBool(trainingSpot.selfAnimatorBool, true);
+        agent.StartTraining(trainingData);
+        selfAnimator.SetBool(trainingData.selfAnimatorBool, true);
         occupiedObstacle.SetActive(true);
-        yield return new WaitForSeconds(trainingSpot.trainingDuration);
-        agent.StopTraining(trainingSpot);
-        selfAnimator.SetBool(trainingSpot.selfAnimatorBool, false);
+        yield return new WaitForSeconds(trainingData.trainingDuration);
+        agent.StopTraining(trainingData);
+        selfAnimator.SetBool(trainingData.selfAnimatorBool, false);
         occupiedObstacle.SetActive(false);
         accessObstacle.SetActive(true);
         isAvailable = true;
@@ -70,7 +70,7 @@ public class Barbell : MonoBehaviour, IPlayerTrainingHost
         isAvailable = false;
         accessObstacle.SetActive(false);
         playerController = player.GetComponent<PlayerController>();
-        playerController.Train(trainingSpot, this);
+        playerController.StartTraining(trainingData, this);
     }
 
     public void ReleaseTrainingSpot()

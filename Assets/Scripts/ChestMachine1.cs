@@ -4,7 +4,7 @@ using UnityEngine;
 public class ChestMachine1 : MonoBehaviour, IPlayerTrainingHost
 {
     [SerializeField] private GameObject occupiedObstacle;
-    [SerializeField] private TrainingSpot trainingSpot;
+    [SerializeField] private TrainingData trainingData;
     [SerializeField] private Animator selfAnimator;
     private PlayerController playerController;
     private ManController manController;
@@ -30,19 +30,19 @@ public class ChestMachine1 : MonoBehaviour, IPlayerTrainingHost
         }
 
         playerController = other.GetComponent<PlayerController>();
-        playerController.Train(trainingSpot, this);
-        selfAnimator.SetBool(trainingSpot.selfAnimatorBool, true);
+        playerController.StartTraining(trainingData, this);
+        selfAnimator.SetBool(trainingData.selfAnimatorBool, true);
     }
 
     private IEnumerator TrainMan(GameObject agent)
     {
         manController = agent.GetComponent<ManController>();
-        manController.StartTraining(trainingSpot);
-        selfAnimator.SetBool(trainingSpot.selfAnimatorBool, true);
+        manController.StartTraining(trainingData);
+        selfAnimator.SetBool(trainingData.selfAnimatorBool, true);
         occupiedObstacle.SetActive(true);
-        yield return new WaitForSeconds(trainingSpot.trainingDuration);
-        manController.StopTraining(trainingSpot);
-        selfAnimator.SetBool(trainingSpot.selfAnimatorBool, false);
+        yield return new WaitForSeconds(trainingData.trainingDuration);
+        manController.StopTraining(trainingData);
+        selfAnimator.SetBool(trainingData.selfAnimatorBool, false);
         occupiedObstacle.SetActive(false);
         isAvailable = true;
     }
@@ -50,19 +50,19 @@ public class ChestMachine1 : MonoBehaviour, IPlayerTrainingHost
     private IEnumerator TrainGirl(GameObject agent)
     {
         girlController = agent.GetComponent<GirlController>();
-        girlController.StartTraining(trainingSpot);
-        selfAnimator.SetBool(trainingSpot.selfAnimatorBool, true);
+        girlController.StartTraining(trainingData);
+        selfAnimator.SetBool(trainingData.selfAnimatorBool, true);
         occupiedObstacle.SetActive(true);
-        yield return new WaitForSeconds(trainingSpot.trainingDuration);
-        girlController.StopTraining(trainingSpot);
-        selfAnimator.SetBool(trainingSpot.selfAnimatorBool, false);
+        yield return new WaitForSeconds(trainingData.trainingDuration);
+        girlController.StopTraining(trainingData);
+        selfAnimator.SetBool(trainingData.selfAnimatorBool, false);
         occupiedObstacle.SetActive(false);
         isAvailable = true;
     }
 
     public void ReleaseTrainingSpot()
     {
-        selfAnimator.SetBool(trainingSpot.selfAnimatorBool, false);
+        selfAnimator.SetBool(trainingData.selfAnimatorBool, false);
         occupiedObstacle.SetActive(false);
         isAvailable = true;
     }

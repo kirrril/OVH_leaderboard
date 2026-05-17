@@ -6,7 +6,7 @@ public class ChestMachine2 : MonoBehaviour, IPlayerTrainingHost
     [SerializeField] private Animator selfAnimator;
     [SerializeField] private GameObject accessObstacle;
     [SerializeField] private GameObject occupiedObstacle;
-    [SerializeField] private TrainingSpot trainingSpot;
+    [SerializeField] private TrainingData trainingData;
     private PlayerController playerController;
     private bool isAvailable = true;
 
@@ -25,7 +25,7 @@ public class ChestMachine2 : MonoBehaviour, IPlayerTrainingHost
 
             if (other.CompareTag("Girl"))
             {
-                agent.ResetPath();
+                agent.CancelTraining();
                 return;
             }
 
@@ -47,12 +47,12 @@ public class ChestMachine2 : MonoBehaviour, IPlayerTrainingHost
         if (!isAvailable) yield break;
         isAvailable = false;
         accessObstacle.SetActive(false);
-        agent.StartTraining(trainingSpot);
-        selfAnimator.SetBool(trainingSpot.selfAnimatorBool, true);
+        agent.StartTraining(trainingData);
+        selfAnimator.SetBool(trainingData.selfAnimatorBool, true);
         occupiedObstacle.SetActive(true);
-        yield return new WaitForSeconds(trainingSpot.trainingDuration);
-        agent.StopTraining(trainingSpot);
-        selfAnimator.SetBool(trainingSpot.selfAnimatorBool, false);
+        yield return new WaitForSeconds(trainingData.trainingDuration);
+        agent.StopTraining(trainingData);
+        selfAnimator.SetBool(trainingData.selfAnimatorBool, false);
         occupiedObstacle.SetActive(false);
         accessObstacle.SetActive(true);
         isAvailable = true;
@@ -65,14 +65,14 @@ public class ChestMachine2 : MonoBehaviour, IPlayerTrainingHost
         isAvailable = false;
         accessObstacle.SetActive(false);
         playerController = player.GetComponent<PlayerController>();
-        playerController.Train(trainingSpot, this);
-        selfAnimator.SetBool(trainingSpot.selfAnimatorBool, true);
+        playerController.StartTraining(trainingData, this);
+        selfAnimator.SetBool(trainingData.selfAnimatorBool, true);
         occupiedObstacle.SetActive(true);
     }
 
     public void ReleaseTrainingSpot()
     {
-        selfAnimator.SetBool(trainingSpot.selfAnimatorBool, false);
+        selfAnimator.SetBool(trainingData.selfAnimatorBool, false);
         occupiedObstacle.SetActive(false);
         isAvailable = true;
         accessObstacle.SetActive(true);

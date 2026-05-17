@@ -7,7 +7,7 @@ public class BarbellStand : MonoBehaviour
     [SerializeField] private Animator selfAnimator;
     [SerializeField] private GameObject accessObstacle;
     [SerializeField] private GameObject occupiedObstacle;
-    [SerializeField] private TrainingSpot trainingSpot;
+    [SerializeField] private TrainingData trainingData;
     private bool isAvailable = true;
     private bool blockedByPlayer;
 
@@ -27,7 +27,7 @@ public class BarbellStand : MonoBehaviour
 
             if (other.CompareTag("Girl"))
             {
-                agent.ResetPath();
+                agent.CancelTraining();
                 return;
             }
 
@@ -35,7 +35,7 @@ public class BarbellStand : MonoBehaviour
             {
                 if (!isAvailable)
                 {
-                    agent.ResetPath();
+                    agent.CancelTraining();
                     return;
                 }
                 isAvailable = false;
@@ -64,12 +64,12 @@ public class BarbellStand : MonoBehaviour
 
     private IEnumerator TrainAgent(IAgent agent)
     {
-        agent.StartTraining(trainingSpot);
-        selfAnimator.SetBool(trainingSpot.selfAnimatorBool, true);
+        agent.StartTraining(trainingData);
+        selfAnimator.SetBool(trainingData.selfAnimatorBool, true);
         occupiedObstacle.SetActive(true);
-        yield return new WaitForSeconds(trainingSpot.trainingDuration);
-        agent.StopTraining(trainingSpot);
-        selfAnimator.SetBool(trainingSpot.selfAnimatorBool, false);
+        yield return new WaitForSeconds(trainingData.trainingDuration);
+        agent.StopTraining(trainingData);
+        selfAnimator.SetBool(trainingData.selfAnimatorBool, false);
         occupiedObstacle.SetActive(false);
         accessObstacle.SetActive(true);
         isAvailable = true;

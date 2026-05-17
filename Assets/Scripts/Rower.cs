@@ -5,7 +5,7 @@ public class Rower : MonoBehaviour, IPlayerTrainingHost
 {
     [SerializeField] private GameObject occupiedObstacle;
     [SerializeField] private GameObject accessObstacle;
-    [SerializeField] private TrainingSpot trainingSpot;
+    [SerializeField] private TrainingData trainingData;
     [SerializeField] private Animator selfAnimator;
     private PlayerController playerController;
     private GirlController girlController;
@@ -30,7 +30,7 @@ public class Rower : MonoBehaviour, IPlayerTrainingHost
 
         accessObstacle.SetActive(false);
         playerController = other.GetComponent<PlayerController>();
-        playerController.Train(trainingSpot, this);
+        playerController.StartTraining(trainingData, this);
     }
 
     public void ReleaseTrainingSpot()
@@ -44,12 +44,12 @@ public class Rower : MonoBehaviour, IPlayerTrainingHost
     {
         accessObstacle.SetActive(false);
         girlController = agent.GetComponent<GirlController>();
-        girlController.StartTraining(trainingSpot);
-        selfAnimator.SetBool(trainingSpot.selfAnimatorBool, true);
+        girlController.StartTraining(trainingData);
+        selfAnimator.SetBool(trainingData.selfAnimatorBool, true);
         occupiedObstacle.SetActive(true);
-        yield return new WaitForSeconds(trainingSpot.trainingDuration);
-        selfAnimator.SetBool(trainingSpot.selfAnimatorBool, false);
-        girlController.StopTraining(trainingSpot);
+        yield return new WaitForSeconds(trainingData.trainingDuration);
+        selfAnimator.SetBool(trainingData.selfAnimatorBool, false);
+        girlController.StopTraining(trainingData);
         occupiedObstacle.SetActive(false);
         isAvailable = true;
         accessObstacle.SetActive(true);
