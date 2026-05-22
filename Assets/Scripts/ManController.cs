@@ -12,29 +12,13 @@ public class ManController : MonoBehaviour, IAgent
     public PlayerController playerController;
     public Animator animator;
     private Transform targetSpot;
-    private int level = 2;
-    [SerializeField] private Transform[] spotsManLegs;
-    [SerializeField] private Transform[] spotsManChest;
-    [SerializeField] private Transform[] spotsManBack;
-    Transform[] trainingSpots;
+    [SerializeField] Transform[] trainingSpots;
     int lastSpotIndex = -1;
     public GameObject fightZone;
 
 
     void Awake()
     {
-        switch (level)
-        {
-            case 1:
-                trainingSpots = spotsManLegs;
-                break;
-            case 2:
-                trainingSpots = spotsManChest;
-                break;
-            case 3:
-                trainingSpots = spotsManBack;
-                break;
-        }
         blackboard.SetVariableValue("player", playerController.gameObject);
 
         agent.avoidancePriority = Random.Range(45, 99);

@@ -42,7 +42,8 @@ public class PlayerController : MonoBehaviour
         "isMakingDips",
         "isPushingBarbell",
         "isTrainingChest_1",
-        "isTrainingChest_2"
+        "isTrainingChest_2",
+        "isPullingBackMachine1"
     };
 
     public State currentState = State.Walking;
@@ -203,6 +204,7 @@ public class PlayerController : MonoBehaviour
     {
         transform.position = entryPoint.position;
         transform.rotation = entryPoint.rotation;
+        SetCamera(reinitCameraTarget, reinitCameraPlace);
         ChangeState(State.Walking);
     }
 
