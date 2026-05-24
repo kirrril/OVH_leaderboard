@@ -69,7 +69,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 83ce90be8c066c745b60e62c8a30d28e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TrainingLogic
-  excludedUserKind: 5
+  excludedUserKind: 6
   selfAnimator: {fileID: 0}
   accessObstacle: {fileID: 0}
   occupiedObstacle: {fileID: 7234754067963226854}

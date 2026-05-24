@@ -653,10 +653,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 83ce90be8c066c745b60e62c8a30d28e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TrainingLogic
-  excludedUserKind: 4
+  excludedUserKind: 5
   selfAnimator: {fileID: 2196083815165934382}
   accessObstacle: {fileID: 5050402922753447793}
-  occupiedObstacle: {fileID: 1147919640336999170}
+  occupiedObstacle: {fileID: 7105854475950001805}
   trainingData: {fileID: 6217439937906674847}
 --- !u!1001 &4270563798615956819
 PrefabInstance:

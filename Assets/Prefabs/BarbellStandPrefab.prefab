@@ -101,7 +101,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 83ce90be8c066c745b60e62c8a30d28e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TrainingLogic
-  excludedUserKind: 4
+  excludedUserKind: 5
   selfAnimator: {fileID: 597425198841350667}
   accessObstacle: {fileID: 7372871142268234471}
   occupiedObstacle: {fileID: 6919378836132109685}
@@ -125,8 +125,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 2.984073, y: 2, z: 2.5523021}
-  m_Center: {x: 0.0074818134, y: 1, z: 0.37615108}
+  m_Size: {x: 2.984073, y: 2, z: 3.11}
+  m_Center: {x: 0.0074818134, y: 1, z: 0.16}
 --- !u!1 &6919378836132109685
 GameObject:
   m_ObjectHideFlags: 0
@@ -147,7 +147,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &7211546332018360206
 Transform:
   m_ObjectHideFlags: 0
@@ -288,7 +288,7 @@ Transform:
   m_GameObject: {fileID: 7323262193785336611}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0, y: 0, z: 1.381}
+  m_LocalPosition: {x: 0, y: 0, z: 1.97}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []

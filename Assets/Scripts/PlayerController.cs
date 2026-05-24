@@ -43,7 +43,13 @@ public class PlayerController : MonoBehaviour
         "isPushingBarbell",
         "isTrainingChest_1",
         "isTrainingChest_2",
-        "isPullingBackMachine1"
+        "isPullingBackMachine1",
+        "isPullingBackMachine2",
+        "isExtensingBack",
+        "isPullingBackBarbell1",
+        "isMakingAustralianPullUps",
+        "isMakingPullUps",
+        "isMakingPullUps2"
     };
 
     public State currentState = State.Walking;

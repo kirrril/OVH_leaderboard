@@ -1,7 +1,7 @@
 using System.Collections;
 using UnityEngine;
 
-public enum ExcludedUserKind { Player, Man, Girl, PlayerMan, PlayerGirl, AllAllowed }
+public enum ExcludedUserKind { Player, Man, Girl, ManGirl, PlayerMan, PlayerGirl, AllAllowed }
 
 public class TrainingLogic : MonoBehaviour, IPlayerTrainingHost
 {
@@ -36,6 +36,9 @@ public class TrainingLogic : MonoBehaviour, IPlayerTrainingHost
                 break;
             case ExcludedUserKind.Girl:
                 ExcludeGirl(user);
+                break;
+            case ExcludedUserKind.ManGirl:
+                ExcludeManGirl(user);
                 break;
             case ExcludedUserKind.PlayerMan:
                 ExcludePlayerAndMan(user);
@@ -112,6 +115,20 @@ public class TrainingLogic : MonoBehaviour, IPlayerTrainingHost
                 StartCoroutine(TrainAgent(agent));
                 return;
             }
+        }
+
+        if (user.CompareTag("Player"))
+        {
+            TrainPlayer(user.gameObject);
+        }
+    }
+
+    private void ExcludeManGirl(GameObject user)
+    {
+        if (user.CompareTag("Girl") || user.CompareTag("Man"))
+        {
+            // agent.CancelTraining();
+            return;
         }
 
         if (user.CompareTag("Player"))
