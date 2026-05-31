@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -34,6 +35,8 @@ public class GameManager : MonoBehaviour
     public float BackBarbell1Training { get; private set; }
     public float PullUpsTraining { get; private set; }
     private Coroutine currentTrainingCoroutine;
+
+    public event Action CurrentLevelChanged;
 
 
     void Awake()
@@ -133,7 +136,10 @@ public class GameManager : MonoBehaviour
 
     public void SetCurrentLevel(CurrentLevelZone level)
     {
+        if (CurrentLevel == level) return;
+
         CurrentLevel = level;
+        CurrentLevelChanged?.Invoke();
     }
 
     public void TrainingStarted(TrainingProgressType type)
