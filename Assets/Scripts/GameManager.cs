@@ -11,27 +11,29 @@ public class GameManager : MonoBehaviour
     private bool gameSceneLoaded;
 
     public int health = 5;
-    private bool isLosingHealth;
+    private bool isLosingHealthOfThirst;
     public int currentScore = 0;
 
     public float water = 0.5f;
 
-    public float legsTraining;
-    public float chestTraining;
-    public float backTraining;
-    public float treadmillTraining;
-    public float bikeTraining;
-    public float jumpboxTraining;
-    public float barbellTraining;
-    public float chest1Training;
-    public float chest2Training;
-    public float dipsTraining;
-    public float back1Training;
-    public float back2Training;
-    public float rowerTraining;
-    public float extensionTraining;
-    public float backBarbell1Training;
-    public float pullUpsTraining;
+    public CurrentLevelZone CurrentLevel { get; private set; }
+    public float LegsTraining { get; private set; }
+    public float ChestTraining { get; private set; }
+    public float BackTraining { get; private set; }
+    public float TreadmillTraining { get; private set; }
+    public float BikeTraining { get; private set; }
+    public float JumpboxTraining { get; private set; }
+    public float BarbellTraining { get; private set; }
+    public float ChestMachine1Training { get; private set; }
+    public float ChestMachine2Training { get; private set; }
+    public float DipsTraining { get; private set; }
+    public float BackMachine1Training { get; private set; }
+    public float BackMachine2Training { get; private set; }
+    public float RowerTraining { get; private set; }
+    public float BackExtensionTraining { get; private set; }
+    public float BackBarbell1Training { get; private set; }
+    public float PullUpsTraining { get; private set; }
+    private Coroutine currentTrainingCoroutine;
 
 
     void Awake()
@@ -75,7 +77,7 @@ public class GameManager : MonoBehaviour
         if (playerPrefab == null) return;
         playerController = playerPrefab.GetComponent<PlayerController>();
         if (playerController == null) return;
-        
+
         gameSceneLoaded = true;
         ResetGame();
     }
@@ -83,35 +85,38 @@ public class GameManager : MonoBehaviour
     void Update()
     {
         if (!gameSceneLoaded) return;
-        
-        TrainingManagement();
-        WaterManagement();
+
         FallingDownManagement();
     }
 
     void ResetGame()
     {
+        StopAllCoroutines();
+        currentTrainingCoroutine = null;
+        isLosingHealthOfThirst = false;
+
         health = 5;
         currentScore = 0;
         water = 0.5f;
+        CurrentLevel = CurrentLevelZone.None;
 
-        legsTraining = 0;
-        chestTraining = 0;
-        backTraining = 0;
+        LegsTraining = 0;
+        ChestTraining = 0;
+        BackTraining = 0;
 
-        treadmillTraining = 0;
-        bikeTraining = 0;
-        jumpboxTraining = 0;
-        barbellTraining = 0;
-        chest1Training = 0;
-        chest2Training = 0;
-        dipsTraining = 0;
-        back1Training = 0;
-        back2Training = 0;
-        rowerTraining = 0;
-        extensionTraining = 0;
-        backBarbell1Training = 0;
-        pullUpsTraining = 0;
+        TreadmillTraining = 0;
+        BikeTraining = 0;
+        JumpboxTraining = 0;
+        BarbellTraining = 0;
+        ChestMachine1Training = 0;
+        ChestMachine2Training = 0;
+        DipsTraining = 0;
+        BackMachine1Training = 0;
+        BackMachine2Training = 0;
+        RowerTraining = 0;
+        BackExtensionTraining = 0;
+        BackBarbell1Training = 0;
+        PullUpsTraining = 0;
     }
 
     public void ModifyScore(int delta)
@@ -126,32 +131,116 @@ public class GameManager : MonoBehaviour
         if (health < 1) YouLoose();
     }
 
-    public void TrainingManagement()
+    public void SetCurrentLevel(CurrentLevelZone level)
     {
-        legsTraining = treadmillTraining + bikeTraining + jumpboxTraining;
-        chestTraining = barbellTraining + chest1Training + chest2Training + dipsTraining;
-        backTraining = back1Training + back2Training + rowerTraining + extensionTraining + backBarbell1Training + pullUpsTraining;
+        CurrentLevel = level;
+    }
 
+    public void TrainingStarted(TrainingProgressType type)
+    {
+        TrainingStopped();
 
-        // legsTraining = 1.05f;
-        // chestTraining = 1.05f;
-        // backTraining = 0.5f;
+        if (type == TrainingProgressType.None) return;
+
+        currentTrainingCoroutine = StartCoroutine(ProcessTraining(type));
+    }
+
+    public void TrainingStopped()
+    {
+        if (currentTrainingCoroutine == null) return;
+
+        StopCoroutine(currentTrainingCoroutine);
+        currentTrainingCoroutine = null;
+    }
+
+    private IEnumerator ProcessTraining(TrainingProgressType type)
+    {
+        while (true)
+        {
+            WaterManagement();
+            AddTrainingProgress(type, Time.deltaTime * 0.1f);
+            yield return null;
+        }
+    }
+
+    private void AddTrainingProgress(TrainingProgressType type, float delta)
+    {
+        switch (type)
+        {
+            case TrainingProgressType.Treadmill:
+                TreadmillTraining = Mathf.Clamp01(TreadmillTraining + delta);
+                break;
+
+            case TrainingProgressType.Bike:
+                BikeTraining = Mathf.Clamp01(BikeTraining + delta);
+                break;
+
+            case TrainingProgressType.JumpBox:
+                JumpboxTraining = Mathf.Clamp01(JumpboxTraining + delta);
+                break;
+
+            case TrainingProgressType.Barbell:
+                BarbellTraining = Mathf.Clamp01(BarbellTraining + delta);
+                break;
+
+            case TrainingProgressType.ChestMachine1:
+                ChestMachine1Training = Mathf.Clamp01(ChestMachine1Training + delta);
+                break;
+
+            case TrainingProgressType.ChestMachine2:
+                ChestMachine2Training = Mathf.Clamp01(ChestMachine2Training + delta);
+                break;
+
+            case TrainingProgressType.Dips:
+                DipsTraining = Mathf.Clamp01(DipsTraining + delta);
+                break;
+
+            case TrainingProgressType.BackMachine1:
+                BackMachine1Training = Mathf.Clamp01(BackMachine1Training + delta);
+                break;
+
+            case TrainingProgressType.BackMachine2:
+                BackMachine2Training = Mathf.Clamp01(BackMachine2Training + delta);
+                break;
+
+            case TrainingProgressType.Rower:
+                RowerTraining = Mathf.Clamp01(RowerTraining + delta);
+                break;
+
+            case TrainingProgressType.BackExtension:
+                BackExtensionTraining = Mathf.Clamp01(BackExtensionTraining + delta);
+                break;
+
+            case TrainingProgressType.BackBarbell1:
+                BackBarbell1Training = Mathf.Clamp01(BackBarbell1Training + delta);
+                break;
+
+            case TrainingProgressType.PullUps:
+                PullUpsTraining = Mathf.Clamp01(PullUpsTraining + delta);
+                break;
+        }
+
+        UpdateTrainingTotals();
+    }
+
+    private void UpdateTrainingTotals()
+    {
+        LegsTraining = (TreadmillTraining + BikeTraining + JumpboxTraining) / 3f;
+        ChestTraining = (BarbellTraining + ChestMachine1Training + ChestMachine2Training + DipsTraining) / 4f;
+        BackTraining = (BackMachine1Training + BackMachine2Training + RowerTraining + BackExtensionTraining + BackBarbell1Training + PullUpsTraining) / 6f;
     }
 
     private void WaterManagement()
     {
-        if (playerController.currentState == PlayerController.State.Training)
-        {
-            float waterLoss = Time.deltaTime / 20;
-            water -= waterLoss;
-        }
+        water = Mathf.Max(0f, water - Time.deltaTime / 20f);
 
         if (water <= 0)
         {
-            if (!isLosingHealth)
+            if (!isLosingHealthOfThirst)
             {
-                isLosingHealth = true;
+                isLosingHealthOfThirst = true;
                 StartCoroutine(LoseHealthOfThirst());
+                TrainingStopped();
             }
         }
     }
@@ -162,7 +251,7 @@ public class GameManager : MonoBehaviour
         LoseHealth();
         water = 0.5f;
         playerController.currentState = PlayerController.State.DyingOfThirst;
-        isLosingHealth = false;
+        isLosingHealthOfThirst = false;
     }
 
     private void FallingDownManagement()
@@ -171,11 +260,13 @@ public class GameManager : MonoBehaviour
         {
             playerController.HandleComeBack();
             LoseHealth();
+            water = 0.5f;
         }
     }
 
     public void YouWin()
     {
+        SetCurrentLevel(CurrentLevelZone.None);
         StartCoroutine(YouWinTransitionCorout());
     }
 
@@ -188,6 +279,7 @@ public class GameManager : MonoBehaviour
 
     public void YouLoose()
     {
+        SetCurrentLevel(CurrentLevelZone.None);
         SceneManager.LoadScene("YouLoseScene");
     }
 }

@@ -202,7 +202,10 @@ public class PlayerController : MonoBehaviour
 
     public void HandleDyingOfThirst()
     {
-        StopTraining();
+        if (trainingData != null)
+        {
+            StopTraining();
+        }
         HandleComeBack();
     }
 
@@ -308,6 +311,7 @@ public class PlayerController : MonoBehaviour
         SetCamera(trainingData.cameraTargetLocalPosition, trainingData.cameraPlaceLocalPosition);
         trainingAnimationBool = trainingData.userAnimatorBool;
         ChangeState(State.Training);
+        GameManager.Instance.TrainingStarted(data.progressType);
         Cursor.visible = true;
     }
 
@@ -318,6 +322,7 @@ public class PlayerController : MonoBehaviour
         transform.position = trainingData.exitPos.position;
         transform.rotation = trainingData.exitPos.rotation;
         SetCamera(reinitCameraTarget, reinitCameraPlace);
+        GameManager.Instance.TrainingStopped();
         trainingHost?.ReleaseTrainingSpot();
         trainingHost = null;
         trainingData = null;
