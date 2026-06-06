@@ -1,13 +1,14 @@
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class WaterSpawner : MonoBehaviour
+public class ProteinSpawner : MonoBehaviour
 {
     [SerializeField] private List<BoxCollider> legsSpawnZones;
     [SerializeField] private List<BoxCollider> chestSpawnZones;
     [SerializeField] private List<BoxCollider> backSpawnZones;
-    [SerializeField] private GameObject waterBottle;
-    private float respawnWaterLevel = 0.4f;
+    [SerializeField] private GameObject proteinTub;
+    private Coroutine currentSpawnCoroutine;
 
     private void OnEnable()
     {
@@ -19,46 +20,41 @@ public class WaterSpawner : MonoBehaviour
         SubscribeToCurrentLevelChanged();
     }
 
-    private void Update()
-    {
-        SpawnWater();
-    }
-
     private void OnDisable()
     {
         if (GameManager.Instance == null) return;
 
-        GameManager.Instance.CurrentLevelChanged -= RemoveSpawnedBottle;
+        GameManager.Instance.CurrentLevelChanged -= SpawnProtein;
     }
 
     private void SubscribeToCurrentLevelChanged()
     {
         if (GameManager.Instance == null) return;
 
-        GameManager.Instance.CurrentLevelChanged -= RemoveSpawnedBottle;
-        GameManager.Instance.CurrentLevelChanged += RemoveSpawnedBottle;
+        GameManager.Instance.CurrentLevelChanged -= SpawnProtein;
+        GameManager.Instance.CurrentLevelChanged += SpawnProtein;
     }
 
-    private void RemoveSpawnedBottle()
+    public void SpawnProtein()
     {
-        if (GameManager.Instance.CurrentLevel != CurrentLevelZone.None) return;
-
-        waterBottle.SetActive(false);
-    }
-
-    public void SpawnWater()
-    {
-        if (GameManager.Instance.CurrentLevel == CurrentLevelZone.None) return;
-        if (GameManager.Instance.Water > respawnWaterLevel) return;
-        if (waterBottle.activeSelf) return;
+        if (currentSpawnCoroutine != null)
+        {
+            StopCoroutine(currentSpawnCoroutine);
+            currentSpawnCoroutine = null;
+        }
+        proteinTub.SetActive(false);
 
         BoxCollider spawnZone = SetSpawnZone(GameManager.Instance.CurrentLevel);
 
-        if (!spawnZone) return;
+        if (!spawnZone)
+        {
+            proteinTub.SetActive(false);
+            return;
+        }
 
         Vector3 spawnPoint = SetSpawnPoint(spawnZone);
-        waterBottle.transform.position = spawnPoint;
-        waterBottle.SetActive(true);
+        
+        currentSpawnCoroutine = StartCoroutine(SpawnProteinCoroutine(spawnPoint));
     }
 
     private BoxCollider SetSpawnZone(CurrentLevelZone level)
@@ -86,5 +82,13 @@ public class WaterSpawner : MonoBehaviour
         float y = bounds.min.y;
 
         return new Vector3(x, y, z);
+    }
+
+    private IEnumerator SpawnProteinCoroutine(Vector3 point)
+    {
+        yield return new WaitForSeconds(3f);
+        proteinTub.transform.position = point;
+        proteinTub.SetActive(true);
+        currentSpawnCoroutine = null;
     }
 }

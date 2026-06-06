@@ -27,7 +27,7 @@ public class ManController : MonoBehaviour, IAgent
     void Update()
     {
         UpdateWalkingAnimation();
-        blackboard.SetVariableValue("playerScore", GameManager.Instance.currentScore);
+        blackboard.SetVariableValue("playerScore", GameManager.Instance.CurrentScore);
     }
 
     private void UpdateWalkingAnimation()
