@@ -25,11 +25,4 @@ public class CurrentLevelChecker : MonoBehaviour
                 break;
         }
     }
-
-    private void OnTriggerExit(Collider other)
-    {
-        if (!other.CompareTag("Player")) return;
-
-        GameManager.Instance.SetCurrentLevel(CurrentLevelZone.None);
-    }
 }

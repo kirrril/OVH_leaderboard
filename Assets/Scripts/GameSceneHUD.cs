@@ -72,9 +72,16 @@ public class GameSceneHUD : MonoBehaviour
     [SerializeField] private Image[] chestProgressBarPanels;
     [SerializeField] private Image[] backProgressBarPanels;
 
+    [SerializeField] private GameObject trainingCompletedAlert;
+    [SerializeField] private TMP_Text trainingCompletedAlertText;
+
     private bool isVoidFalling;
     private bool isDyingOfThirst;
     private float waterAlertTimer;
+    private float trainingAlertTimer;
+    bool trainingAlertIsDiplayed;
+    private Coroutine trainingCompletedAlertCoroutine;
+
 
 
     void Update()
@@ -88,6 +95,7 @@ public class GameSceneHUD : MonoBehaviour
         UpdateTrainingProgress();
         ManageTrainingPanels();
         HighlightProgressBar();
+        ActivateTrainingCompletedAlert();
     }
 
     private void UpdateCurrentScoreValue()
@@ -236,21 +244,21 @@ public class GameSceneHUD : MonoBehaviour
             case CurrentLevelZone.Chest:
                 switch (GameManager.Instance.CurrentTrainingType)
                 {
-                    case TrainingProgressType.Barbell:
+                    case TrainingProgressType.BenchPress:
                         foreach (Image panel in chestProgressBarPanels)
                         {
                             panel.color = new Color(0, 0, 0, 0f);
                         }
                         chestProgressBarPanels[0].color = new Color(0, 0, 0, 0.3f);
                         break;
-                    case TrainingProgressType.ChestMachine1:
+                    case TrainingProgressType.PecFly:
                         foreach (Image panel in chestProgressBarPanels)
                         {
                             panel.color = new Color(0, 0, 0, 0f);
                         }
                         chestProgressBarPanels[1].color = new Color(0, 0, 0, 0.3f);
                         break;
-                    case TrainingProgressType.ChestMachine2:
+                    case TrainingProgressType.Crossover:
                         foreach (Image panel in chestProgressBarPanels)
                         {
                             panel.color = new Color(0, 0, 0, 0f);
@@ -275,14 +283,14 @@ public class GameSceneHUD : MonoBehaviour
             case CurrentLevelZone.Back:
                 switch (GameManager.Instance.CurrentTrainingType)
                 {
-                    case TrainingProgressType.BackMachine1:
+                    case TrainingProgressType.LatPull:
                         foreach (Image panel in backProgressBarPanels)
                         {
                             panel.color = new Color(0, 0, 0, 0f);
                         }
                         backProgressBarPanels[0].color = new Color(0, 0, 0, 0.3f);
                         break;
-                    case TrainingProgressType.BackMachine2:
+                    case TrainingProgressType.CableRow:
                         foreach (Image panel in backProgressBarPanels)
                         {
                             panel.color = new Color(0, 0, 0, 0f);
@@ -303,7 +311,7 @@ public class GameSceneHUD : MonoBehaviour
                         }
                         backProgressBarPanels[3].color = new Color(0, 0, 0, 0.3f);
                         break;
-                    case TrainingProgressType.BackBarbell1:
+                    case TrainingProgressType.TBar:
                         foreach (Image panel in backProgressBarPanels)
                         {
                             panel.color = new Color(0, 0, 0, 0f);
@@ -391,6 +399,101 @@ public class GameSceneHUD : MonoBehaviour
         Color alert = new Color(1f, 0.2f, 0.2f, 0.16f);
 
         waterPanel.color = Color.Lerp(idle, alert, t);
+    }
+
+    private void ActivateTrainingCompletedAlert()
+    {
+        if (trainingCompletedAlert == null || trainingCompletedAlertText == null) return;
+
+        if (playerController.currentState != PlayerController.State.Training)
+        {
+            trainingAlertIsDiplayed = false;
+            trainingAlertTimer = 0f;
+
+            if (trainingCompletedAlertCoroutine != null)
+            {
+                StopCoroutine(trainingCompletedAlertCoroutine);
+                trainingCompletedAlertCoroutine = null;
+            }
+
+            trainingCompletedAlert.SetActive(false);
+            return;
+        }
+
+        if (!GameManager.Instance.IsTrainingCompleted(GameManager.Instance.CurrentTrainingType)) return;
+        if (trainingAlertIsDiplayed) return;
+
+        trainingCompletedAlertText.text = GetTrainingCompletedAlertMessage(GameManager.Instance.CurrentTrainingType);
+        trainingCompletedAlertCoroutine = StartCoroutine(DisplayTrainingCompletedAlert());
+    }
+
+    private IEnumerator DisplayTrainingCompletedAlert()
+    {
+        trainingAlertIsDiplayed = true;
+        trainingAlertTimer = 0f;
+        trainingCompletedAlert.SetActive(true);
+
+        float duration = 3f;
+
+        while (duration > 0f)
+        {
+            MakeTrainingAlertBlink();
+            duration -= Time.deltaTime;
+            yield return null;
+        }
+
+        trainingCompletedAlertText.color = new Color(1f, 1f, 1f, 1f);
+        trainingCompletedAlert.SetActive(false);
+        trainingCompletedAlertCoroutine = null;
+    }
+
+    private void MakeTrainingAlertBlink()
+    {
+        if (!trainingCompletedAlert.activeSelf) return;
+
+        trainingAlertTimer += Time.deltaTime;
+
+        float t = (Mathf.Sin(trainingAlertTimer * 6f) + 1f) * 0.5f;
+
+        Color idle = new Color(1f, 1f, 1f, 1f);
+        Color alert = new Color(1f, 1f, 1f, 0f);
+
+        trainingCompletedAlertText.color = Color.Lerp(idle, alert, t);
+    }
+
+    private string GetTrainingCompletedAlertMessage(TrainingProgressType type)
+    {
+        switch (type)
+        {
+            case TrainingProgressType.Treadmill:
+                return "Treadmill training completed";
+            case TrainingProgressType.Bike:
+                return "Bike training completed";
+            case TrainingProgressType.JumpBox:
+                return "Jump box training completed";
+            case TrainingProgressType.BenchPress:
+                return "Bench press training completed";
+            case TrainingProgressType.PecFly:
+                return "Pec fly training completed";
+            case TrainingProgressType.Crossover:
+                return "Crossover training completed";
+            case TrainingProgressType.Dips:
+                return "Dips training completed";
+            case TrainingProgressType.LatPull:
+                return "Lat pull training completed";
+            case TrainingProgressType.CableRow:
+                return "Cable row training completed";
+            case TrainingProgressType.Rower:
+                return "Rower training completed";
+            case TrainingProgressType.BackExtension:
+                return "Back extension training completed";
+            case TrainingProgressType.TBar:
+                return "T-bar training completed";
+            case TrainingProgressType.PullUps:
+                return "Pull-ups training completed";
+            default:
+                return "Training completed";
+        }
     }
 
     private void UpdateWaterLevel()

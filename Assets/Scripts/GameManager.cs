@@ -203,15 +203,15 @@ public class GameManager : MonoBehaviour
                 JumpboxTraining = Mathf.Clamp01(JumpboxTraining + delta);
                 break;
 
-            case TrainingProgressType.Barbell:
+            case TrainingProgressType.BenchPress:
                 BenchPressTraining = Mathf.Clamp01(BenchPressTraining + delta);
                 break;
 
-            case TrainingProgressType.ChestMachine1:
+            case TrainingProgressType.PecFly:
                 PecFlyTraining = Mathf.Clamp01(PecFlyTraining + delta);
                 break;
 
-            case TrainingProgressType.ChestMachine2:
+            case TrainingProgressType.Crossover:
                 CrossoverTraining = Mathf.Clamp01(CrossoverTraining + delta);
                 break;
 
@@ -219,11 +219,11 @@ public class GameManager : MonoBehaviour
                 DipsTraining = Mathf.Clamp01(DipsTraining + delta);
                 break;
 
-            case TrainingProgressType.BackMachine1:
+            case TrainingProgressType.LatPull:
                 LatPullTraining = Mathf.Clamp01(LatPullTraining + delta);
                 break;
 
-            case TrainingProgressType.BackMachine2:
+            case TrainingProgressType.CableRow:
                 CableRowTraining = Mathf.Clamp01(CableRowTraining + delta);
                 break;
 
@@ -235,7 +235,7 @@ public class GameManager : MonoBehaviour
                 BackExtensionTraining = Mathf.Clamp01(BackExtensionTraining + delta);
                 break;
 
-            case TrainingProgressType.BackBarbell1:
+            case TrainingProgressType.TBar:
                 TBarTraining = Mathf.Clamp01(TBarTraining + delta);
                 break;
 
@@ -254,15 +254,15 @@ public class GameManager : MonoBehaviour
             case TrainingProgressType.Treadmill: return TreadmillTraining >= 1f;
             case TrainingProgressType.Bike: return BikeTraining >= 1f;
             case TrainingProgressType.JumpBox: return JumpboxTraining >= 1f;
-            case TrainingProgressType.Barbell: return BenchPressTraining >= 1f;
-            case TrainingProgressType.ChestMachine1: return PecFlyTraining >= 1f;
-            case TrainingProgressType.ChestMachine2: return CrossoverTraining >= 1f;
+            case TrainingProgressType.BenchPress: return BenchPressTraining >= 1f;
+            case TrainingProgressType.PecFly: return PecFlyTraining >= 1f;
+            case TrainingProgressType.Crossover: return CrossoverTraining >= 1f;
             case TrainingProgressType.Dips: return DipsTraining >= 1f;
-            case TrainingProgressType.BackMachine1: return LatPullTraining >= 1f;
-            case TrainingProgressType.BackMachine2: return CableRowTraining >= 1f;
+            case TrainingProgressType.LatPull: return LatPullTraining >= 1f;
+            case TrainingProgressType.CableRow: return CableRowTraining >= 1f;
             case TrainingProgressType.Rower: return RowerTraining >= 1f;
             case TrainingProgressType.BackExtension: return BackExtensionTraining >= 1f;
-            case TrainingProgressType.BackBarbell1: return TBarTraining >= 1f;
+            case TrainingProgressType.TBar: return TBarTraining >= 1f;
             case TrainingProgressType.PullUps: return PullUpsTraining >= 1f;
             default: return false;
         }
