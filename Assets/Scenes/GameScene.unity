@@ -62326,6 +62326,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: BarbellStandPrefab
       objectReference: {fileID: 0}
+    - target: {fileID: 6919378836132109685, guid: b32730951e945dc4abc549bc42c0fa05, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 7860711402627944050, guid: b32730951e945dc4abc549bc42c0fa05, type: 3}
       propertyPath: m_LocalPosition.x
       value: -10.269659
