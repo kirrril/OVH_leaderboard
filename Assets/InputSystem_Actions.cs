@@ -284,17 +284,6 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": """",
-                    ""id"": ""6ab291aa-5b94-4223-94a3-a4fd89412b16"",
-                    ""path"": ""<Mouse>/leftButton"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""Jump"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
                     ""id"": ""1c04ea5f-b012-41d1-a6f7-02e963b52893"",
                     ""path"": ""<Keyboard>/space"",
                     ""interactions"": """",

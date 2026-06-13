@@ -1,4 +1,5 @@
 using System.Collections;
+using NUnit.Framework;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -23,13 +24,26 @@ public class PlayerController : MonoBehaviour
 
     public bool playerAttack;
     private bool playerInteract;
-    private bool playerJump;
+
+    private JumpZone currentJumpZone;
+    private bool isChargingJump;
+    private bool hasLaunchedJump;
+    private bool hasLeftGround;
+
+    float jumpingCoeff;
+
     string trainingAnimationBool;
 
     bool cameraFreezed = false;
     Vector3 frozenCameraLocalPlace = new Vector3(0f, 0f, 0f);
 
     public enum State { Walking, Training, Fighting, Falling, DyingOfThirst, BeingSubmissed, Jumping, PushingTheDoor, ClimbingThePole, Dying, MakingDoubleSelfie };
+
+    public State currentState = State.Walking;
+
+    private bool isGrounded;
+    [SerializeField] private LayerMask groundMask;
+
     private string[] exclusiveAnimatorBools =
     {
         "isFalling",
@@ -52,11 +66,11 @@ public class PlayerController : MonoBehaviour
         "isMakingPullUps2"
     };
 
-    public State currentState = State.Walking;
-
 
     void FixedUpdate()
     {
+        ChargeJump();
+
         switch (currentState)
         {
             case State.Walking:
@@ -94,7 +108,7 @@ public class PlayerController : MonoBehaviour
                 break;
         }
 
-
+        Debug.Log(currentState);
     }
 
     public void ChangeState(State nextState)
@@ -115,6 +129,10 @@ public class PlayerController : MonoBehaviour
 
             case State.Training:
                 ApplyExclusiveAnimatorBool(trainingAnimationBool);
+                break;
+
+            case State.Jumping:
+                ApplyExclusiveAnimatorBool();
                 break;
 
             case State.Falling:
@@ -167,7 +185,29 @@ public class PlayerController : MonoBehaviour
 
     private void HandleJumping()
     {
+        RotatePlayer();
+        MoveCameraTarget();
 
+        isGrounded = Physics.CheckSphere(transform.position, 0.2f, groundMask, QueryTriggerInteraction.Ignore);
+
+        if (!hasLaunchedJump) return;
+        if (!hasLeftGround)
+        {
+            if (!isGrounded)
+            {
+                hasLeftGround = true;
+                animator.SetBool("isFlying", true);
+            }
+            return;
+        }
+
+        if (isGrounded)
+        {
+            hasLaunchedJump = false;
+            hasLeftGround = false;
+            animator.SetBool("isLanding", true);
+            ChangeState(State.Walking);
+        }
     }
 
     private void HandlePushingTheDoor()
@@ -259,6 +299,70 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    public void EnterJumpZone(JumpZone jumpZone)
+    {
+        currentJumpZone = jumpZone;
+        if (jumpZone.jumpingPos) transform.position = jumpZone.jumpingPos.position;
+    }
+
+    public void ExitJumpZone(JumpZone jumpZone)
+    {
+        if (currentJumpZone != jumpZone) return;
+        currentJumpZone = null;
+        isChargingJump = false;
+    }
+
+    private void ChargeJump()
+    {
+        if (currentJumpZone == null) return;
+        if (!isChargingJump) return;
+
+        jumpingCoeff += Time.fixedDeltaTime;
+
+        if (currentJumpZone.selfAnimator != null && currentJumpZone.selfAnimatorBool != null)
+        {
+            currentJumpZone.selfAnimator.SetBool(currentJumpZone.selfAnimatorBool, true);
+        }
+
+        if (currentJumpZone.playerAnimatorBoolChargingJump != null)
+        {
+            animator.SetBool(currentJumpZone.playerAnimatorBoolChargingJump, true);
+        }
+    }
+
+    private void StartChargingJump()
+    {
+        isChargingJump = true;
+        jumpingCoeff = 0f;
+        hasLaunchedJump = false;
+        hasLeftGround = false;
+        ChangeState(State.Jumping);
+    }
+
+    private void ReleaseJump()
+    {
+        if (!isChargingJump) return;
+
+        isChargingJump = false;
+        hasLaunchedJump = true;
+        rb.linearVelocity = transform.forward * jumpingCoeff + transform.up * jumpingCoeff;
+
+        if (currentJumpZone.selfAnimator != null && currentJumpZone.selfAnimatorBool != null)
+        {
+            currentJumpZone.selfAnimator.SetBool(currentJumpZone.selfAnimatorBool, false);
+        }
+
+        if (currentJumpZone.playerAnimatorBoolChargingJump != null)
+        {
+            animator.SetBool(currentJumpZone.playerAnimatorBoolChargingJump, false);
+        }
+
+        if (currentJumpZone.playerAnimatorBoolReleaseJump != null)
+        {
+            animator.SetBool(currentJumpZone.playerAnimatorBoolReleaseJump, true);
+        }
+    }
+
     public void OnMove(InputAction.CallbackContext ctx)
     {
         playerMovement = ctx.ReadValue<Vector2>();
@@ -281,7 +385,17 @@ public class PlayerController : MonoBehaviour
 
     public void OnJump(InputAction.CallbackContext ctx)
     {
-        playerJump = ctx.ReadValueAsButton();
+        if (currentJumpZone == null) return;
+
+        if (ctx.started)
+        {
+            StartChargingJump();
+        }
+
+        if (ctx.canceled)
+        {
+            ReleaseJump();
+        }
     }
 
     private void OnTriggerEnter(Collider other)
