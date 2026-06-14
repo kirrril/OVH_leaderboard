@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using NUnit.Framework;
 using UnityEngine;
@@ -26,11 +27,11 @@ public class PlayerController : MonoBehaviour
     private bool playerInteract;
 
     private JumpZone currentJumpZone;
-    private bool isChargingJump;
-    private bool hasLaunchedJump;
-    private bool hasLeftGround;
-
+    private float landedTimer;
     float jumpingCoeff;
+
+    private Door currentDoor;
+    private float doorTimer;
 
     string trainingAnimationBool;
 
@@ -38,39 +39,45 @@ public class PlayerController : MonoBehaviour
     Vector3 frozenCameraLocalPlace = new Vector3(0f, 0f, 0f);
 
     public enum State { Walking, Training, Fighting, Falling, DyingOfThirst, BeingSubmissed, Jumping, PushingTheDoor, ClimbingThePole, Dying, MakingDoubleSelfie };
+    public enum WalkingPhase { None, Idle, Walking };
+    public enum JumpPhase { None, Charging, Squatting, Released, Airborne, Landed };
+    public enum DoorPhase { None, Pushing, Releasing }
 
     public State currentState = State.Walking;
+    public WalkingPhase walkingPhase;
+    public JumpPhase jumpPhase;
+    public DoorPhase doorPhase;
 
     private bool isGrounded;
     [SerializeField] private LayerMask groundMask;
 
-    private string[] exclusiveAnimatorBools =
-    {
-        "isFalling",
-        "isSubmissed",
-        "isGaming",
-        "isJogging",
-        "isCycling",
-        "isBoxJumping",
-        "isPullingRower",
-        "isMakingDips",
-        "isPushingBarbell",
-        "isTrainingChest_1",
-        "isTrainingChest_2",
-        "isPullingBackMachine1",
-        "isPullingBackMachine2",
-        "isExtensingBack",
-        "isPullingBackBarbell1",
-        "isMakingAustralianPullUps",
-        "isMakingPullUps",
-        "isMakingPullUps2"
-    };
+    public event Action OpenTheDoor;
+
+    // private string[] exclusiveAnimatorBools =
+    // {
+    //     "isFalling",
+    //     "isSubmissed",
+    //     "isGaming",
+    //     "isJogging",
+    //     "isCycling",
+    //     "isBoxJumping",
+    //     "isPullingRower",
+    //     "isMakingDips",
+    //     "isPushingBarbell",
+    //     "isTrainingChest_1",
+    //     "isTrainingChest_2",
+    //     "isPullingBackMachine1",
+    //     "isPullingBackMachine2",
+    //     "isExtensingBack",
+    //     "isPullingBackBarbell1",
+    //     "isMakingAustralianPullUps",
+    //     "isMakingPullUps",
+    //     "isMakingPullUps2"
+    // };
 
 
     void FixedUpdate()
     {
-        ChargeJump();
-
         switch (currentState)
         {
             case State.Walking:
@@ -107,54 +114,49 @@ public class PlayerController : MonoBehaviour
                 HandleMakingDoubleSelfie();
                 break;
         }
-
-        Debug.Log(currentState);
     }
 
     public void ChangeState(State nextState)
     {
         if (currentState == nextState) return;
-
+        ResetSubStatesLeavingState(currentState);
         currentState = nextState;
-        ApplyStateAnimation(nextState);
     }
 
-    private void ApplyStateAnimation(State state)
+    public void ChangeJumpPhase(JumpPhase nextPhase)
+    {
+        if (jumpPhase == nextPhase) return;
+
+        jumpPhase = nextPhase;
+    }
+
+
+    public void ChangeDoorPhase(DoorPhase nextPhase)
+    {
+        if (doorPhase == nextPhase) return;
+
+        doorPhase = nextPhase;
+    }
+
+    private void ResetSubStatesLeavingState(State state)
     {
         switch (state)
         {
             case State.Walking:
-                ApplyExclusiveAnimatorBool();
-                break;
-
-            case State.Training:
-                ApplyExclusiveAnimatorBool(trainingAnimationBool);
+                walkingPhase = WalkingPhase.None;
                 break;
 
             case State.Jumping:
-                ApplyExclusiveAnimatorBool();
+                jumpPhase = JumpPhase.None;
                 break;
 
-            case State.Falling:
-                ApplyExclusiveAnimatorBool("isFalling");
+            case State.PushingTheDoor:
+                doorPhase = DoorPhase.None;
                 break;
 
-            case State.BeingSubmissed:
-                ApplyExclusiveAnimatorBool("isSubmissed");
+            case State.ClimbingThePole:
+                // climbPhase = ClimbPhase.None;
                 break;
-        }
-    }
-
-    private void ApplyExclusiveAnimatorBool(string newBool = null)
-    {
-        foreach (string param in exclusiveAnimatorBools)
-        {
-            animator.SetBool(param, false);
-        }
-
-        if (!string.IsNullOrEmpty(newBool))
-        {
-            animator.SetBool(newBool, true);
         }
     }
 
@@ -163,7 +165,7 @@ public class PlayerController : MonoBehaviour
         MovePlayer();
         RotatePlayer();
         MoveCameraTarget();
-        CheckIfMoving();
+        walkingPhase = CheckIfWalking() ? WalkingPhase.Walking : WalkingPhase.Idle;
         // Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
         stopTrainingControl.SetActive(false);
@@ -185,34 +187,89 @@ public class PlayerController : MonoBehaviour
 
     private void HandleJumping()
     {
+        switch (jumpPhase)
+        {
+            case JumpPhase.Charging:
+                HandleJumpCharging();
+                break;
+
+            case JumpPhase.Squatting:
+                HandleJumpSquatting();
+                break;
+
+            case JumpPhase.Released:
+                HandleJumpReleased();
+                break;
+
+            case JumpPhase.Airborne:
+                HandleJumpAirborne();
+                break;
+
+            case JumpPhase.Landed:
+                HandleJumpLanded();
+                break;
+        }
+    }
+
+    private void HandleJumpCharging()
+    {
         RotatePlayer();
         MoveCameraTarget();
+        ChargeJump();
+    }
 
-        isGrounded = Physics.CheckSphere(transform.position, 0.2f, groundMask, QueryTriggerInteraction.Ignore);
+    private void HandleJumpSquatting()
+    {
+        RotatePlayer();
+        MoveCameraTarget();
+    }
 
-        if (!hasLaunchedJump) return;
-        if (!hasLeftGround)
+    private void HandleJumpReleased()
+    {
+        if (!CheckIfIsGrounded())
+            ChangeJumpPhase(JumpPhase.Airborne);
+    }
+
+    private void HandleJumpAirborne()
+    {
+        if (jumpPhase != JumpPhase.Airborne) return;
+        if (CheckIfIsGrounded())
         {
-            if (!isGrounded)
-            {
-                hasLeftGround = true;
-                animator.SetBool("isFlying", true);
-            }
-            return;
+            landedTimer = 1f;
+            ChangeJumpPhase(JumpPhase.Landed);
         }
+    }
 
-        if (isGrounded)
-        {
-            hasLaunchedJump = false;
-            hasLeftGround = false;
-            animator.SetBool("isLanding", true);
-            ChangeState(State.Walking);
-        }
+    private void HandleJumpLanded()
+    {
+        landedTimer -= Time.fixedDeltaTime;
+
+        if (landedTimer > 0f) return;
+
+        ChangeJumpPhase(JumpPhase.None);
+        ChangeState(State.Walking);
+    }
+
+    private bool CheckIfIsGrounded()
+    {
+        return Physics.CheckSphere(transform.position, 0.2f, groundMask, QueryTriggerInteraction.Ignore);
     }
 
     private void HandlePushingTheDoor()
     {
+        switch (doorPhase)
+        {
+            case DoorPhase.Releasing:
+                WaitAndWalk();
+                break;
+        }
+    }
 
+    private void WaitAndWalk()
+    {
+        doorTimer -= Time.fixedDeltaTime;
+        if (doorTimer > 0) return;
+        ChangeState(State.Walking);
     }
 
     private void HandleClimbingThePole()
@@ -287,16 +344,9 @@ public class PlayerController : MonoBehaviour
         cameraTarget.localPosition = new Vector3(0, pitch, 0);
     }
 
-    private void CheckIfMoving()
+    private bool CheckIfWalking()
     {
-        if (Mathf.Abs(playerMovement.x) > 0.1f || Mathf.Abs(playerMovement.y) > 0.1f)
-        {
-            animator.SetFloat("MovementSpeed", 2.1f);
-        }
-        else
-        {
-            animator.SetFloat("MovementSpeed", 0.2f);
-        }
+        return Mathf.Abs(playerMovement.x) > 0.1f || Mathf.Abs(playerMovement.y) > 0.1f;
     }
 
     public void EnterJumpZone(JumpZone jumpZone)
@@ -309,57 +359,67 @@ public class PlayerController : MonoBehaviour
     {
         if (currentJumpZone != jumpZone) return;
         currentJumpZone = null;
-        isChargingJump = false;
     }
 
     private void ChargeJump()
     {
         if (currentJumpZone == null) return;
-        if (!isChargingJump) return;
-
-        jumpingCoeff += Time.fixedDeltaTime;
-
-        if (currentJumpZone.selfAnimator != null && currentJumpZone.selfAnimatorBool != null)
-        {
-            currentJumpZone.selfAnimator.SetBool(currentJumpZone.selfAnimatorBool, true);
-        }
-
-        if (currentJumpZone.playerAnimatorBoolChargingJump != null)
-        {
-            animator.SetBool(currentJumpZone.playerAnimatorBoolChargingJump, true);
-        }
+        jumpingCoeff += Time.fixedDeltaTime * 2;
     }
 
     private void StartChargingJump()
     {
-        isChargingJump = true;
-        jumpingCoeff = 0f;
-        hasLaunchedJump = false;
-        hasLeftGround = false;
+        jumpingCoeff = 1f;
         ChangeState(State.Jumping);
+        if (currentJumpZone.jumpType == JumpZone.JumpType.Charged)
+        {
+            ChangeJumpPhase(JumpPhase.Charging);
+        }
+        else
+        {
+            ChangeJumpPhase(JumpPhase.Squatting);
+        }
+
     }
 
     private void ReleaseJump()
     {
-        if (!isChargingJump) return;
+        if (jumpPhase != JumpPhase.Charging && jumpPhase != JumpPhase.Squatting) return;
+        ChangeJumpPhase(JumpPhase.Released);
+        rb.linearVelocity = transform.forward * 2 * jumpingCoeff + transform.up * 2 * jumpingCoeff;
+    }
 
-        isChargingJump = false;
-        hasLaunchedJump = true;
-        rb.linearVelocity = transform.forward * jumpingCoeff + transform.up * jumpingCoeff;
+    public void EnterDoorZone(Door door)
+    {
+        currentDoor = door;
+        transform.position = door.pushingPos.position;
+    }
 
-        if (currentJumpZone.selfAnimator != null && currentJumpZone.selfAnimatorBool != null)
+    public void ExitDoorZone()
+    {
+        currentDoor = null;
+        ChangeDoorPhase(DoorPhase.None);
+        ChangeState(State.Walking);
+    }
+
+    private void StartPushing()
+    {
+        ChangeState(State.PushingTheDoor);
+        ChangeDoorPhase(DoorPhase.Pushing);
+    }
+
+    private void ReleaseTheDoor()
+    {
+        if (GameManager.Instance.ChestTraining < 1f)
         {
-            currentJumpZone.selfAnimator.SetBool(currentJumpZone.selfAnimatorBool, false);
+            ChangeDoorPhase(DoorPhase.None);
+            ChangeState(State.Walking);
         }
-
-        if (currentJumpZone.playerAnimatorBoolChargingJump != null)
+        else
         {
-            animator.SetBool(currentJumpZone.playerAnimatorBoolChargingJump, false);
-        }
-
-        if (currentJumpZone.playerAnimatorBoolReleaseJump != null)
-        {
-            animator.SetBool(currentJumpZone.playerAnimatorBoolReleaseJump, true);
+            ChangeDoorPhase(DoorPhase.Releasing);
+            OpenTheDoor?.Invoke();
+            doorTimer = 1f;
         }
     }
 
@@ -395,6 +455,21 @@ public class PlayerController : MonoBehaviour
         if (ctx.canceled)
         {
             ReleaseJump();
+        }
+    }
+
+    public void OnPush(InputAction.CallbackContext ctx)
+    {
+        if (currentDoor == null) return;
+
+        if (ctx.started)
+        {
+            StartPushing();
+        }
+
+        if (ctx.canceled)
+        {
+            ReleaseTheDoor();
         }
     }
 

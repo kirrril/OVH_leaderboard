@@ -6,8 +6,9 @@ public class JumpZone : MonoBehaviour
     private PlayerController playerController;
     public Animator selfAnimator;
     public string selfAnimatorBool;
-    public string playerAnimatorBoolChargingJump;
-    public string playerAnimatorBoolReleaseJump;
+
+    public enum JumpType { Plain, Charged }
+    public JumpType jumpType;
 
     private void OnTriggerEnter(Collider other)
     {
