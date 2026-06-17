@@ -34,7 +34,7 @@ public class GameManager : MonoBehaviour
     public float BackExtensionTraining { get; private set; }
     public float TBarTraining { get; private set; }
     public float PullUpsTraining { get; private set; }
-    public TrainingProgressType CurrentTrainingType { get; private set; }
+    public TrainingType CurrentTrainingType { get; private set; }
     private Coroutine currentTrainingCoroutine;
     public event Action CurrentLevelChanged;
 
@@ -102,7 +102,7 @@ public class GameManager : MonoBehaviour
         CurrentScore = 0;
         SetWater(0.5f);
         CurrentLevel = CurrentLevelZone.None;
-        CurrentTrainingType = TrainingProgressType.None;
+        CurrentTrainingType = TrainingType.None;
 
         LegsTraining = 0;
         ChestTraining = 0;
@@ -158,11 +158,11 @@ public class GameManager : MonoBehaviour
         CurrentLevelChanged?.Invoke();
     }
 
-    public void TrainingStarted(TrainingProgressType type)
+    public void TrainingStarted(TrainingType type)
     {
         TrainingStopped();
 
-        if (type == TrainingProgressType.None) return;
+        if (type == TrainingType.None) return;
 
         CurrentTrainingType = type;
         currentTrainingCoroutine = StartCoroutine(ProcessTraining(type));
@@ -172,12 +172,12 @@ public class GameManager : MonoBehaviour
     {
         if (currentTrainingCoroutine == null) return;
 
-        CurrentTrainingType = TrainingProgressType.None;
+        CurrentTrainingType = TrainingType.None;
         StopCoroutine(currentTrainingCoroutine);
         currentTrainingCoroutine = null;
     }
 
-    private IEnumerator ProcessTraining(TrainingProgressType type)
+    private IEnumerator ProcessTraining(TrainingType type)
     {
         while (true)
         {
@@ -187,59 +187,59 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    private void AddTrainingProgress(TrainingProgressType type, float delta)
+    private void AddTrainingProgress(TrainingType type, float delta)
     {
         switch (type)
         {
-            case TrainingProgressType.Treadmill:
+            case TrainingType.Treadmill:
                 TreadmillTraining = Mathf.Clamp01(TreadmillTraining + delta);
                 break;
 
-            case TrainingProgressType.Bike:
+            case TrainingType.Bike:
                 BikeTraining = Mathf.Clamp01(BikeTraining + delta);
                 break;
 
-            case TrainingProgressType.JumpBox:
+            case TrainingType.JumpBox:
                 JumpboxTraining = Mathf.Clamp01(JumpboxTraining + delta);
                 break;
 
-            case TrainingProgressType.BenchPress:
+            case TrainingType.BenchPress:
                 BenchPressTraining = Mathf.Clamp01(BenchPressTraining + delta);
                 break;
 
-            case TrainingProgressType.PecFly:
+            case TrainingType.PecFly:
                 PecFlyTraining = Mathf.Clamp01(PecFlyTraining + delta);
                 break;
 
-            case TrainingProgressType.Crossover:
+            case TrainingType.Crossover:
                 CrossoverTraining = Mathf.Clamp01(CrossoverTraining + delta);
                 break;
 
-            case TrainingProgressType.Dips:
+            case TrainingType.Dips:
                 DipsTraining = Mathf.Clamp01(DipsTraining + delta);
                 break;
 
-            case TrainingProgressType.LatPull:
+            case TrainingType.LatPull:
                 LatPullTraining = Mathf.Clamp01(LatPullTraining + delta);
                 break;
 
-            case TrainingProgressType.CableRow:
+            case TrainingType.CableRow:
                 CableRowTraining = Mathf.Clamp01(CableRowTraining + delta);
                 break;
 
-            case TrainingProgressType.Rower:
+            case TrainingType.Rower:
                 RowerTraining = Mathf.Clamp01(RowerTraining + delta);
                 break;
 
-            case TrainingProgressType.BackExtension:
+            case TrainingType.BackExtension:
                 BackExtensionTraining = Mathf.Clamp01(BackExtensionTraining + delta);
                 break;
 
-            case TrainingProgressType.TBar:
+            case TrainingType.TBar:
                 TBarTraining = Mathf.Clamp01(TBarTraining + delta);
                 break;
 
-            case TrainingProgressType.PullUps:
+            case TrainingType.PullUps:
                 PullUpsTraining = Mathf.Clamp01(PullUpsTraining + delta);
                 break;
         }
@@ -247,23 +247,23 @@ public class GameManager : MonoBehaviour
         UpdateTrainingTotals();
     }
 
-    public bool IsTrainingCompleted(TrainingProgressType type)
+    public bool IsTrainingCompleted(TrainingType type)
     {
         switch (type)
         {
-            case TrainingProgressType.Treadmill: return TreadmillTraining >= 1f;
-            case TrainingProgressType.Bike: return BikeTraining >= 1f;
-            case TrainingProgressType.JumpBox: return JumpboxTraining >= 1f;
-            case TrainingProgressType.BenchPress: return BenchPressTraining >= 1f;
-            case TrainingProgressType.PecFly: return PecFlyTraining >= 1f;
-            case TrainingProgressType.Crossover: return CrossoverTraining >= 1f;
-            case TrainingProgressType.Dips: return DipsTraining >= 1f;
-            case TrainingProgressType.LatPull: return LatPullTraining >= 1f;
-            case TrainingProgressType.CableRow: return CableRowTraining >= 1f;
-            case TrainingProgressType.Rower: return RowerTraining >= 1f;
-            case TrainingProgressType.BackExtension: return BackExtensionTraining >= 1f;
-            case TrainingProgressType.TBar: return TBarTraining >= 1f;
-            case TrainingProgressType.PullUps: return PullUpsTraining >= 1f;
+            case TrainingType.Treadmill: return TreadmillTraining >= 1f;
+            case TrainingType.Bike: return BikeTraining >= 1f;
+            case TrainingType.JumpBox: return JumpboxTraining >= 1f;
+            case TrainingType.BenchPress: return BenchPressTraining >= 1f;
+            case TrainingType.PecFly: return PecFlyTraining >= 1f;
+            case TrainingType.Crossover: return CrossoverTraining >= 1f;
+            case TrainingType.Dips: return DipsTraining >= 1f;
+            case TrainingType.LatPull: return LatPullTraining >= 1f;
+            case TrainingType.CableRow: return CableRowTraining >= 1f;
+            case TrainingType.Rower: return RowerTraining >= 1f;
+            case TrainingType.BackExtension: return BackExtensionTraining >= 1f;
+            case TrainingType.TBar: return TBarTraining >= 1f;
+            case TrainingType.PullUps: return PullUpsTraining >= 1f;
             default: return false;
         }
     }

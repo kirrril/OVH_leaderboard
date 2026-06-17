@@ -46,8 +46,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e4beeac904d17834c8be1210c7cc750e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TrainingData
-  progressType: 13
-  userAnimatorBool: isMakingPullUps2
+  trainingType: 13
+  agentAnimatorBool: isMakingPullUps2
   cameraTargetLocalPosition: {x: 0, y: 1.5, z: 0}
   cameraPlaceLocalPosition: {x: 0, y: 1.5, z: 2}
   trainingPos: {fileID: 2203115490442421672}
@@ -264,7 +264,6 @@ MonoBehaviour:
   australianTrainingData: {fileID: 8381641001616376926}
   assistedTrainingData: {fileID: 2558346342236061114}
   regularTrainingData: {fileID: 2769007447175561433}
-  playerTrainingData: {fileID: 0}
 --- !u!65 &7385985526635676267
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -332,8 +331,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e4beeac904d17834c8be1210c7cc750e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TrainingData
-  progressType: 13
-  userAnimatorBool: isMakingAustralianPullUps
+  trainingType: 13
+  agentAnimatorBool: isMakingAustralianPullUps
   cameraTargetLocalPosition: {x: 0, y: 0.5, z: 0}
   cameraPlaceLocalPosition: {x: 0, y: 1.5, z: 1.5}
   trainingPos: {fileID: 9006579650230999669}
@@ -553,8 +552,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e4beeac904d17834c8be1210c7cc750e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TrainingData
-  progressType: 13
-  userAnimatorBool: isMakingPullUps
+  trainingType: 13
+  agentAnimatorBool: 
   cameraTargetLocalPosition: {x: 0, y: 1.5, z: 0}
   cameraPlaceLocalPosition: {x: 0, y: 1.5, z: 1.7}
   trainingPos: {fileID: 9047803676880022226}

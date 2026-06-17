@@ -76,12 +76,12 @@ public class ManController : MonoBehaviour, IAgent
         blackboard.SetVariableValue("hasInteracted", false);
         transform.position = trainingData.trainingPos.position;
         transform.rotation = trainingData.trainingPos.rotation;
-        animator.SetBool(trainingData.userAnimatorBool, true);
+        animator.SetBool(trainingData.agentAnimatorBool, true);
     }
 
     public void StopTraining(TrainingData trainingData)
     {
-        animator.SetBool(trainingData.userAnimatorBool, false);
+        animator.SetBool(trainingData.agentAnimatorBool, false);
         transform.position = trainingData.exitPos.position;
         transform.rotation = trainingData.exitPos.rotation;
         agent.enabled = true;

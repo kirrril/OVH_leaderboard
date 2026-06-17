@@ -113,8 +113,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e4beeac904d17834c8be1210c7cc750e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TrainingSpot
-  progressType: 4
-  userAnimatorBool: isPushingBarbell
+  trainingType: 4
+  agentAnimatorBool: isPushingBarbell
   cameraTargetLocalPosition: {x: 0, y: 0.5, z: -0.7}
   cameraPlaceLocalPosition: {x: 0, y: 2, z: 0}
   trainingPos: {fileID: 6647283452495301521}

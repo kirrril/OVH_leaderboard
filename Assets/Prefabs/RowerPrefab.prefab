@@ -204,8 +204,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e4beeac904d17834c8be1210c7cc750e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TrainingSpot
-  progressType: 10
-  userAnimatorBool: isPullingRower
+  trainingType: 10
+  agentAnimatorBool: isPullingRower
   cameraTargetLocalPosition: {x: 0, y: 1.04, z: 1}
   cameraPlaceLocalPosition: {x: -1, y: 1.5, z: 0.5}
   trainingPos: {fileID: 2170740073470483615}

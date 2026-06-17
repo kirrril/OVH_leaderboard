@@ -103,8 +103,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e4beeac904d17834c8be1210c7cc750e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TrainingData
-  progressType: 9
-  userAnimatorBool: isPullingBackMachine2
+  trainingType: 0
+  agentAnimatorBool: isPullingBackMachine2
   cameraTargetLocalPosition: {x: 0, y: 0.5, z: 0}
   cameraPlaceLocalPosition: {x: -1.2, y: 1.5, z: -1}
   trainingPos: {fileID: 7854721437214330907}

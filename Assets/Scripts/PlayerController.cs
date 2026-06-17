@@ -33,8 +33,6 @@ public class PlayerController : MonoBehaviour
     private Door currentDoor;
     private float doorTimer;
 
-    string trainingAnimationBool;
-
     bool cameraFreezed = false;
     Vector3 frozenCameraLocalPlace = new Vector3(0f, 0f, 0f);
 
@@ -47,6 +45,7 @@ public class PlayerController : MonoBehaviour
     public WalkingPhase walkingPhase;
     public JumpPhase jumpPhase;
     public DoorPhase doorPhase;
+    public TrainingType CurrentTrainingType { get; private set; }
 
     private bool isGrounded;
     [SerializeField] private LayerMask groundMask;
@@ -116,14 +115,21 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    public void ChangeState(State nextState)
+    private void ChangeState(State nextState)
     {
         if (currentState == nextState) return;
         ResetSubStatesLeavingState(currentState);
         currentState = nextState;
     }
 
-    public void ChangeJumpPhase(JumpPhase nextPhase)
+    private void ChangeWalkingPhase(WalkingPhase nextPhase)
+    {
+        if (walkingPhase == nextPhase) return;
+
+        walkingPhase = nextPhase;
+    }
+
+    private void ChangeJumpPhase(JumpPhase nextPhase)
     {
         if (jumpPhase == nextPhase) return;
 
@@ -131,11 +137,18 @@ public class PlayerController : MonoBehaviour
     }
 
 
-    public void ChangeDoorPhase(DoorPhase nextPhase)
+    private void ChangeDoorPhase(DoorPhase nextPhase)
     {
         if (doorPhase == nextPhase) return;
 
         doorPhase = nextPhase;
+    }
+
+    private void SetTrainingType(TrainingType type)
+    {
+        if (CurrentTrainingType == type) return;
+
+        CurrentTrainingType = type;
     }
 
     private void ResetSubStatesLeavingState(State state)
@@ -165,7 +178,7 @@ public class PlayerController : MonoBehaviour
         MovePlayer();
         RotatePlayer();
         MoveCameraTarget();
-        walkingPhase = CheckIfWalking() ? WalkingPhase.Walking : WalkingPhase.Idle;
+        ChangeWalkingPhase(CheckIfWalking() ? WalkingPhase.Walking : WalkingPhase.Idle);
         // Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
         stopTrainingControl.SetActive(false);
@@ -498,9 +511,9 @@ public class PlayerController : MonoBehaviour
         transform.position = trainingData.trainingPos.position;
         transform.rotation = trainingData.trainingPos.rotation;
         SetCamera(trainingData.cameraTargetLocalPosition, trainingData.cameraPlaceLocalPosition);
-        trainingAnimationBool = trainingData.userAnimatorBool;
+        SetTrainingType(data.trainingType);
         ChangeState(State.Training);
-        GameManager.Instance.TrainingStarted(data.progressType);
+        GameManager.Instance.TrainingStarted(data.trainingType);
         Cursor.visible = true;
     }
 
@@ -516,6 +529,7 @@ public class PlayerController : MonoBehaviour
         trainingHost = null;
         trainingData = null;
         ChangeState(State.Walking);
+        SetTrainingType(TrainingType.None);
     }
 
     private void SetCamera(Vector3 target, Vector3 place)

@@ -2,8 +2,8 @@ using UnityEngine;
 
 public class TrainingData : MonoBehaviour
 {
-    public TrainingProgressType progressType;
-    public string userAnimatorBool;
+    public TrainingType trainingType;
+    public string agentAnimatorBool;
     public Vector3 cameraTargetLocalPosition;
     public Vector3 cameraPlaceLocalPosition;
     public Transform trainingPos;
@@ -12,7 +12,7 @@ public class TrainingData : MonoBehaviour
     public string selfAnimatorBool;
 }
 
-public enum TrainingProgressType
+public enum TrainingType
 {
     None,
     Treadmill,

@@ -634,7 +634,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e4beeac904d17834c8be1210c7cc750e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TrainingData
-  userAnimatorBool: isLiftnigDumbbells4
+  trainingType: 0
+  agentAnimatorBool: isLiftnigDumbbells4
   cameraTargetLocalPosition: {x: 0, y: 0, z: 0}
   cameraPlaceLocalPosition: {x: 0, y: 0, z: 0}
   trainingPos: {fileID: 6475883306630985468}

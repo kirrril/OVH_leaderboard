@@ -11,7 +11,7 @@ public class TrainingLogic_Dumbbells : MonoBehaviour
     private PlayerController playerController;
     private bool isAvailable = true;
     private bool blockedByPlayer;
-    [SerializeField] private string[] userAnimationBools;
+    [SerializeField] private string[] agentAnimationBools;
     [SerializeField] private string[] selfAnimationBools;
 
     void OnEnable()
@@ -55,13 +55,13 @@ public class TrainingLogic_Dumbbells : MonoBehaviour
             if (tag == "Girl")
             {
                 int training = Random.Range(1, 3);
-                trainingData.userAnimatorBool = userAnimationBools[training];
+                trainingData.agentAnimatorBool = agentAnimationBools[training];
                 trainingData.selfAnimatorBool = selfAnimationBools[training];
             }
 
             if (tag == "Man")
             {
-                trainingData.userAnimatorBool = userAnimationBools[0];
+                trainingData.agentAnimatorBool = agentAnimationBools[0];
                 trainingData.selfAnimatorBool = selfAnimationBools[0];
             }
 

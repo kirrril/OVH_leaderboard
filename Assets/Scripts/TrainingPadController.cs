@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class TrainingPadController : MonoBehaviour
 {
-    [SerializeField] private TrainingProgressType trainingType;
+    [SerializeField] private TrainingType trainingType;
     [SerializeField] private Material enabledMaterial;
     [SerializeField] private Material disabledMaterial;
     [SerializeField] private Renderer padRenderer;
