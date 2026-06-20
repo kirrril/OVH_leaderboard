@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using NUnit.Framework;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -28,51 +29,33 @@ public class PlayerController : MonoBehaviour
 
     private JumpZone currentJumpZone;
     private float landedTimer;
-    float jumpingCoeff;
+    private float jumpingCoeff;
 
     private Door currentDoor;
     private float doorTimer;
 
+    private Pole currentPole;
+
     bool cameraFreezed = false;
     Vector3 frozenCameraLocalPlace = new Vector3(0f, 0f, 0f);
 
-    public enum State { Walking, Training, Fighting, Falling, DyingOfThirst, BeingSubmissed, Jumping, PushingTheDoor, ClimbingThePole, Dying, MakingDoubleSelfie };
+    public enum State { Walking, Gaming, Training, Fighting, Falling, DyingOfThirst, BeingSubmissed, Jumping, PushingTheDoor, ClimbingThePole, Dying, MakingDoubleSelfie };
     public enum WalkingPhase { None, Idle, Walking };
     public enum JumpPhase { None, Charging, Squatting, Released, Airborne, Landed };
     public enum DoorPhase { None, Pushing, Releasing }
+    public enum ClimbPhase { None, ClimbingUp, SlidingDown }
 
     public State currentState = State.Walking;
     public WalkingPhase walkingPhase;
     public JumpPhase jumpPhase;
     public DoorPhase doorPhase;
+    public ClimbPhase climbPhase;
     public TrainingType CurrentTrainingType { get; private set; }
 
     private bool isGrounded;
     [SerializeField] private LayerMask groundMask;
 
     public event Action OpenTheDoor;
-
-    // private string[] exclusiveAnimatorBools =
-    // {
-    //     "isFalling",
-    //     "isSubmissed",
-    //     "isGaming",
-    //     "isJogging",
-    //     "isCycling",
-    //     "isBoxJumping",
-    //     "isPullingRower",
-    //     "isMakingDips",
-    //     "isPushingBarbell",
-    //     "isTrainingChest_1",
-    //     "isTrainingChest_2",
-    //     "isPullingBackMachine1",
-    //     "isPullingBackMachine2",
-    //     "isExtensingBack",
-    //     "isPullingBackBarbell1",
-    //     "isMakingAustralianPullUps",
-    //     "isMakingPullUps",
-    //     "isMakingPullUps2"
-    // };
 
 
     void FixedUpdate()
@@ -144,6 +127,13 @@ public class PlayerController : MonoBehaviour
         doorPhase = nextPhase;
     }
 
+    private void ChangeClimbPhase(ClimbPhase nextPhase)
+    {
+        if (climbPhase == nextPhase) return;
+
+        climbPhase = nextPhase;
+    }
+
     private void SetTrainingType(TrainingType type)
     {
         if (CurrentTrainingType == type) return;
@@ -168,7 +158,7 @@ public class PlayerController : MonoBehaviour
                 break;
 
             case State.ClimbingThePole:
-                // climbPhase = ClimbPhase.None;
+                climbPhase = ClimbPhase.None;
                 break;
         }
     }
@@ -270,12 +260,7 @@ public class PlayerController : MonoBehaviour
 
     private void HandlePushingTheDoor()
     {
-        switch (doorPhase)
-        {
-            case DoorPhase.Releasing:
-                WaitAndWalk();
-                break;
-        }
+        if (doorPhase == DoorPhase.Releasing) WaitAndWalk();
     }
 
     private void WaitAndWalk()
@@ -287,7 +272,19 @@ public class PlayerController : MonoBehaviour
 
     private void HandleClimbingThePole()
     {
+        float climbingHeight = currentPole.climbingPos.position.y;
 
+        switch (climbPhase)
+        {
+            case ClimbPhase.ClimbingUp:
+                climbingHeight += Time.deltaTime * 2;
+                break;
+            case ClimbPhase.SlidingDown:
+                climbingHeight -= Time.deltaTime * 2;
+                break;
+        }
+        currentPole.climbingPos.position = new Vector3(currentPole.climbingPos.position.x, climbingHeight, currentPole.climbingPos.position.z);
+        transform.position = currentPole.climbingPos.position;
     }
 
     private void HandleBeingSubmissed()
@@ -365,7 +362,7 @@ public class PlayerController : MonoBehaviour
     public void EnterJumpZone(JumpZone jumpZone)
     {
         currentJumpZone = jumpZone;
-        if (jumpZone.jumpingPos) transform.position = jumpZone.jumpingPos.position;
+        if (jumpZone.jumpingPos) transform.position = currentJumpZone.jumpingPos.position;
     }
 
     public void ExitJumpZone(JumpZone jumpZone)
@@ -387,6 +384,7 @@ public class PlayerController : MonoBehaviour
         if (currentJumpZone.jumpType == JumpZone.JumpType.Charged)
         {
             ChangeJumpPhase(JumpPhase.Charging);
+            transform.position = currentJumpZone.jumpingPos.position;
         }
         else
         {
@@ -405,7 +403,6 @@ public class PlayerController : MonoBehaviour
     public void EnterDoorZone(Door door)
     {
         currentDoor = door;
-        transform.position = door.pushingPos.position;
     }
 
     public void ExitDoorZone()
@@ -417,8 +414,10 @@ public class PlayerController : MonoBehaviour
 
     private void StartPushing()
     {
+        transform.position = currentDoor.pushingPos.position;
         ChangeState(State.PushingTheDoor);
         ChangeDoorPhase(DoorPhase.Pushing);
+
     }
 
     private void ReleaseTheDoor()
@@ -435,6 +434,33 @@ public class PlayerController : MonoBehaviour
             doorTimer = 1f;
         }
     }
+
+    public void EnterClimbZone(Pole pole)
+    {
+        currentPole = pole;
+        Debug.Log(currentPole);
+    }
+
+    public void ExitClimbZone()
+    {
+        currentPole = null;
+    }
+
+    private void StartClimbing()
+    {
+        Debug.Log("Start training");
+        rb.isKinematic = true;
+        transform.position = currentPole.climbingPos.position;
+        climbPhase = ClimbPhase.ClimbingUp;
+        ChangeState(State.ClimbingThePole);
+        ChangeClimbPhase(ClimbPhase.ClimbingUp);
+    }
+
+    private void ReleaseClimbing()
+    {
+        climbPhase = ClimbPhase.SlidingDown;
+    }
+
 
     public void OnMove(InputAction.CallbackContext ctx)
     {
@@ -486,6 +512,21 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    public void OnClimb(InputAction.CallbackContext ctx)
+    {
+        if (currentPole == null) return;
+
+        if (ctx.started)
+        {
+            StartClimbing();
+        }
+
+        if (ctx.canceled)
+        {
+            ReleaseClimbing();
+        }
+    }
+
     private void OnTriggerEnter(Collider other)
     {
         string tag = other.tag;
@@ -528,8 +569,8 @@ public class PlayerController : MonoBehaviour
         trainingHost?.ReleaseTrainingSpot();
         trainingHost = null;
         trainingData = null;
-        ChangeState(State.Walking);
         SetTrainingType(TrainingType.None);
+        ChangeState(State.Walking);
     }
 
     private void SetCamera(Vector3 target, Vector3 place)

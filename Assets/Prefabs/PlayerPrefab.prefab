@@ -73,6 +73,7 @@ GameObject:
   - component: {fileID: 6992477434287819084}
   - component: {fileID: 7132400585949813493}
   - component: {fileID: 775626146835990690}
+  - component: {fileID: 8888472643783258362}
   - component: {fileID: 1825947116902778187}
   - component: {fileID: 8948382738235279479}
   - component: {fileID: 6656972172204561236}
@@ -260,9 +261,26 @@ MonoBehaviour:
   isBeingAttacked: 0
   playerAttack: 0
   currentState: 0
+  walkingPhase: 0
+  jumpPhase: 0
+  doorPhase: 0
   groundMask:
     serializedVersion: 2
     m_Bits: 128
+--- !u!114 &8888472643783258362
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8118313448260642084}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a306cd4496e637e41956a3891c595905, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerAnimationController
+  playerController: {fileID: 775626146835990690}
+  animator: {fileID: 5196658078557779710}
 --- !u!54 &1825947116902778187
 Rigidbody:
   m_ObjectHideFlags: 0
