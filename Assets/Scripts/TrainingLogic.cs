@@ -10,6 +10,7 @@ public class TrainingLogic : MonoBehaviour, IPlayerTrainingHost
     [SerializeField] private GameObject accessObstacle;
     [SerializeField] private GameObject occupiedObstacle;
     [SerializeField] private TrainingData trainingData;
+    private Coroutine currentReleaseCoroutine;
     private PlayerController playerController;
     private bool isAvailable = true;
     private bool blockedByPlayer;
@@ -19,6 +20,11 @@ public class TrainingLogic : MonoBehaviour, IPlayerTrainingHost
         if (occupiedObstacle) occupiedObstacle.SetActive(false);
         if (accessObstacle) accessObstacle.SetActive(true);
         if (selfAnimator) selfAnimator.SetBool(trainingData.selfAnimatorBool, false);
+    }
+
+    void OnDisable()
+    {
+        currentReleaseCoroutine = null;
     }
 
     void OnTriggerEnter(Collider other)
@@ -57,8 +63,7 @@ public class TrainingLogic : MonoBehaviour, IPlayerTrainingHost
         if (!other.CompareTag("Player")) return;
         if (!blockedByPlayer) return;
 
-        blockedByPlayer = false;
-        isAvailable = true;
+        RequestSpotRelease();
     }
 
     private void ExcludeGirl(GameObject user)
@@ -261,7 +266,7 @@ public class TrainingLogic : MonoBehaviour, IPlayerTrainingHost
         if (selfAnimator) selfAnimator.SetBool(trainingData.selfAnimatorBool, false);
         if (occupiedObstacle) occupiedObstacle.SetActive(false);
         if (accessObstacle) accessObstacle.SetActive(true);
-        isAvailable = true;
+        RequestSpotRelease();
     }
 
     private void TrainPlayer(GameObject player)
@@ -279,7 +284,21 @@ public class TrainingLogic : MonoBehaviour, IPlayerTrainingHost
     {
         if (selfAnimator) selfAnimator.SetBool(trainingData.selfAnimatorBool, false);
         if (occupiedObstacle) occupiedObstacle.SetActive(false);
-        isAvailable = true;
         if (accessObstacle) accessObstacle.SetActive(true);
+        RequestSpotRelease();
+    }
+
+    private void RequestSpotRelease()
+    {
+        if (currentReleaseCoroutine != null) return;
+        currentReleaseCoroutine = StartCoroutine(ReleaseSpotCoroutine());
+    }
+
+    private IEnumerator ReleaseSpotCoroutine()
+    {
+        yield return new WaitForSeconds(0.5f);
+        isAvailable = true;
+        if (blockedByPlayer) blockedByPlayer = false;
+        currentReleaseCoroutine = null;
     }
 }

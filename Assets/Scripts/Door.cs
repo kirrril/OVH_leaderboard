@@ -4,6 +4,8 @@ public class Door : MonoBehaviour
 {
     public Transform pushingPos;
     [SerializeField] private PlayerController playerController;
+    public Transform cameraPlace;
+    public Transform cameraTarget;
     public Animator selfAnimator;
 
     void OnEnable()
@@ -36,6 +38,7 @@ public class Door : MonoBehaviour
     private void OnTriggerExit(Collider other)
     {
         if (other.tag != "Player") return;
+        if (playerController.currentState == PlayerController.State.PushingTheDoor) return;
 
         playerController.ExitDoorZone();
         PlayClosingAnimation();

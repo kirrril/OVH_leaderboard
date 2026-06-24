@@ -8,6 +8,7 @@ public class TrainingLogic_PullUps : MonoBehaviour, IPlayerTrainingHost
     [SerializeField] private TrainingData australianTrainingData;
     [SerializeField] private TrainingData assistedTrainingData;
     [SerializeField] private TrainingData regularTrainingData;
+    private Coroutine currentReleaseCoroutine;
     private PlayerController playerController;
     private bool isAvailable = true;
 
@@ -15,6 +16,11 @@ public class TrainingLogic_PullUps : MonoBehaviour, IPlayerTrainingHost
     {
         if (occupiedObstacle) occupiedObstacle.SetActive(false);
         if (selfAnimator) selfAnimator.SetBool(assistedTrainingData.selfAnimatorBool, false);
+    }
+
+    void OnDisable()
+    {
+        currentReleaseCoroutine = null;
     }
 
     void OnTriggerEnter(Collider other)
@@ -67,7 +73,7 @@ public class TrainingLogic_PullUps : MonoBehaviour, IPlayerTrainingHost
         yield return new WaitForSeconds(trainingData.trainingDuration);
         agent.StopTraining(trainingData);
         if (occupiedObstacle) occupiedObstacle.SetActive(false);
-        isAvailable = true;
+        RequestSpotRelease();
     }
 
     private void TrainPlayer(GameObject player)
@@ -103,6 +109,19 @@ public class TrainingLogic_PullUps : MonoBehaviour, IPlayerTrainingHost
     {
         if (selfAnimator) selfAnimator.SetBool(assistedTrainingData.selfAnimatorBool, false);
         if (occupiedObstacle) occupiedObstacle.SetActive(false);
+        RequestSpotRelease();
+    }
+
+    private void RequestSpotRelease()
+    {
+        if (currentReleaseCoroutine != null) return;
+        currentReleaseCoroutine = StartCoroutine(ReleaseSpotCoroutine());
+    }
+
+    private IEnumerator ReleaseSpotCoroutine()
+    {
+        yield return new WaitForSeconds(0.5f);
         isAvailable = true;
+        currentReleaseCoroutine = null;
     }
 }

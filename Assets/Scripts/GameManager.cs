@@ -295,7 +295,7 @@ public class GameManager : MonoBehaviour
         yield return new WaitForSeconds(2f);
         LoseHealth();
         SetWater(0.5f);
-        playerController.currentState = PlayerController.State.DyingOfThirst;
+        playerController.ChangeState(PlayerController.State.DyingOfThirst);
         isLosingHealthOfThirst = false;
     }
 

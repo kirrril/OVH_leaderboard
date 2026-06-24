@@ -1,13 +1,14 @@
 using System.Collections;
 using UnityEngine;
 
-public class TrainingLogic_mobile : MonoBehaviour, IPlayerTrainingHost
+public class TrainingLogic_mobile : MonoBehaviour
 {
     [SerializeField] private Animator selfAnimator;
     [SerializeField] private GameObject accessObstacle;
     [SerializeField] private GameObject occupiedObstacle;
     [SerializeField] private GameObject mobile;
     [SerializeField] private TrainingData trainingData;
+    private Coroutine currentReleaseCoroutine;
     private PlayerController playerController;
     private bool isAvailable = true;
     private bool blockedByPlayer;
@@ -18,6 +19,11 @@ public class TrainingLogic_mobile : MonoBehaviour, IPlayerTrainingHost
         if (accessObstacle) accessObstacle.SetActive(true);
         if (selfAnimator) selfAnimator.SetBool(trainingData.selfAnimatorBool, false);
         if (mobile) mobile.SetActive(false);
+    }
+
+    void OnDisable()
+    {
+        currentReleaseCoroutine = null;
     }
 
     void OnTriggerEnter(Collider other)
@@ -33,8 +39,7 @@ public class TrainingLogic_mobile : MonoBehaviour, IPlayerTrainingHost
         if (!other.CompareTag("Player")) return;
         if (!blockedByPlayer) return;
 
-        blockedByPlayer = false;
-        isAvailable = true;
+        RequestSpotRelease();
     }
 
     private void ExcludePlayerAndMan(GameObject user)
@@ -82,14 +87,20 @@ public class TrainingLogic_mobile : MonoBehaviour, IPlayerTrainingHost
         mobile.SetActive(false);
         if (occupiedObstacle) occupiedObstacle.SetActive(false);
         if (accessObstacle) accessObstacle.SetActive(true);
-        isAvailable = true;
+        RequestSpotRelease();
     }
 
-    public void ReleaseTrainingSpot()
+    private void RequestSpotRelease()
     {
-        if (selfAnimator) selfAnimator.SetBool(trainingData.selfAnimatorBool, false);
-        if (occupiedObstacle) occupiedObstacle.SetActive(false);
+        if (currentReleaseCoroutine != null) return;
+        currentReleaseCoroutine = StartCoroutine(ReleaseSpotCoroutine());
+    }
+
+    private IEnumerator ReleaseSpotCoroutine()
+    {
+        yield return new WaitForSeconds(0.5f);
         isAvailable = true;
-        if (accessObstacle) accessObstacle.SetActive(true);
+        if (blockedByPlayer) blockedByPlayer = false;
+        currentReleaseCoroutine = null;
     }
 }

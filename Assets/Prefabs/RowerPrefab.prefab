@@ -73,7 +73,38 @@ Transform:
   m_GameObject: {fileID: 2094315265383461865}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0, y: 0, z: 2.209}
+  m_LocalPosition: {x: -0, y: 0, z: 2.925}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1957484125100694831}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &3735397287426895120
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6879531817628008815}
+  m_Layer: 0
+  m_Name: CameraPlace
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6879531817628008815
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3735397287426895120}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 1, y: 1.5, z: 1.6}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -146,6 +177,8 @@ Transform:
   - {fileID: 4310284686538107854}
   - {fileID: 2170740073470483615}
   - {fileID: 6827804131030211021}
+  - {fileID: 1671933376658978070}
+  - {fileID: 6879531817628008815}
   - {fileID: 1773865334477407913}
   - {fileID: 8288112968102202739}
   m_Father: {fileID: 0}
@@ -206,8 +239,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::TrainingSpot
   trainingType: 10
   agentAnimatorBool: isPullingRower
-  cameraTargetLocalPosition: {x: 0, y: 1.04, z: 1}
-  cameraPlaceLocalPosition: {x: -1, y: 1.5, z: 0.5}
+  cameraTarget: {fileID: 1671933376658978070}
+  cameraPlace: {fileID: 6879531817628008815}
   trainingPos: {fileID: 2170740073470483615}
   exitPos: {fileID: 6827804131030211021}
   trainingDuration: 8
@@ -229,6 +262,37 @@ MonoBehaviour:
   accessObstacle: {fileID: 1385892488276318998}
   occupiedObstacle: {fileID: 8581423956080291720}
   trainingData: {fileID: 793228380872103646}
+--- !u!1 &7880438170705450642
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1671933376658978070}
+  m_Layer: 0
+  m_Name: CameraTarget
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1671933376658978070
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7880438170705450642}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0.5, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1957484125100694831}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &8581423956080291720
 GameObject:
   m_ObjectHideFlags: 0

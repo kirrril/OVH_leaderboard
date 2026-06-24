@@ -4,8 +4,8 @@ public class TrainingData : MonoBehaviour
 {
     public TrainingType trainingType;
     public string agentAnimatorBool;
-    public Vector3 cameraTargetLocalPosition;
-    public Vector3 cameraPlaceLocalPosition;
+    public Transform cameraTarget;
+    public Transform cameraPlace;
     public Transform trainingPos;
     public Transform exitPos;
     public float trainingDuration;

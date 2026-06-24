@@ -42,7 +42,7 @@ public class FightController : MonoBehaviour
         {
             if (IsFacingEnemy() && playerController.playerAttack)
             {
-                playerController.Push();
+                // playerController.Push();
                 manAnimator.SetBool("isAttacking", false);
                 manAnimator.SetBool("isSubmissed", true);
                 yield return new WaitForSeconds(2);

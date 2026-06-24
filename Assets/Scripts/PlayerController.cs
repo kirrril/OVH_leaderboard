@@ -9,17 +9,15 @@ public class PlayerController : MonoBehaviour
 {
     public Rigidbody rb;
     [SerializeField] private Animator animator;
-    [SerializeField] private Transform cameraTarget;
-    public Transform cameraPlace;
+    public Transform playerCameraTarget;
+    public Transform playerCameraPlace;
     [SerializeField] private GameObject stopTrainingControl;
     public Transform entryPoint;
     private Vector2 playerMovement;
     private Vector2 mouseDelta;
-    private Vector3 reinitCameraPlace = new Vector3(0f, 1.9f, -1f);
-    private Vector3 reinitCameraTarget = new Vector3(0f, 1.7f, 0f);
 
-    private TrainingData trainingData;
-    private IPlayerTrainingHost trainingHost;
+    public TrainingData CurrentTrainingData { get; private set; }
+    private IPlayerTrainingHost currentTrainingHost;
 
     public bool isBeingAttacked;
     private Transform enemy;
@@ -31,13 +29,12 @@ public class PlayerController : MonoBehaviour
     private float landedTimer;
     private float jumpingCoeff;
 
-    private Door currentDoor;
+    public Door CurrentDoor { get; private set; }
     private float doorTimer;
 
     private Pole currentPole;
-
-    bool cameraFreezed = false;
-    Vector3 frozenCameraLocalPlace = new Vector3(0f, 0f, 0f);
+    float fullClimbingHeight = 20f;
+    float climbingHeightLimit;
 
     public enum State { Walking, Gaming, Training, Fighting, Falling, DyingOfThirst, BeingSubmissed, Jumping, PushingTheDoor, ClimbingThePole, Dying, MakingDoubleSelfie };
     public enum WalkingPhase { None, Idle, Walking };
@@ -98,11 +95,59 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    private void ChangeState(State nextState)
+    public void ChangeState(State nextState)
     {
         if (currentState == nextState) return;
         ResetSubStatesLeavingState(currentState);
         currentState = nextState;
+        SetKinematicProperty(currentState);
+        ReinitCameraPlace();
+    }
+
+    private void ReinitCameraPlace()
+    {
+        if (currentState != State.Walking) return;
+        playerCameraPlace.localPosition = new Vector3 (0, 1.9f, -1f);
+    }
+
+    private void SetKinematicProperty(State state)
+    {
+        switch (state)
+        {
+            case State.Walking:
+                rb.isKinematic = false;
+                break;
+            case State.Training:
+                rb.isKinematic = true;
+                break;
+            case State.Fighting:
+                rb.isKinematic = false;
+                break;
+            case State.Falling:
+                rb.isKinematic = false;
+                break;
+            case State.DyingOfThirst:
+                rb.isKinematic = false;
+                break;
+            case State.Jumping:
+                rb.isKinematic = false;
+                break;
+            case State.PushingTheDoor:
+                rb.isKinematic = true;
+                break;
+            case State.ClimbingThePole:
+                rb.isKinematic = true;
+                break;
+            case State.BeingSubmissed:
+                rb.isKinematic = false;
+                break;
+            case State.Dying:
+                rb.isKinematic = false;
+                break;
+            case State.MakingDoubleSelfie:
+                rb.isKinematic = false;
+                break;
+        }
     }
 
     private void ChangeWalkingPhase(WalkingPhase nextPhase)
@@ -172,7 +217,6 @@ public class PlayerController : MonoBehaviour
         // Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
         stopTrainingControl.SetActive(false);
-        cameraFreezed = false;
     }
 
     private void HandleTraining()
@@ -238,7 +282,7 @@ public class PlayerController : MonoBehaviour
         if (jumpPhase != JumpPhase.Airborne) return;
         if (CheckIfIsGrounded())
         {
-            landedTimer = 1f;
+            landedTimer = 0.5f;
             ChangeJumpPhase(JumpPhase.Landed);
         }
     }
@@ -255,12 +299,15 @@ public class PlayerController : MonoBehaviour
 
     private bool CheckIfIsGrounded()
     {
-        return Physics.CheckSphere(transform.position, 0.2f, groundMask, QueryTriggerInteraction.Ignore);
+        return Physics.CheckSphere(rb.position, 0.2f, groundMask, QueryTriggerInteraction.Ignore);
     }
 
     private void HandlePushingTheDoor()
     {
         if (doorPhase == DoorPhase.Releasing) WaitAndWalk();
+
+        rb.position = CurrentDoor.pushingPos.position;
+        rb.rotation = CurrentDoor.pushingPos.rotation;
     }
 
     private void WaitAndWalk()
@@ -272,19 +319,28 @@ public class PlayerController : MonoBehaviour
 
     private void HandleClimbingThePole()
     {
-        float climbingHeight = currentPole.climbingPos.position.y;
+        if (currentPole == null)
+        {
+            ChangeState(State.Walking);
+            return;
+        }
+
+        MoveCameraTarget();
+
+        float climbingMaxHeight = currentPole.transform.position.y + climbingHeightLimit;
 
         switch (climbPhase)
         {
             case ClimbPhase.ClimbingUp:
-                climbingHeight += Time.deltaTime * 2;
+                rb.MovePosition(rb.position + Vector3.up * Time.fixedDeltaTime * 2);
                 break;
             case ClimbPhase.SlidingDown:
-                climbingHeight -= Time.deltaTime * 2;
+                rb.MovePosition(rb.position - Vector3.up * Time.fixedDeltaTime * 4);
                 break;
         }
-        currentPole.climbingPos.position = new Vector3(currentPole.climbingPos.position.x, climbingHeight, currentPole.climbingPos.position.z);
-        transform.position = currentPole.climbingPos.position;
+
+        if (CheckIfIsGrounded()) ChangeState(State.Walking);
+        if (transform.position.y >= climbingMaxHeight) ChangeClimbPhase(ClimbPhase.SlidingDown);
     }
 
     private void HandleBeingSubmissed()
@@ -294,22 +350,20 @@ public class PlayerController : MonoBehaviour
 
     private void HandleFalling()
     {
-        if (!cameraFreezed)
-        {
-            frozenCameraLocalPlace = cameraPlace.localPosition;
-            cameraFreezed = true;
-        }
-        frozenCameraLocalPlace += Vector3.forward * Time.deltaTime * 3;
-        frozenCameraLocalPlace.z = Mathf.Min(frozenCameraLocalPlace.z, 0f);
-        cameraPlace.localPosition = frozenCameraLocalPlace;
-        animator.SetBool("isFalling", true);
+        FreezeCameraHeight();
 
         rb.angularVelocity = Vector3.zero;
     }
 
+    private void FreezeCameraHeight()
+    {
+        float frozenCameraHeight = playerCameraPlace.position.y;
+        playerCameraPlace.position = new Vector3(transform.position.x, frozenCameraHeight, transform.position.z);
+    }
+
     public void HandleDyingOfThirst()
     {
-        if (trainingData != null)
+        if (CurrentTrainingData != null)
         {
             StopTraining();
         }
@@ -320,7 +374,6 @@ public class PlayerController : MonoBehaviour
     {
         transform.position = entryPoint.position;
         transform.rotation = entryPoint.rotation;
-        SetCamera(reinitCameraTarget, reinitCameraPlace);
         ChangeState(State.Walking);
     }
 
@@ -349,9 +402,9 @@ public class PlayerController : MonoBehaviour
     {
         float pitchDelta = mouseDelta.y * 0.5f;
         pitchDelta = Mathf.Clamp(pitchDelta, -1f, 1.5f);
-        float pitch = cameraTarget.localPosition.y + pitchDelta * 1.5f * Time.fixedDeltaTime;
+        float pitch = playerCameraTarget.localPosition.y + pitchDelta * 1.5f * Time.fixedDeltaTime;
 
-        cameraTarget.localPosition = new Vector3(0, pitch, 0);
+        playerCameraTarget.localPosition = new Vector3(0, pitch, 0);
     }
 
     private bool CheckIfWalking()
@@ -390,7 +443,6 @@ public class PlayerController : MonoBehaviour
         {
             ChangeJumpPhase(JumpPhase.Squatting);
         }
-
     }
 
     private void ReleaseJump()
@@ -402,22 +454,20 @@ public class PlayerController : MonoBehaviour
 
     public void EnterDoorZone(Door door)
     {
-        currentDoor = door;
+        CurrentDoor = door;
     }
 
     public void ExitDoorZone()
     {
-        currentDoor = null;
+        CurrentDoor = null;
         ChangeDoorPhase(DoorPhase.None);
         ChangeState(State.Walking);
     }
 
     private void StartPushing()
     {
-        transform.position = currentDoor.pushingPos.position;
         ChangeState(State.PushingTheDoor);
         ChangeDoorPhase(DoorPhase.Pushing);
-
     }
 
     private void ReleaseTheDoor()
@@ -431,34 +481,32 @@ public class PlayerController : MonoBehaviour
         {
             ChangeDoorPhase(DoorPhase.Releasing);
             OpenTheDoor?.Invoke();
-            doorTimer = 1f;
+            doorTimer = 0.3f;
         }
     }
 
     public void EnterClimbZone(Pole pole)
     {
         currentPole = pole;
-        Debug.Log(currentPole);
+        climbingHeightLimit = fullClimbingHeight * GameManager.Instance.BackTraining;
     }
 
     public void ExitClimbZone()
     {
         currentPole = null;
+        climbingHeightLimit = 0f;
     }
 
     private void StartClimbing()
     {
-        Debug.Log("Start training");
-        rb.isKinematic = true;
         transform.position = currentPole.climbingPos.position;
-        climbPhase = ClimbPhase.ClimbingUp;
         ChangeState(State.ClimbingThePole);
         ChangeClimbPhase(ClimbPhase.ClimbingUp);
     }
 
     private void ReleaseClimbing()
     {
-        climbPhase = ClimbPhase.SlidingDown;
+        ChangeClimbPhase(ClimbPhase.SlidingDown);
     }
 
 
@@ -499,7 +547,7 @@ public class PlayerController : MonoBehaviour
 
     public void OnPush(InputAction.CallbackContext ctx)
     {
-        if (currentDoor == null) return;
+        if (CurrentDoor == null) return;
 
         if (ctx.started)
         {
@@ -546,12 +594,10 @@ public class PlayerController : MonoBehaviour
 
     public void StartTraining(TrainingData data, IPlayerTrainingHost host)
     {
-        trainingData = data;
-        trainingHost = host;
-        rb.isKinematic = true;
-        transform.position = trainingData.trainingPos.position;
-        transform.rotation = trainingData.trainingPos.rotation;
-        SetCamera(trainingData.cameraTargetLocalPosition, trainingData.cameraPlaceLocalPosition);
+        CurrentTrainingData = data;
+        currentTrainingHost = host;
+        transform.position = CurrentTrainingData.trainingPos.position;
+        transform.rotation = CurrentTrainingData.trainingPos.rotation;
         SetTrainingType(data.trainingType);
         ChangeState(State.Training);
         GameManager.Instance.TrainingStarted(data.trainingType);
@@ -561,50 +607,41 @@ public class PlayerController : MonoBehaviour
     public void StopTraining()
     {
         Cursor.visible = false;
-        rb.isKinematic = false;
-        transform.position = trainingData.exitPos.position;
-        transform.rotation = trainingData.exitPos.rotation;
-        SetCamera(reinitCameraTarget, reinitCameraPlace);
+        transform.position = CurrentTrainingData.exitPos.position;
+        transform.rotation = CurrentTrainingData.exitPos.rotation;
         GameManager.Instance.TrainingStopped();
-        trainingHost?.ReleaseTrainingSpot();
-        trainingHost = null;
-        trainingData = null;
+        currentTrainingHost?.ReleaseTrainingSpot();
+        currentTrainingHost = null;
+        CurrentTrainingData = null;
         SetTrainingType(TrainingType.None);
         ChangeState(State.Walking);
-    }
-
-    private void SetCamera(Vector3 target, Vector3 place)
-    {
-        cameraTarget.localPosition = target;
-        cameraPlace.localPosition = place;
     }
 
     private async void PlaceCameraLookingAtSreen()
     {
         Vector3 targetPosition = new Vector3(0, 1.04f, 0.6f);
         await Awaitable.WaitForSecondsAsync(3);
-        cameraPlace.localPosition = targetPosition;
+        // cameraPlace.localPosition = targetPosition;
     }
 
-    public void Push()
-    {
-        StartCoroutine(DoPush());
-    }
+    // public void Push()
+    // {
+    //     StartCoroutine(DoPush());
+    // }
 
-    private IEnumerator DoPush()
-    {
-        animator.SetBool("isPushing", true);
-        animator.SetFloat("PushingState", 0.5f);
-        yield return new WaitForSeconds(0.3f);
-        animator.SetFloat("PushingState", 1.9f);
-        yield return new WaitForSeconds(0.3f);
-        animator.SetFloat("PushingState", 0.1f);
-        animator.SetBool("isPushing", false);
-    }
+    // private IEnumerator DoPush()
+    // {
+    //     animator.SetBool("isPushing", true);
+    //     animator.SetFloat("PushingState", 0.5f);
+    //     yield return new WaitForSeconds(0.3f);
+    //     animator.SetFloat("PushingState", 1.9f);
+    //     yield return new WaitForSeconds(0.3f);
+    //     animator.SetFloat("PushingState", 0.1f);
+    //     animator.SetBool("isPushing", false);
+    // }
 
     public void SufferSubmission()
     {
         ChangeState(State.BeingSubmissed);
-        SetCamera(new Vector3(0, 0, 0), new Vector3(0, 2, 1));
     }
 }

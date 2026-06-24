@@ -123,6 +123,68 @@ Transform:
   m_Children: []
   m_Father: {fileID: 2185578237163256362}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &4503479975275816073
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5418800637510079637}
+  m_Layer: 0
+  m_Name: CameraPlace
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5418800637510079637
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4503479975275816073}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 2, z: 2}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2185578237163256362}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &4878946301414284156
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7614618940857618706}
+  m_Layer: 0
+  m_Name: CameraTarget
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &7614618940857618706
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4878946301414284156}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 1.2, z: 0.6}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2185578237163256362}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &6055669781416999015
 GameObject:
   m_ObjectHideFlags: 0
@@ -325,6 +387,8 @@ Transform:
   - {fileID: 5316909208694938195}
   - {fileID: 1930918187959157986}
   - {fileID: 1034272217707282087}
+  - {fileID: 7614618940857618706}
+  - {fileID: 5418800637510079637}
   - {fileID: 7076876793909689451}
   - {fileID: 5771383670746536604}
   m_Father: {fileID: 0}
@@ -343,8 +407,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::TrainingSpot
   trainingType: 6
   agentAnimatorBool: isTrainingChest_2
-  cameraTargetLocalPosition: {x: 0, y: 1.3, z: 1}
-  cameraPlaceLocalPosition: {x: 0, y: 1.8, z: 2}
+  cameraTarget: {fileID: 7614618940857618706}
+  cameraPlace: {fileID: 5418800637510079637}
   trainingPos: {fileID: 1930918187959157986}
   exitPos: {fileID: 1034272217707282087}
   trainingDuration: 10

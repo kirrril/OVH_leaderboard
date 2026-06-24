@@ -8,6 +8,7 @@ public class TrainingLogic_Dumbbells : MonoBehaviour
     [SerializeField] private GameObject accessObstacle;
     [SerializeField] private GameObject occupiedObstacle;
     [SerializeField] private TrainingData trainingData;
+    private Coroutine currentReleaseCoroutine;
     private PlayerController playerController;
     private bool isAvailable = true;
     private bool blockedByPlayer;
@@ -19,6 +20,11 @@ public class TrainingLogic_Dumbbells : MonoBehaviour
         if (occupiedObstacle) occupiedObstacle.SetActive(false);
         if (accessObstacle) accessObstacle.SetActive(true);
         if (selfAnimator & trainingData.selfAnimatorBool != "") selfAnimator.SetBool(trainingData.selfAnimatorBool, false);
+    }
+
+    void OnDisable()
+    {
+        currentReleaseCoroutine = null;
     }
 
     void OnTriggerEnter(Collider other)
@@ -33,9 +39,8 @@ public class TrainingLogic_Dumbbells : MonoBehaviour
     {
         if (!other.CompareTag("Player")) return;
         if (!blockedByPlayer) return;
-
-        blockedByPlayer = false;
-        isAvailable = true;
+        
+        RequestSpotRelease();
     }
 
     private void ExcludePlayer(GameObject user)
@@ -89,6 +94,20 @@ public class TrainingLogic_Dumbbells : MonoBehaviour
         if (selfAnimator) selfAnimator.SetBool(trainingData.selfAnimatorBool, false);
         if (occupiedObstacle) occupiedObstacle.SetActive(false);
         if (accessObstacle) accessObstacle.SetActive(true);
+        RequestSpotRelease();
+    }
+
+    private void RequestSpotRelease()
+    {
+        if (currentReleaseCoroutine != null) return;
+        currentReleaseCoroutine = StartCoroutine(ReleaseSpotCoroutine());
+    }
+
+    private IEnumerator ReleaseSpotCoroutine()
+    {
+        yield return new WaitForSeconds(0.5f);
         isAvailable = true;
+        if (blockedByPlayer) blockedByPlayer = false;
+        currentReleaseCoroutine = null;
     }
 }

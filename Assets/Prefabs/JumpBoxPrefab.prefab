@@ -136,6 +136,37 @@ NavMeshObstacle:
   m_CarveOnlyStationary: 1
   m_Center: {x: 0, y: 0.5, z: 0.29}
   m_TimeToStationary: 0.5
+--- !u!1 &4358134149033994356
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6918231749698882954}
+  m_Layer: 0
+  m_Name: CameraTarget
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6918231749698882954
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4358134149033994356}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 1.3, z: 1}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2767232495773842629}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &4525636605951807358
 GameObject:
   m_ObjectHideFlags: 0
@@ -202,6 +233,8 @@ Transform:
   - {fileID: 2124996605170776818}
   - {fileID: 8378464513519727350}
   - {fileID: 3354053085858718247}
+  - {fileID: 5561442254877170613}
+  - {fileID: 6918231749698882954}
   - {fileID: 5229592816998192461}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -240,8 +273,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::TrainingSpot
   trainingType: 3
   agentAnimatorBool: isBoxJumping
-  cameraTargetLocalPosition: {x: 0, y: 1.3, z: 1}
-  cameraPlaceLocalPosition: {x: 0, y: 2, z: 2}
+  cameraTarget: {fileID: 6918231749698882954}
+  cameraPlace: {fileID: 5561442254877170613}
   trainingPos: {fileID: 8378464513519727350}
   exitPos: {fileID: 3354053085858718247}
   trainingDuration: 7
@@ -263,6 +296,37 @@ MonoBehaviour:
   accessObstacle: {fileID: 0}
   occupiedObstacle: {fileID: 3119868674264329303}
   trainingData: {fileID: 2166333200769507870}
+--- !u!1 &6632754862476757161
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5561442254877170613}
+  m_Layer: 0
+  m_Name: CameraPlace
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5561442254877170613
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6632754862476757161}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 2, z: 2}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2767232495773842629}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &9031991662503719229
 GameObject:
   m_ObjectHideFlags: 0
