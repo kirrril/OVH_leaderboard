@@ -5,6 +5,7 @@ public class PlayerAnimationController : MonoBehaviour
     [SerializeField] private PlayerController playerController;
     [SerializeField] private Animator animator;
     private float chargedJumpOscillationSpeed = 4f;
+    private PlayerController.JumpPhase lastJumpPhase = PlayerController.JumpPhase.None;
 
     private void Update()
     {
@@ -12,6 +13,7 @@ public class PlayerAnimationController : MonoBehaviour
         SyncStateBools();
         SyncMoveBlend();
         SyncJumpBlend();
+        SyncLandingTrigger();
         SyncDoorBlend();
         SyncClimbBlend();
     }
@@ -97,7 +99,7 @@ public class PlayerAnimationController : MonoBehaviour
                 break;
 
             case PlayerController.JumpPhase.Landed:
-                target = 3f;
+                target = 2f;
                 break;
 
             case PlayerController.JumpPhase.None:
@@ -106,6 +108,19 @@ public class PlayerAnimationController : MonoBehaviour
         }
 
         animator.SetFloat("jumpState", target);
+    }
+
+    private void SyncLandingTrigger()
+    {
+        PlayerController.JumpPhase currentJumpPhase = playerController.jumpPhase;
+
+        if (currentJumpPhase == PlayerController.JumpPhase.Landed &&
+            lastJumpPhase != PlayerController.JumpPhase.Landed)
+        {
+            animator.SetTrigger("land");
+        }
+
+        lastJumpPhase = currentJumpPhase;
     }
 
     private void SyncDoorBlend()

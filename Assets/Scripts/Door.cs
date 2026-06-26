@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 public class Door : MonoBehaviour
@@ -7,6 +8,8 @@ public class Door : MonoBehaviour
     public Transform cameraPlace;
     public Transform cameraTarget;
     public Animator selfAnimator;
+    private bool isInDoorZone = false;
+    private bool doorIsOpen = false;
 
     void OnEnable()
     {
@@ -18,29 +21,47 @@ public class Door : MonoBehaviour
         playerController.OpenTheDoor -= PlayOpenningAnimation;
     }
 
+    void Update()
+    {
+        CheckIfIsInDoorZone();
+    }
+
     private void PlayOpenningAnimation()
     {
         selfAnimator.SetBool("isOpenning", true);
-    }
-
-    private void PlayClosingAnimation()
-    {
-        selfAnimator.SetBool("isOpenning", false);
+        doorIsOpen = true;
     }
 
     private void OnTriggerEnter(Collider other)
     {
         if (other.tag != "Player") return;
 
+        isInDoorZone = true;
         playerController.EnterDoorZone(this);
     }
 
-    private void OnTriggerExit(Collider other)
+    private void CheckIfIsInDoorZone()
     {
-        if (other.tag != "Player") return;
-        if (playerController.currentState == PlayerController.State.PushingTheDoor) return;
+        if (!isInDoorZone) return;
 
+        Vector2 doorPos = new Vector2(transform.position.x, transform.position.z);
+        Vector2 playerPos = new Vector2(playerController.transform.position.x, playerController.transform.position.z);
+
+        if (Vector2.Distance(playerPos, doorPos) > 2f)
+        {
+            LeaveTheDoorZone();
+        }
+    }
+
+    private void LeaveTheDoorZone()
+    {
         playerController.ExitDoorZone();
-        PlayClosingAnimation();
+        isInDoorZone = false;
+
+        if (doorIsOpen)
+        {
+            selfAnimator.SetBool("isOpenning", false);
+            doorIsOpen = false;
+        }
     }
 }

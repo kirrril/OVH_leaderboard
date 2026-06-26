@@ -36,6 +36,8 @@ public class PlayerController : MonoBehaviour
     float fullClimbingHeight = 20f;
     float climbingHeightLimit;
 
+    public bool fallingDownScreenIsTriggered;
+
     public enum State { Walking, Gaming, Training, Fighting, Falling, DyingOfThirst, BeingSubmissed, Jumping, PushingTheDoor, ClimbingThePole, Dying, MakingDoubleSelfie };
     public enum WalkingPhase { None, Idle, Walking };
     public enum JumpPhase { None, Charging, Squatting, Released, Airborne, Landed };
@@ -585,7 +587,14 @@ public class PlayerController : MonoBehaviour
         if (tag == "Level") return;
         if (tag == "FallingZone")
         {
+            if (currentState == State.Jumping)
+            {
+                fallingDownScreenIsTriggered = true;
+                return;
+            }
+            
             ChangeState(State.Falling);
+            fallingDownScreenIsTriggered = true;
             return;
         }
 

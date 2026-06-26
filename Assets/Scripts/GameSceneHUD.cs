@@ -338,8 +338,9 @@ public class GameSceneHUD : MonoBehaviour
 
     private void VoidFallingScreen()
     {
-        if (playerController.currentState == PlayerController.State.Falling && !isVoidFalling)
+        if (playerController.fallingDownScreenIsTriggered && !isVoidFalling)
         {
+            playerController.fallingDownScreenIsTriggered = false;
             isVoidFalling = true;
             StartCoroutine(FallingDownScreenCoroutine());
         }
@@ -349,7 +350,7 @@ public class GameSceneHUD : MonoBehaviour
     {
         fallingDownScreen.gameObject.SetActive(true);
 
-        float duration = 1f;
+        float duration = 0.6f;
         float elapsedTime = 0f;
 
         Color color = fallingDownScreen.color;
@@ -367,7 +368,7 @@ public class GameSceneHUD : MonoBehaviour
         }
         color.a = 1f;
         fallingDownScreen.color = color;
-        yield return new WaitForSeconds(2f);
+        yield return new WaitForSeconds(3f);
         color.a = 0f;
         fallingDownScreen.color = color;
 

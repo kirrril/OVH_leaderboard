@@ -85,6 +85,13 @@ public class GameManager : MonoBehaviour
         ResetGame();
     }
 
+    /// <summary>
+    void Start()
+    {
+        ChestTraining = 1f;
+    }
+    /// </summary>
+
     void Update()
     {
         if (!gameSceneLoaded) return;
