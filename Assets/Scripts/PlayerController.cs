@@ -26,8 +26,10 @@ public class PlayerController : MonoBehaviour
     private bool playerInteract;
 
     private JumpZone currentJumpZone;
+
     private float landedTimer;
-    private float jumpingCoeff;
+    private float jumpChargeCoeff;
+    private float jumpAmplifier;
 
     public Door CurrentDoor { get; private set; }
     private float doorTimer;
@@ -109,7 +111,7 @@ public class PlayerController : MonoBehaviour
     private void ReinitCameraPlace()
     {
         if (currentState != State.Walking) return;
-        playerCameraPlace.localPosition = new Vector3 (0, 1.9f, -1f);
+        playerCameraPlace.localPosition = new Vector3(0, 1.9f, -1f);
     }
 
     private void SetKinematicProperty(State state)
@@ -429,12 +431,13 @@ public class PlayerController : MonoBehaviour
     private void ChargeJump()
     {
         if (currentJumpZone == null) return;
-        jumpingCoeff += Time.fixedDeltaTime * 2;
+        jumpChargeCoeff += Time.fixedDeltaTime / 6;
+        jumpChargeCoeff = Mathf.Clamp(jumpChargeCoeff, 0f, 1f);
     }
 
     private void StartChargingJump()
     {
-        jumpingCoeff = 1f;
+        jumpChargeCoeff = 0f;
         ChangeState(State.Jumping);
         if (currentJumpZone.jumpType == JumpZone.JumpType.Charged)
         {
@@ -449,10 +452,69 @@ public class PlayerController : MonoBehaviour
 
     private void ReleaseJump()
     {
+        Debug.Log(jumpChargeCoeff);
+
         if (jumpPhase != JumpPhase.Charging && jumpPhase != JumpPhase.Squatting) return;
+
         ChangeJumpPhase(JumpPhase.Released);
-        rb.linearVelocity = transform.forward * 2 * jumpingCoeff + transform.up * 2 * jumpingCoeff;
+
+        switch (currentJumpZone.jumpType)
+        {
+            case JumpZone.JumpType.Plain:
+                rb.linearVelocity = transform.forward * 7.5f + transform.up * 2;
+                break;
+
+            case JumpZone.JumpType.Charged:
+                float legsTraining = GameManager.Instance.LegsTraining;
+
+                jumpChargeCoeff += 1f;
+                float verticalCoeff = Mathf.Lerp(0.35f, 6f, legsTraining);
+                float verticalForce = Mathf.Lerp(1f, 5f, verticalCoeff) * jumpChargeCoeff;
+
+                jumpChargeCoeff -= 1f;
+                float horizontalCoeff = Mathf.Lerp(0f, 30f, jumpChargeCoeff);
+                horizontalCoeff = legsTraining >= 1f ? horizontalCoeff / 1.5f : 0f;
+                float horizontalForce = 1f * jumpChargeCoeff * horizontalCoeff;
+                if (horizontalForce > 0) verticalForce *= 1.5f;
+                // if (horizontalForce > 0) verticalForce = horizontalForce / 2 + 2;
+
+                rb.linearVelocity = transform.forward * horizontalForce + transform.up * verticalForce;
+                break;
+        }
     }
+
+    // private void Jump()
+    // {
+    //     Debug.Log(jumpChargeCoeff);
+
+    //     if (jumpPhase != JumpPhase.Charging && jumpPhase != JumpPhase.Squatting) return;
+
+    //     ChangeJumpPhase(JumpPhase.Released);
+
+    //     switch (currentJumpZone.jumpType)
+    //     {
+    //         case JumpZone.JumpType.Plain:
+    //             rb.linearVelocity = transform.forward * 7.5f + transform.up * 2;
+    //             break;
+
+    //         case JumpZone.JumpType.Charged:
+    //             float trainingCoeff = GameManager.Instance.LegsTraining > 0.3f ? GameManager.Instance.LegsTraining : 0.3f;
+
+    //             if (trainingCoeff < 1f)
+    //             {
+    //                 if (jumpChargeCoeff < 1.2f) jumpAmplifier = 8f;
+    //                 else if (jumpChargeCoeff < 3f) jumpAmplifier = 6f;
+    //                 else jumpAmplifier = 3f;
+
+    //                 rb.linearVelocity = transform.up * jumpAmplifier * trainingCoeff * jumpChargeCoeff;
+    //                 break;
+    //             }
+
+    //             jumpAmplifier = 2f;
+    //             rb.linearVelocity = transform.forward * jumpAmplifier * jumpChargeCoeff + transform.up * 6 * jumpChargeCoeff;
+    //             break;
+    //     }
+    // }
 
     public void EnterDoorZone(Door door)
     {
@@ -592,7 +654,7 @@ public class PlayerController : MonoBehaviour
                 fallingDownScreenIsTriggered = true;
                 return;
             }
-            
+
             ChangeState(State.Falling);
             fallingDownScreenIsTriggered = true;
             return;

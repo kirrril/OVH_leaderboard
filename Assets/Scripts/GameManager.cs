@@ -88,6 +88,7 @@ public class GameManager : MonoBehaviour
     /// <summary>
     void Start()
     {
+        LegsTraining = 1f;
         ChestTraining = 1f;
     }
     /// </summary>
