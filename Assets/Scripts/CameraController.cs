@@ -8,6 +8,16 @@ public class CameraController : MonoBehaviour
     private Transform activeCameraPlace;
     private Transform activeCameraTarget;
 
+    void OnEnable()
+    {
+        playerController.WarpTransition += NotifyTargetWarp;
+    }
+
+    void OnDisable()
+    {
+        playerController.WarpTransition -= NotifyTargetWarp;
+    }
+
     void Update()
     {
         SetActiveCameraTargetAndPlace();
@@ -51,5 +61,11 @@ public class CameraController : MonoBehaviour
 
         virtualCamera.Follow = activeCameraPlace;
         virtualCamera.LookAt = activeCameraTarget;
+    }
+
+    public void NotifyTargetWarp(Transform newCameraPlace, Vector3 warpPositionDelta)
+    {
+        Debug.Log("NotifyTargetWarp called");
+        virtualCamera.OnTargetObjectWarped(newCameraPlace, warpPositionDelta);
     }
 }

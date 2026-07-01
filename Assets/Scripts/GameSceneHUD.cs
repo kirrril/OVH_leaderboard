@@ -8,6 +8,7 @@ using System.Collections.Generic;
 public class GameSceneHUD : MonoBehaviour
 {
     [SerializeField] private TMP_Text currentScoreValue;
+    [SerializeField] private GameObject bodyMap;
     [SerializeField] private GameObject legsTraining;
     [SerializeField] private GameObject chestTraining;
     [SerializeField] private GameObject backTraining;
@@ -62,8 +63,6 @@ public class GameSceneHUD : MonoBehaviour
     [SerializeField] private Image backMachine2;
     [SerializeField] private Image pullups;
     [SerializeField] private Image healthPointsImage;
-    [SerializeField] private Image thirstyDeathScreen;
-    [SerializeField] private Image fallingDownScreen;
     [SerializeField] private PlayerController playerController;
     [SerializeField] private Sprite[] healthPointsSprites;
     [SerializeField] private Image healthPanel;
@@ -75,8 +74,8 @@ public class GameSceneHUD : MonoBehaviour
     [SerializeField] private GameObject trainingCompletedAlert;
     [SerializeField] private TMP_Text trainingCompletedAlertText;
 
-    private bool isVoidFalling;
-    private bool isDyingOfThirst;
+    [SerializeField] private Image deathScreen;
+
     private float waterAlertTimer;
     private float trainingAlertTimer;
     bool trainingAlertIsDiplayed;
@@ -89,7 +88,6 @@ public class GameSceneHUD : MonoBehaviour
         UpdateCurrentScoreValue();
         UpdateWaterLevel();
         ActivateWaterLevelAlert();
-        VoidFallingScreen();
         UpdateHealthPoints();
         ActivateHealthAlert();
         UpdateTrainingProgress();
@@ -161,6 +159,7 @@ public class GameSceneHUD : MonoBehaviour
         switch (GameManager.Instance.CurrentLevel)
         {
             case CurrentLevelZone.Legs:
+                bodyMap.SetActive(true);
                 legsTraining.SetActive(true);
                 chestTraining.SetActive(false);
                 backTraining.SetActive(false);
@@ -170,6 +169,7 @@ public class GameSceneHUD : MonoBehaviour
                 ManageProgressOrCompleted(jumpboxProgress, jumpboxCompleted, GameManager.Instance.JumpboxTraining);
                 break;
             case CurrentLevelZone.Chest:
+                bodyMap.SetActive(true);
                 legsTraining.SetActive(false);
                 chestTraining.SetActive(true);
                 backTraining.SetActive(false);
@@ -180,6 +180,7 @@ public class GameSceneHUD : MonoBehaviour
                 ManageProgressOrCompleted(benchpressProgress, benchpressCompleted, GameManager.Instance.BenchPressTraining);
                 break;
             case CurrentLevelZone.Back:
+                bodyMap.SetActive(true);
                 legsTraining.SetActive(false);
                 chestTraining.SetActive(false);
                 backTraining.SetActive(true);
@@ -192,6 +193,7 @@ public class GameSceneHUD : MonoBehaviour
                 ManageProgressOrCompleted(pullupsProgress, pullupsCompleted, GameManager.Instance.PullUpsTraining);
                 break;
             case CurrentLevelZone.None:
+                bodyMap.SetActive(false);
                 legsTraining.SetActive(false);
                 chestTraining.SetActive(false);
                 backTraining.SetActive(false);
@@ -336,46 +338,6 @@ public class GameSceneHUD : MonoBehaviour
         }
     }
 
-    private void VoidFallingScreen()
-    {
-        if (playerController.fallingDownScreenIsTriggered && !isVoidFalling)
-        {
-            playerController.fallingDownScreenIsTriggered = false;
-            isVoidFalling = true;
-            StartCoroutine(FallingDownScreenCoroutine());
-        }
-    }
-
-    public IEnumerator FallingDownScreenCoroutine()
-    {
-        fallingDownScreen.gameObject.SetActive(true);
-
-        float duration = 0.6f;
-        float elapsedTime = 0f;
-
-        Color color = fallingDownScreen.color;
-        color.a = 0f;
-        fallingDownScreen.color = color;
-
-        while (elapsedTime < duration)
-        {
-            elapsedTime += Time.deltaTime;
-
-            color.a = Mathf.Clamp01(elapsedTime / duration);
-            fallingDownScreen.color = color;
-
-            yield return null;
-        }
-        color.a = 1f;
-        fallingDownScreen.color = color;
-        yield return new WaitForSeconds(3f);
-        color.a = 0f;
-        fallingDownScreen.color = color;
-
-        fallingDownScreen.gameObject.SetActive(false);
-        isVoidFalling = false;
-    }
-
     private void ActivateWaterLevelAlert()
     {
         if (GameManager.Instance.Water > 0.4f)
@@ -500,41 +462,71 @@ public class GameSceneHUD : MonoBehaviour
     private void UpdateWaterLevel()
     {
         water.fillAmount = GameManager.Instance.Water;
+    }
 
-        if (GameManager.Instance.Water <= 0 && !isDyingOfThirst)
+    private Color GetDeathColor(GameManager.DeathReason reason)
+    {
+        switch (reason)
         {
-            isDyingOfThirst = true;
-            StartCoroutine(ThirstyDeathScreenCoroutine());
+            case GameManager.DeathReason.Thirst:
+                return new Color(0f, 0f, 0f, 1f);
+
+            case GameManager.DeathReason.VoidFall:
+                return new Color(0f, 0f, 0f, 1f);
+
+            case GameManager.DeathReason.Fight:
+                return new Color(0.4f, 0f, 0f, 1f);
+
+            case GameManager.DeathReason.BarbellWeight:
+                return new Color(0.2f, 0f, 0f, 1f);
+
+            default:
+                return new Color(0f, 0f, 0f, 1f);
         }
     }
 
-    public IEnumerator ThirstyDeathScreenCoroutine()
+    public IEnumerator FadeInDeathScreen(GameManager.DeathReason reason)
     {
-        thirstyDeathScreen.gameObject.SetActive(true);
-
-        float duration = 3f;
+        float duration = 0.6f;
         float elapsedTime = 0f;
 
-        Color color = thirstyDeathScreen.color;
+        deathScreen.gameObject.SetActive(true);
+
+        Color color = GetDeathColor(reason);
         color.a = 0f;
-        thirstyDeathScreen.color = color;
+        deathScreen.color = color;
 
         while (elapsedTime < duration)
         {
             elapsedTime += Time.deltaTime;
-
             color.a = Mathf.Clamp01(elapsedTime / duration);
-            thirstyDeathScreen.color = color;
-
+            deathScreen.color = color;
             yield return null;
         }
-        color.a = 1f;
-        thirstyDeathScreen.color = color;
-        yield return new WaitForSeconds(1f);
-        color.a = 0f;
-        thirstyDeathScreen.color = color;
 
-        thirstyDeathScreen.gameObject.SetActive(false);
-        isDyingOfThirst = false;
+        color.a = 1f;
+        deathScreen.color = color;
+    }
+
+    public IEnumerator FadeOutDeathScreen()
+    {
+        float duration = 0.6f;
+        float elapsedTime = 0f;
+
+        Color color = deathScreen.color;
+        color.a = 1f;
+        deathScreen.color = color;
+
+        while (elapsedTime < duration)
+        {
+            elapsedTime += Time.deltaTime;
+            color.a = Mathf.Clamp01(1f - elapsedTime / duration);
+            deathScreen.color = color;
+            yield return null;
+        }
+
+        color.a = 0f;
+        deathScreen.color = color;
+        deathScreen.gameObject.SetActive(false);
     }
 }

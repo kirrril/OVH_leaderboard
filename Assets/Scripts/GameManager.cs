@@ -38,6 +38,12 @@ public class GameManager : MonoBehaviour
     private Coroutine currentTrainingCoroutine;
     public event Action CurrentLevelChanged;
 
+    public enum DeathReason { None, VoidFall, Thirst, Fight, BarbellWeight }
+    private bool isDeathSequenceActive;
+    private GameSceneHUD gameSceneHUD;
+
+    public bool IsDeathSequenceActive => isDeathSequenceActive;
+
 
     void Awake()
     {
@@ -80,25 +86,20 @@ public class GameManager : MonoBehaviour
         if (playerPrefab == null) return;
         playerController = playerPrefab.GetComponent<PlayerController>();
         if (playerController == null) return;
+        gameSceneHUD = FindFirstObjectByType<GameSceneHUD>();
 
         gameSceneLoaded = true;
         ResetGame();
     }
 
-    /// <summary>
+    /// <test setup>
     void Start()
     {
         LegsTraining = 1f;
         ChestTraining = 1f;
     }
-    /// </summary>
-
-    void Update()
-    {
-        if (!gameSceneLoaded) return;
-
-        FallingDownManagement();
-    }
+    /// </test setup>
+    /// 
 
     void ResetGame()
     {
@@ -164,6 +165,50 @@ public class GameManager : MonoBehaviour
 
         CurrentLevel = level;
         CurrentLevelChanged?.Invoke();
+    }
+
+    public void RequestDeath(DeathReason reason)
+    {
+        if (!gameSceneLoaded) return;
+        if (playerController == null) return;
+        if (isDeathSequenceActive) return;
+
+        StartCoroutine(DeathSequenceCoroutine(reason));
+    }
+
+    private IEnumerator DeathSequenceCoroutine(DeathReason reason)
+    {
+        isDeathSequenceActive = true;
+
+        TrainingStopped();
+
+        playerController.BeginDeath(reason);
+
+        if (gameSceneHUD != null)
+        {
+            yield return StartCoroutine(gameSceneHUD.FadeInDeathScreen(reason));
+        }
+
+        Health -= 1;
+        SetWater(0.5f);
+
+        if (Health < 1)
+        {
+            isDeathSequenceActive = false;
+            YouLoose();
+            yield break;
+        }
+
+        playerController.RespawnAtEntryPoint();
+
+        yield return null;
+
+        if (gameSceneHUD != null)
+        {
+            yield return StartCoroutine(gameSceneHUD.FadeOutDeathScreen());
+        }
+
+        isDeathSequenceActive = false;
     }
 
     public void TrainingStarted(TrainingType type)
@@ -287,34 +332,7 @@ public class GameManager : MonoBehaviour
     {
         ModifyWater(-Time.deltaTime / 20f);
 
-        if (Water <= 0)
-        {
-            if (!isLosingHealthOfThirst)
-            {
-                isLosingHealthOfThirst = true;
-                StartCoroutine(LoseHealthOfThirst());
-                TrainingStopped();
-            }
-        }
-    }
-
-    private IEnumerator LoseHealthOfThirst()
-    {
-        yield return new WaitForSeconds(2f);
-        LoseHealth();
-        SetWater(0.5f);
-        playerController.ChangeState(PlayerController.State.DyingOfThirst);
-        isLosingHealthOfThirst = false;
-    }
-
-    private void FallingDownManagement()
-    {
-        if (playerController.transform.position.y < -15f)
-        {
-            playerController.HandleComeBack();
-            LoseHealth();
-            SetWater(0.5f);
-        }
+        if (Water <= 0) RequestDeath(DeathReason.Thirst);
     }
 
     public void YouWin()

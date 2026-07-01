@@ -28,8 +28,7 @@ public class PlayerController : MonoBehaviour
     private JumpZone currentJumpZone;
 
     private float landedTimer;
-    private float jumpChargeCoeff;
-    private float jumpAmplifier;
+    public float JumpChargeCoeff { get; private set; }
 
     public Door CurrentDoor { get; private set; }
     private float doorTimer;
@@ -38,9 +37,7 @@ public class PlayerController : MonoBehaviour
     float fullClimbingHeight = 20f;
     float climbingHeightLimit;
 
-    public bool fallingDownScreenIsTriggered;
-
-    public enum State { Walking, Gaming, Training, Fighting, Falling, DyingOfThirst, BeingSubmissed, Jumping, PushingTheDoor, ClimbingThePole, Dying, MakingDoubleSelfie };
+    public enum State { Walking, Gaming, Training, Fighting, Falling, BeingSubmissed, Jumping, PushingTheDoor, ClimbingThePole, Dying, MakingDoubleSelfie };
     public enum WalkingPhase { None, Idle, Walking };
     public enum JumpPhase { None, Charging, Squatting, Released, Airborne, Landed };
     public enum DoorPhase { None, Pushing, Releasing }
@@ -57,6 +54,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private LayerMask groundMask;
 
     public event Action OpenTheDoor;
+    public event Action<Transform, Vector3> WarpTransition;
 
 
     void FixedUpdate()
@@ -75,9 +73,6 @@ public class PlayerController : MonoBehaviour
             case State.Falling:
                 HandleFalling();
                 break;
-            case State.DyingOfThirst:
-                HandleDyingOfThirst();
-                break;
             case State.Jumping:
                 HandleJumping();
                 break;
@@ -91,7 +86,7 @@ public class PlayerController : MonoBehaviour
                 HandleBeingSubmissed();
                 break;
             case State.Dying:
-                HandleComeBack();
+                HandleDying();
                 break;
             case State.MakingDoubleSelfie:
                 HandleMakingDoubleSelfie();
@@ -105,12 +100,12 @@ public class PlayerController : MonoBehaviour
         ResetSubStatesLeavingState(currentState);
         currentState = nextState;
         SetKinematicProperty(currentState);
-        ReinitCameraPlace();
+        if (currentState == State.Walking) ReinitCameraPlace();
     }
 
     private void ReinitCameraPlace()
     {
-        if (currentState != State.Walking) return;
+        // if (currentState != State.Walking) return;
         playerCameraPlace.localPosition = new Vector3(0, 1.9f, -1f);
     }
 
@@ -130,9 +125,6 @@ public class PlayerController : MonoBehaviour
             case State.Falling:
                 rb.isKinematic = false;
                 break;
-            case State.DyingOfThirst:
-                rb.isKinematic = false;
-                break;
             case State.Jumping:
                 rb.isKinematic = false;
                 break;
@@ -146,7 +138,7 @@ public class PlayerController : MonoBehaviour
                 rb.isKinematic = false;
                 break;
             case State.Dying:
-                rb.isKinematic = false;
+                rb.isKinematic = true;
                 break;
             case State.MakingDoubleSelfie:
                 rb.isKinematic = false;
@@ -167,7 +159,6 @@ public class PlayerController : MonoBehaviour
 
         jumpPhase = nextPhase;
     }
-
 
     private void ChangeDoorPhase(DoorPhase nextPhase)
     {
@@ -236,6 +227,50 @@ public class PlayerController : MonoBehaviour
         MoveCameraTarget();
     }
 
+    private void HandleDying()
+    {
+        rb.linearVelocity = Vector3.zero;
+        rb.angularVelocity = Vector3.zero;
+    }
+
+    public void BeginDeath(GameManager.DeathReason reason)
+    {
+        AbortCurrentContextForDeath();
+
+        playerMovement = Vector2.zero;
+        mouseDelta = Vector2.zero;
+        playerAttack = false;
+        playerInteract = false;
+
+        rb.linearVelocity = Vector3.zero;
+        rb.angularVelocity = Vector3.zero;
+
+        ChangeState(State.Dying);
+    }
+
+    private void AbortCurrentContextForDeath()
+    {
+        Cursor.visible = false;
+        stopTrainingControl.SetActive(false);
+
+        if (CurrentTrainingData != null)
+        {
+            currentTrainingHost?.ReleaseTrainingSpot();
+            currentTrainingHost = null;
+            CurrentTrainingData = null;
+            SetTrainingType(TrainingType.None);
+        }
+
+        CurrentDoor = null;
+        currentPole = null;
+        climbingHeightLimit = 0f;
+        currentJumpZone = null;
+
+        walkingPhase = WalkingPhase.None;
+        jumpPhase = JumpPhase.None;
+        doorPhase = DoorPhase.None;
+        climbPhase = ClimbPhase.None;
+    }
     private void HandleJumping()
     {
         switch (jumpPhase)
@@ -365,19 +400,18 @@ public class PlayerController : MonoBehaviour
         playerCameraPlace.position = new Vector3(transform.position.x, frozenCameraHeight, transform.position.z);
     }
 
-    public void HandleDyingOfThirst()
+    public void RespawnAtEntryPoint()
     {
-        if (CurrentTrainingData != null)
-        {
-            StopTraining();
-        }
-        HandleComeBack();
-    }
+        ReinitCameraPlace();
+        Vector3 beforeWarpPosition = playerCameraPlace.position;
 
-    public void HandleComeBack()
-    {
-        transform.position = entryPoint.position;
-        transform.rotation = entryPoint.rotation;
+        rb.linearVelocity = Vector3.zero;
+        rb.angularVelocity = Vector3.zero;
+        rb.position = entryPoint.position;
+        rb.rotation = entryPoint.rotation;
+
+        WarpTransition?.Invoke(playerCameraPlace, playerCameraPlace.position - beforeWarpPosition);
+
         ChangeState(State.Walking);
     }
 
@@ -431,13 +465,13 @@ public class PlayerController : MonoBehaviour
     private void ChargeJump()
     {
         if (currentJumpZone == null) return;
-        jumpChargeCoeff += Time.fixedDeltaTime / 6;
-        jumpChargeCoeff = Mathf.Clamp(jumpChargeCoeff, 0f, 1f);
+        JumpChargeCoeff += Time.fixedDeltaTime / 6;
+        JumpChargeCoeff = Mathf.Clamp(JumpChargeCoeff, 0f, 1f);
     }
 
     private void StartChargingJump()
     {
-        jumpChargeCoeff = 0f;
+        JumpChargeCoeff = 0f;
         ChangeState(State.Jumping);
         if (currentJumpZone.jumpType == JumpZone.JumpType.Charged)
         {
@@ -452,7 +486,7 @@ public class PlayerController : MonoBehaviour
 
     private void ReleaseJump()
     {
-        Debug.Log(jumpChargeCoeff);
+        Debug.Log(JumpChargeCoeff);
 
         if (jumpPhase != JumpPhase.Charging && jumpPhase != JumpPhase.Squatting) return;
 
@@ -467,54 +501,28 @@ public class PlayerController : MonoBehaviour
             case JumpZone.JumpType.Charged:
                 float legsTraining = GameManager.Instance.LegsTraining;
 
-                jumpChargeCoeff += 1f;
-                float verticalCoeff = Mathf.Lerp(0.35f, 6f, legsTraining);
-                float verticalForce = Mathf.Lerp(1f, 5f, verticalCoeff) * jumpChargeCoeff;
+                float verticalCharge = Mathf.Sqrt(JumpChargeCoeff);
+                float horizontalCharge = JumpChargeCoeff * JumpChargeCoeff;
 
-                jumpChargeCoeff -= 1f;
-                float horizontalCoeff = Mathf.Lerp(0f, 30f, jumpChargeCoeff);
-                horizontalCoeff = legsTraining >= 1f ? horizontalCoeff / 1.5f : 0f;
-                float horizontalForce = 1f * jumpChargeCoeff * horizontalCoeff;
-                if (horizontalForce > 0) verticalForce *= 1.5f;
-                // if (horizontalForce > 0) verticalForce = horizontalForce / 2 + 2;
+                float minVerticalForce = 1.5f;
+                float maxVerticalForceLowTraining = 7f;
+                float maxVerticalForceFullTraining = 20f;
+
+                float verticalForceLowTraining = Mathf.Lerp(minVerticalForce, maxVerticalForceLowTraining, verticalCharge);
+                float verticalForceFullTraining = Mathf.Lerp(minVerticalForce, maxVerticalForceFullTraining, verticalCharge);
+                float verticalForce = Mathf.Lerp(verticalForceLowTraining, verticalForceFullTraining, legsTraining);
+
+                float horizontalForce = 0f;
+
+                if (legsTraining >= 1f)
+                {
+                    horizontalForce = Mathf.Lerp(0f, 15f, horizontalCharge);
+                }
 
                 rb.linearVelocity = transform.forward * horizontalForce + transform.up * verticalForce;
                 break;
         }
     }
-
-    // private void Jump()
-    // {
-    //     Debug.Log(jumpChargeCoeff);
-
-    //     if (jumpPhase != JumpPhase.Charging && jumpPhase != JumpPhase.Squatting) return;
-
-    //     ChangeJumpPhase(JumpPhase.Released);
-
-    //     switch (currentJumpZone.jumpType)
-    //     {
-    //         case JumpZone.JumpType.Plain:
-    //             rb.linearVelocity = transform.forward * 7.5f + transform.up * 2;
-    //             break;
-
-    //         case JumpZone.JumpType.Charged:
-    //             float trainingCoeff = GameManager.Instance.LegsTraining > 0.3f ? GameManager.Instance.LegsTraining : 0.3f;
-
-    //             if (trainingCoeff < 1f)
-    //             {
-    //                 if (jumpChargeCoeff < 1.2f) jumpAmplifier = 8f;
-    //                 else if (jumpChargeCoeff < 3f) jumpAmplifier = 6f;
-    //                 else jumpAmplifier = 3f;
-
-    //                 rb.linearVelocity = transform.up * jumpAmplifier * trainingCoeff * jumpChargeCoeff;
-    //                 break;
-    //             }
-
-    //             jumpAmplifier = 2f;
-    //             rb.linearVelocity = transform.forward * jumpAmplifier * jumpChargeCoeff + transform.up * 6 * jumpChargeCoeff;
-    //             break;
-    //     }
-    // }
 
     public void EnterDoorZone(Door door)
     {
@@ -572,7 +580,6 @@ public class PlayerController : MonoBehaviour
     {
         ChangeClimbPhase(ClimbPhase.SlidingDown);
     }
-
 
     public void OnMove(InputAction.CallbackContext ctx)
     {
@@ -643,24 +650,24 @@ public class PlayerController : MonoBehaviour
     {
         string tag = other.tag;
 
-
         if (tag == "Water") return;
         if (tag == "Protein") return;
         if (tag == "Level") return;
         if (tag == "FallingZone")
         {
-            if (currentState == State.Jumping)
-            {
-                fallingDownScreenIsTriggered = true;
-                return;
-            }
-
-            ChangeState(State.Falling);
-            fallingDownScreenIsTriggered = true;
+            BeginVoidFall();
             return;
         }
 
         if (tag == "Desk") PlaceCameraLookingAtSreen();
+    }
+
+    private void BeginVoidFall()
+    {
+        if (currentState != State.Jumping)
+        {
+            ChangeState(State.Falling);
+        }
     }
 
     public void StartTraining(TrainingData data, IPlayerTrainingHost host)
@@ -694,22 +701,6 @@ public class PlayerController : MonoBehaviour
         await Awaitable.WaitForSecondsAsync(3);
         // cameraPlace.localPosition = targetPosition;
     }
-
-    // public void Push()
-    // {
-    //     StartCoroutine(DoPush());
-    // }
-
-    // private IEnumerator DoPush()
-    // {
-    //     animator.SetBool("isPushing", true);
-    //     animator.SetFloat("PushingState", 0.5f);
-    //     yield return new WaitForSeconds(0.3f);
-    //     animator.SetFloat("PushingState", 1.9f);
-    //     yield return new WaitForSeconds(0.3f);
-    //     animator.SetFloat("PushingState", 0.1f);
-    //     animator.SetBool("isPushing", false);
-    // }
 
     public void SufferSubmission()
     {
