@@ -37,7 +37,7 @@ public class PlayerController : MonoBehaviour
     float fullClimbingHeight = 20f;
     float climbingHeightLimit;
 
-    public enum State { Walking, Gaming, Training, Fighting, Falling, BeingSubmissed, Jumping, PushingTheDoor, ClimbingThePole, Dying, MakingDoubleSelfie };
+    public enum State { Walking, Gaming, Training, Fighting, Falling, BeingSubmissed, Jumping, PushingTheDoor, ClimbingThePole, MakingDoubleSelfie };
     public enum WalkingPhase { None, Idle, Walking };
     public enum JumpPhase { None, Charging, Squatting, Released, Airborne, Landed };
     public enum DoorPhase { None, Pushing, Releasing }
@@ -54,7 +54,6 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private LayerMask groundMask;
 
     public event Action OpenTheDoor;
-    public event Action<Transform, Vector3> WarpTransition;
 
 
     void FixedUpdate()
@@ -84,9 +83,6 @@ public class PlayerController : MonoBehaviour
                 break;
             case State.BeingSubmissed:
                 HandleBeingSubmissed();
-                break;
-            case State.Dying:
-                HandleDying();
                 break;
             case State.MakingDoubleSelfie:
                 HandleMakingDoubleSelfie();
@@ -136,9 +132,6 @@ public class PlayerController : MonoBehaviour
                 break;
             case State.BeingSubmissed:
                 rb.isKinematic = false;
-                break;
-            case State.Dying:
-                rb.isKinematic = true;
                 break;
             case State.MakingDoubleSelfie:
                 rb.isKinematic = false;
@@ -227,27 +220,6 @@ public class PlayerController : MonoBehaviour
         MoveCameraTarget();
     }
 
-    private void HandleDying()
-    {
-        rb.linearVelocity = Vector3.zero;
-        rb.angularVelocity = Vector3.zero;
-    }
-
-    public void BeginDeath(GameManager.DeathReason reason)
-    {
-        AbortCurrentContextForDeath();
-
-        playerMovement = Vector2.zero;
-        mouseDelta = Vector2.zero;
-        playerAttack = false;
-        playerInteract = false;
-
-        rb.linearVelocity = Vector3.zero;
-        rb.angularVelocity = Vector3.zero;
-
-        ChangeState(State.Dying);
-    }
-
     private void AbortCurrentContextForDeath()
     {
         Cursor.visible = false;
@@ -312,12 +284,16 @@ public class PlayerController : MonoBehaviour
 
     private void HandleJumpReleased()
     {
+        rb.angularVelocity = Vector3.zero;
+
         if (!CheckIfIsGrounded())
             ChangeJumpPhase(JumpPhase.Airborne);
     }
 
     private void HandleJumpAirborne()
     {
+        rb.angularVelocity = Vector3.zero;
+
         if (jumpPhase != JumpPhase.Airborne) return;
         if (CheckIfIsGrounded())
         {
@@ -328,6 +304,9 @@ public class PlayerController : MonoBehaviour
 
     private void HandleJumpLanded()
     {
+        rb.angularVelocity = Vector3.zero;
+        rb.linearVelocity = Vector3.zero;
+
         landedTimer -= Time.fixedDeltaTime;
 
         if (landedTimer > 0f) return;
@@ -390,8 +369,6 @@ public class PlayerController : MonoBehaviour
     private void HandleFalling()
     {
         FreezeCameraHeight();
-
-        rb.angularVelocity = Vector3.zero;
     }
 
     private void FreezeCameraHeight()
@@ -402,17 +379,17 @@ public class PlayerController : MonoBehaviour
 
     public void RespawnAtEntryPoint()
     {
+        AbortCurrentContextForDeath();
         ReinitCameraPlace();
-        Vector3 beforeWarpPosition = playerCameraPlace.position;
+
+
+        ChangeState(State.Walking);
 
         rb.linearVelocity = Vector3.zero;
         rb.angularVelocity = Vector3.zero;
+
         rb.position = entryPoint.position;
         rb.rotation = entryPoint.rotation;
-
-        WarpTransition?.Invoke(playerCameraPlace, playerCameraPlace.position - beforeWarpPosition);
-
-        ChangeState(State.Walking);
     }
 
     private void HandleMakingDoubleSelfie()

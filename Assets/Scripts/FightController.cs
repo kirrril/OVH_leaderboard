@@ -65,7 +65,7 @@ public class FightController : MonoBehaviour
         GameManager.Instance.ModifyScore(-10);
         GameManager.Instance.LoseHealth();
         playerAnimator.SetBool("isSubmissed", false);
-        playerController.currentState = PlayerController.State.Dying;
+        // playerController.currentState = PlayerController.State.Dying;
         manAnimator.SetBool("isAttacking", false);
         fightLight.SetActive(false);
         agent.enabled = true;

@@ -469,7 +469,7 @@ public class GameSceneHUD : MonoBehaviour
         switch (reason)
         {
             case GameManager.DeathReason.Thirst:
-                return new Color(0f, 0f, 0f, 1f);
+                return new Color(1f, 1f, 1f, 1f);
 
             case GameManager.DeathReason.VoidFall:
                 return new Color(0f, 0f, 0f, 1f);
@@ -485,9 +485,30 @@ public class GameSceneHUD : MonoBehaviour
         }
     }
 
+    private float GetFadeInDuration(GameManager.DeathReason reason)
+    {
+        switch (reason)
+        {
+            case GameManager.DeathReason.Thirst:
+                return 1.5f;
+
+            case GameManager.DeathReason.VoidFall:
+                return 1f;
+
+            case GameManager.DeathReason.Fight:
+                return 0.6f;
+
+            case GameManager.DeathReason.BarbellWeight:
+                return 1.5f;
+
+            default:
+                return 0.6f;
+        }
+    }
+
     public IEnumerator FadeInDeathScreen(GameManager.DeathReason reason)
     {
-        float duration = 0.6f;
+        float duration = GetFadeInDuration(reason);
         float elapsedTime = 0f;
 
         deathScreen.gameObject.SetActive(true);

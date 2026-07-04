@@ -12,7 +12,6 @@ public class GameManager : MonoBehaviour
     private bool gameSceneLoaded;
 
     public int Health { get; private set; }
-    private bool isLosingHealthOfThirst;
     public int CurrentScore { get; private set; }
 
     public float Water { get; private set; }
@@ -105,7 +104,6 @@ public class GameManager : MonoBehaviour
     {
         StopAllCoroutines();
         currentTrainingCoroutine = null;
-        isLosingHealthOfThirst = false;
 
         Health = 5;
         CurrentScore = 0;
@@ -182,8 +180,6 @@ public class GameManager : MonoBehaviour
 
         TrainingStopped();
 
-        playerController.BeginDeath(reason);
-
         if (gameSceneHUD != null)
         {
             yield return StartCoroutine(gameSceneHUD.FadeInDeathScreen(reason));
@@ -201,7 +197,7 @@ public class GameManager : MonoBehaviour
 
         playerController.RespawnAtEntryPoint();
 
-        yield return null;
+        yield return new WaitForSeconds(1.5f);
 
         if (gameSceneHUD != null)
         {
