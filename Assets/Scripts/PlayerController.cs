@@ -29,6 +29,9 @@ public class PlayerController : MonoBehaviour
 
     private float landedTimer;
     public float JumpChargeCoeff { get; private set; }
+    public float JumpChargeBounce { get; private set; }
+    private float jumpChargeBounceTime;
+    private float jumpChargeBounceSpeed = 1f;
 
     public Door CurrentDoor { get; private set; }
     private float doorTimer;
@@ -274,6 +277,8 @@ public class PlayerController : MonoBehaviour
         RotatePlayer();
         MoveCameraTarget();
         ChargeJump();
+        ChargeBounce();
+        BouncePlayer();
     }
 
     private void HandleJumpSquatting()
@@ -446,14 +451,34 @@ public class PlayerController : MonoBehaviour
         JumpChargeCoeff = Mathf.Clamp(JumpChargeCoeff, 0f, 1f);
     }
 
+    private void ChargeBounce()
+    {
+        jumpChargeBounceTime += Time.fixedDeltaTime * jumpChargeBounceSpeed;
+        JumpChargeBounce = 0.5f + 0.5f * Mathf.Sin(jumpChargeBounceTime * Mathf.PI * 2f);
+    }
+
+    private void BouncePlayer()
+    {
+        if (currentJumpZone == null) return;
+
+        Vector3 targetPos = Vector3.Lerp(currentJumpZone.chargingLowPos.position, currentJumpZone.chargingHighPos.position, JumpChargeBounce);
+
+        rb.linearVelocity = Vector3.zero;
+        rb.MovePosition(targetPos);
+    }
+
     private void StartChargingJump()
     {
         JumpChargeCoeff = 0f;
+        jumpChargeBounceTime = 0f;
+        JumpChargeBounce = 0f;
+
         ChangeState(State.Jumping);
+
         if (currentJumpZone.jumpType == JumpZone.JumpType.Charged)
         {
             ChangeJumpPhase(JumpPhase.Charging);
-            transform.position = currentJumpZone.jumpingPos.position;
+            rb.position = currentJumpZone.jumpingPos.position;
         }
         else
         {

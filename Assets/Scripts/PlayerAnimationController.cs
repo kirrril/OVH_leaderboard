@@ -83,7 +83,7 @@ public class PlayerAnimationController : MonoBehaviour
         switch (playerController.jumpPhase)
         {
             case PlayerController.JumpPhase.Charging:
-                target = Mathf.Lerp(0f, 1f, Mathf.PingPong(Time.time * chargedJumpOscillationSpeed, 2f));
+                target = playerController.JumpChargeBounce;
                 break;
 
             case PlayerController.JumpPhase.Squatting:
