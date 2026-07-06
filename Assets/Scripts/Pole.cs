@@ -3,6 +3,7 @@ using UnityEngine;
 public class Pole : MonoBehaviour
 {
     public Transform climbingPos;
+    public Transform cameraPlace;
     [SerializeField] private PlayerController playerController;
 
     private void OnTriggerEnter(Collider other)

@@ -4,7 +4,6 @@ public class PlayerAnimationController : MonoBehaviour
 {
     [SerializeField] private PlayerController playerController;
     [SerializeField] private Animator animator;
-    private float chargedJumpOscillationSpeed = 4f;
     private PlayerController.JumpPhase lastJumpPhase = PlayerController.JumpPhase.None;
 
     private void Update()

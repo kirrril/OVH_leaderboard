@@ -36,7 +36,7 @@ public class PlayerController : MonoBehaviour
     public Door CurrentDoor { get; private set; }
     private float doorTimer;
 
-    private Pole currentPole;
+    public Pole CurrentPole { get; private set; }
     float fullClimbingHeight = 20f;
     float climbingHeightLimit;
 
@@ -91,6 +91,8 @@ public class PlayerController : MonoBehaviour
                 HandleMakingDoubleSelfie();
                 break;
         }
+
+        SwitchPlayerLayer();
     }
 
     public void ChangeState(State nextState)
@@ -237,7 +239,7 @@ public class PlayerController : MonoBehaviour
         }
 
         CurrentDoor = null;
-        currentPole = null;
+        CurrentPole = null;
         climbingHeightLimit = 0f;
         currentJumpZone = null;
 
@@ -307,6 +309,20 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    private void SwitchPlayerLayer()
+    {
+        switch (currentState)
+        {
+            case State.Jumping:
+                string layerName = CheckIfIsGrounded() ? "Player" : "PlayerAirborne";
+                gameObject.layer = LayerMask.NameToLayer(layerName);
+                break;
+            default:
+                gameObject.layer = LayerMask.NameToLayer("Player");
+                break;
+        }
+    }
+
     private void HandleJumpLanded()
     {
         rb.angularVelocity = Vector3.zero;
@@ -342,7 +358,7 @@ public class PlayerController : MonoBehaviour
 
     private void HandleClimbingThePole()
     {
-        if (currentPole == null)
+        if (CurrentPole == null)
         {
             ChangeState(State.Walking);
             return;
@@ -350,7 +366,7 @@ public class PlayerController : MonoBehaviour
 
         MoveCameraTarget();
 
-        float climbingMaxHeight = currentPole.transform.position.y + climbingHeightLimit;
+        float climbingMaxHeight = CurrentPole.transform.position.y + climbingHeightLimit;
 
         switch (climbPhase)
         {
@@ -561,19 +577,19 @@ public class PlayerController : MonoBehaviour
 
     public void EnterClimbZone(Pole pole)
     {
-        currentPole = pole;
+        CurrentPole = pole;
         climbingHeightLimit = fullClimbingHeight * GameManager.Instance.BackTraining;
     }
 
     public void ExitClimbZone()
     {
-        currentPole = null;
+        CurrentPole = null;
         climbingHeightLimit = 0f;
     }
 
     private void StartClimbing()
     {
-        transform.position = currentPole.climbingPos.position;
+        transform.position = CurrentPole.climbingPos.position;
         ChangeState(State.ClimbingThePole);
         ChangeClimbPhase(ClimbPhase.ClimbingUp);
     }
@@ -635,7 +651,7 @@ public class PlayerController : MonoBehaviour
 
     public void OnClimb(InputAction.CallbackContext ctx)
     {
-        if (currentPole == null) return;
+        if (CurrentPole == null) return;
 
         if (ctx.started)
         {

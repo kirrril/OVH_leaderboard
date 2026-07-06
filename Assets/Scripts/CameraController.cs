@@ -32,15 +32,24 @@ public class CameraController : MonoBehaviour
 
             case PlayerController.State.Walking:
             case PlayerController.State.PushingTheDoor:
+            case PlayerController.State.ClimbingThePole:
                 {
-                    if (!playerController.CurrentDoor)
+                    if (!playerController.CurrentDoor && !playerController.CurrentPole)
                     {
                         activeCameraPlace = playerController.playerCameraPlace;
                         activeCameraTarget = playerController.playerCameraTarget;
                         break;
                     }
-                    activeCameraPlace = playerController.CurrentDoor.cameraPlace;
-                    activeCameraTarget = playerController.CurrentDoor.cameraTarget;
+                    if (playerController.CurrentDoor && !playerController.CurrentPole)
+                    {
+                        activeCameraPlace = playerController.CurrentDoor.cameraPlace;
+                        activeCameraTarget = playerController.CurrentDoor.cameraTarget;
+                    }
+                    if (!playerController.CurrentDoor && playerController.CurrentPole)
+                    {
+                        activeCameraPlace = playerController.CurrentPole.cameraPlace;
+                        activeCameraTarget = playerController.playerCameraTarget;
+                    }
                 }
                 break;
             default:
