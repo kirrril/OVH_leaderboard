@@ -67,20 +67,20 @@ public class GameSceneHUD : MonoBehaviour
     [SerializeField] private Sprite[] healthPointsSprites;
     [SerializeField] private Image healthPanel;
 
+    [SerializeField] private GameObject jumpChargeProgress;
+    [SerializeField] private Image jumpChargeProgressFill;
+
     [SerializeField] private Image[] legsProgressBarPanels;
     [SerializeField] private Image[] chestProgressBarPanels;
     [SerializeField] private Image[] backProgressBarPanels;
 
-    [SerializeField] private GameObject trainingCompletedAlert;
-    [SerializeField] private TMP_Text trainingCompletedAlertText;
+    [SerializeField] private GameObject contextMessage;
+    [SerializeField] private TMP_Text contextMessageText;
 
     [SerializeField] private Image deathScreen;
 
     private float waterAlertTimer;
-    private float trainingAlertTimer;
-    bool trainingAlertIsDiplayed;
-    private Coroutine trainingCompletedAlertCoroutine;
-
+    private float contextMessageTimer;
 
 
     void Update()
@@ -93,7 +93,8 @@ public class GameSceneHUD : MonoBehaviour
         UpdateTrainingProgress();
         ManageTrainingPanels();
         HighlightProgressBar();
-        ActivateTrainingCompletedAlert();
+        DisplayContextMessage();
+        UpdateJumpChargeProgress();
     }
 
     private void UpdateCurrentScoreValue()
@@ -347,7 +348,7 @@ public class GameSceneHUD : MonoBehaviour
             return;
         }
 
-        if (playerController.currentState != PlayerController.State.Training)
+        if (playerController.CurrentState != PlayerController.State.Training)
         {
             waterPanel.color = new Color(1f, 0.3f, 0.3f, 0.12f);
             waterAlertTimer = 0f;
@@ -364,64 +365,74 @@ public class GameSceneHUD : MonoBehaviour
         waterPanel.color = Color.Lerp(idle, alert, t);
     }
 
-    private void ActivateTrainingCompletedAlert()
+    private void UpdateJumpChargeProgress()
     {
-        if (trainingCompletedAlert == null || trainingCompletedAlertText == null) return;
-
-        if (playerController.currentState != PlayerController.State.Training)
+        if (playerController.CurrentJumpZone == null
+        || playerController.CurrentJumpZone.jumpType != JumpZone.JumpType.Charged
+        || playerController.jumpPhase != PlayerController.JumpPhase.Charging)
         {
-            trainingAlertIsDiplayed = false;
-            trainingAlertTimer = 0f;
-
-            if (trainingCompletedAlertCoroutine != null)
-            {
-                StopCoroutine(trainingCompletedAlertCoroutine);
-                trainingCompletedAlertCoroutine = null;
-            }
-
-            trainingCompletedAlert.SetActive(false);
+            jumpChargeProgressFill.fillAmount = 0;
+            jumpChargeProgress.SetActive(false);
             return;
         }
 
-        if (!GameManager.Instance.IsTrainingCompleted(GameManager.Instance.CurrentTrainingType)) return;
-        if (trainingAlertIsDiplayed) return;
-
-        trainingCompletedAlertText.text = GetTrainingCompletedAlertMessage(GameManager.Instance.CurrentTrainingType);
-        trainingCompletedAlertCoroutine = StartCoroutine(DisplayTrainingCompletedAlert());
+        jumpChargeProgress.SetActive(true);
+        jumpChargeProgressFill.fillAmount = playerController.JumpChargeCoeff;
     }
 
-    private IEnumerator DisplayTrainingCompletedAlert()
+    private void DisplayContextMessage()
     {
-        trainingAlertIsDiplayed = true;
-        trainingAlertTimer = 0f;
-        trainingCompletedAlert.SetActive(true);
-
-        float duration = 3f;
-
-        while (duration > 0f)
+        if (playerController.CurrentState == PlayerController.State.Training
+            && playerController.CurrentTrainingType != TrainingType.None
+            && GameManager.Instance.IsTrainingCompleted(playerController.CurrentTrainingType))
         {
+            contextMessageText.text = GetTrainingCompletedAlertMessage(playerController.CurrentTrainingType);
             MakeTrainingAlertBlink();
-            duration -= Time.deltaTime;
-            yield return null;
         }
-
-        trainingCompletedAlertText.color = new Color(1f, 1f, 1f, 1f);
-        trainingCompletedAlert.SetActive(false);
-        trainingCompletedAlertCoroutine = null;
+        else if (playerController.CurrentState == PlayerController.State.Walking
+            && playerController.CurrentJumpZone != null)
+        {
+            if (playerController.CurrentJumpZone.jumpType == JumpZone.JumpType.Plain)
+            {
+                contextMessageText.text = "Press Space to jump";
+            }
+            if (playerController.CurrentJumpZone.jumpType == JumpZone.JumpType.Charged)
+            {
+                contextMessageText.text = "Hold Space to charge jump";
+            }
+        }
+        else if (playerController.CurrentState == PlayerController.State.Jumping
+            && playerController.jumpPhase == PlayerController.JumpPhase.Charging)
+        {
+            contextMessageText.text = "Release Space to jump";
+        }
+        else if (playerController.CurrentState == PlayerController.State.Walking
+            && playerController.CurrentDoor != null)
+        {
+            contextMessageText.text = "Press Space to push";
+        }
+        else if (playerController.CurrentState == PlayerController.State.Walking
+            && playerController.CurrentPole != null)
+        {
+            contextMessageText.text = "Press Space to climb";
+        }
+        else
+        {
+            contextMessageText.text = "";
+            contextMessageText.color = new Color(1f, 1f, 1f, 1f);
+        }
     }
 
     private void MakeTrainingAlertBlink()
     {
-        if (!trainingCompletedAlert.activeSelf) return;
+        float t = (Mathf.Sin(contextMessageTimer * 6f) + 1f) * 0.5f;
 
-        trainingAlertTimer += Time.deltaTime;
-
-        float t = (Mathf.Sin(trainingAlertTimer * 6f) + 1f) * 0.5f;
+        contextMessageTimer += Time.deltaTime;
 
         Color idle = new Color(1f, 1f, 1f, 1f);
         Color alert = new Color(1f, 1f, 1f, 0f);
 
-        trainingCompletedAlertText.color = Color.Lerp(idle, alert, t);
+        contextMessageText.color = Color.Lerp(idle, alert, t);
     }
 
     private string GetTrainingCompletedAlertMessage(TrainingType type)

@@ -20,7 +20,7 @@ public class FightController : MonoBehaviour
         player = GameObject.Find("Player");
         playerController = player.GetComponentInChildren<PlayerController>();
         playerAnimator = playerController.transform.GetComponentInChildren<Animator>();
-        playerController.currentState = PlayerController.State.Fighting;
+        // playerController.currentState = PlayerController.State.Fighting;
         playerController.isBeingAttacked = true;
         StartCoroutine(DoFighting());
     }
@@ -47,7 +47,7 @@ public class FightController : MonoBehaviour
                 manAnimator.SetBool("isSubmissed", true);
                 yield return new WaitForSeconds(2);
                 GameManager.Instance.ModifyScore(10);
-                playerController.currentState = PlayerController.State.Walking;
+                // playerController.currentState = PlayerController.State.Walking;
                 yield return new WaitForSeconds(2);
                 fightLight.SetActive(false);
                 manAnimator.SetBool("isSubmissed", false);

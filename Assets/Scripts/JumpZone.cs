@@ -18,7 +18,7 @@ public class JumpZone : MonoBehaviour
         if (jumpType != JumpType.Charged) return;
 
         bool isChargingBounce =
-        playerController.currentState == PlayerController.State.Jumping &&
+        playerController.CurrentState == PlayerController.State.Jumping &&
         playerController.jumpPhase == PlayerController.JumpPhase.Charging;
 
         trampolinePhysicCollider.SetActive(!isChargingBounce);

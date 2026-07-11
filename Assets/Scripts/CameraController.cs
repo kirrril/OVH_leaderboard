@@ -15,7 +15,7 @@ public class CameraController : MonoBehaviour
 
     private void SetActiveCameraTargetAndPlace()
     {
-        switch (playerController.currentState)
+        switch (playerController.CurrentState)
         {
             case PlayerController.State.Training:
                 {

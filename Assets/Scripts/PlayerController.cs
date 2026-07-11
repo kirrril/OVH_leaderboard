@@ -25,7 +25,7 @@ public class PlayerController : MonoBehaviour
     public bool playerAttack;
     private bool playerInteract;
 
-    private JumpZone currentJumpZone;
+    public JumpZone CurrentJumpZone;
 
     private float landedTimer;
     public float JumpChargeCoeff { get; private set; }
@@ -46,7 +46,7 @@ public class PlayerController : MonoBehaviour
     public enum DoorPhase { None, Pushing, Releasing }
     public enum ClimbPhase { None, ClimbingUp, SlidingDown }
 
-    public State currentState = State.Walking;
+    public State CurrentState { get; private set; } = State.Walking;
     public WalkingPhase walkingPhase;
     public JumpPhase jumpPhase;
     public DoorPhase doorPhase;
@@ -61,7 +61,7 @@ public class PlayerController : MonoBehaviour
 
     void FixedUpdate()
     {
-        switch (currentState)
+        switch (CurrentState)
         {
             case State.Walking:
                 HandleWalking();
@@ -97,11 +97,11 @@ public class PlayerController : MonoBehaviour
 
     public void ChangeState(State nextState)
     {
-        if (currentState == nextState) return;
-        ResetSubStatesLeavingState(currentState);
-        currentState = nextState;
-        SetKinematicProperty(currentState);
-        if (currentState == State.Walking) ReinitCameraPlace();
+        if (CurrentState == nextState) return;
+        ResetSubStatesLeavingState(CurrentState);
+        CurrentState = nextState;
+        SetKinematicProperty(CurrentState);
+        if (CurrentState == State.Walking) ReinitCameraPlace();
     }
 
     private void ReinitCameraPlace()
@@ -241,7 +241,7 @@ public class PlayerController : MonoBehaviour
         CurrentDoor = null;
         CurrentPole = null;
         climbingHeightLimit = 0f;
-        currentJumpZone = null;
+        CurrentJumpZone = null;
 
         walkingPhase = WalkingPhase.None;
         jumpPhase = JumpPhase.None;
@@ -311,7 +311,7 @@ public class PlayerController : MonoBehaviour
 
     private void SwitchPlayerLayer()
     {
-        switch (currentState)
+        switch (CurrentState)
         {
             case State.Jumping:
                 string layerName = CheckIfIsGrounded() ? "Player" : "PlayerAirborne";
@@ -450,19 +450,19 @@ public class PlayerController : MonoBehaviour
 
     public void EnterJumpZone(JumpZone jumpZone)
     {
-        currentJumpZone = jumpZone;
-        if (jumpZone.jumpingPos) transform.position = currentJumpZone.jumpingPos.position;
+        CurrentJumpZone = jumpZone;
+        if (jumpZone.jumpingPos) transform.position = CurrentJumpZone.jumpingPos.position;
     }
 
     public void ExitJumpZone(JumpZone jumpZone)
     {
-        if (currentJumpZone != jumpZone) return;
-        currentJumpZone = null;
+        if (CurrentJumpZone != jumpZone) return;
+        CurrentJumpZone = null;
     }
 
     private void ChargeJump()
     {
-        if (currentJumpZone == null) return;
+        if (CurrentJumpZone == null) return;
         JumpChargeCoeff += Time.fixedDeltaTime / 6;
         JumpChargeCoeff = Mathf.Clamp(JumpChargeCoeff, 0f, 1f);
     }
@@ -475,9 +475,9 @@ public class PlayerController : MonoBehaviour
 
     private void BouncePlayer()
     {
-        if (currentJumpZone == null) return;
+        if (CurrentJumpZone == null) return;
 
-        Vector3 targetPos = Vector3.Lerp(currentJumpZone.chargingLowPos.position, currentJumpZone.chargingHighPos.position, JumpChargeBounce);
+        Vector3 targetPos = Vector3.Lerp(CurrentJumpZone.chargingLowPos.position, CurrentJumpZone.chargingHighPos.position, JumpChargeBounce);
 
         rb.linearVelocity = Vector3.zero;
         rb.MovePosition(targetPos);
@@ -491,10 +491,10 @@ public class PlayerController : MonoBehaviour
 
         ChangeState(State.Jumping);
 
-        if (currentJumpZone.jumpType == JumpZone.JumpType.Charged)
+        if (CurrentJumpZone.jumpType == JumpZone.JumpType.Charged)
         {
             ChangeJumpPhase(JumpPhase.Charging);
-            rb.position = currentJumpZone.jumpingPos.position;
+            rb.position = CurrentJumpZone.jumpingPos.position;
         }
         else
         {
@@ -510,7 +510,7 @@ public class PlayerController : MonoBehaviour
 
         ChangeJumpPhase(JumpPhase.Released);
 
-        switch (currentJumpZone.jumpType)
+        switch (CurrentJumpZone.jumpType)
         {
             case JumpZone.JumpType.Plain:
                 rb.linearVelocity = transform.forward * 7.5f + transform.up * 2;
@@ -621,7 +621,7 @@ public class PlayerController : MonoBehaviour
 
     public void OnJump(InputAction.CallbackContext ctx)
     {
-        if (currentJumpZone == null) return;
+        if (CurrentJumpZone == null) return;
 
         if (ctx.started)
         {
@@ -682,7 +682,7 @@ public class PlayerController : MonoBehaviour
 
     private void BeginVoidFall()
     {
-        if (currentState != State.Jumping)
+        if (CurrentState != State.Jumping)
         {
             ChangeState(State.Falling);
         }

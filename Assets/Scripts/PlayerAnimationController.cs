@@ -46,7 +46,7 @@ public class PlayerAnimationController : MonoBehaviour
 
     private void SyncStateBools()
     {
-        PlayerController.State state = playerController.currentState;
+        PlayerController.State state = playerController.CurrentState;
 
         animator.SetBool("isGaming", state == PlayerController.State.Gaming);
         animator.SetBool("isTraining", state == PlayerController.State.Training);
