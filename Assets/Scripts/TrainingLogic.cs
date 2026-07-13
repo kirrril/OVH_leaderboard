@@ -262,7 +262,7 @@ public class TrainingLogic : MonoBehaviour, IPlayerTrainingHost
         if (selfAnimator) selfAnimator.SetBool(trainingData.selfAnimatorBool, true);
         if (occupiedObstacle) occupiedObstacle.SetActive(true);
         yield return new WaitForSeconds(trainingData.trainingDuration);
-        agent.StopTraining(trainingData);
+        agent.StopTraining();
         if (selfAnimator) selfAnimator.SetBool(trainingData.selfAnimatorBool, false);
         if (occupiedObstacle) occupiedObstacle.SetActive(false);
         if (accessObstacle) accessObstacle.SetActive(true);

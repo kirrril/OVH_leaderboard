@@ -71,7 +71,7 @@ public class TrainingLogic_PullUps : MonoBehaviour, IPlayerTrainingHost
         agent.StartTraining(trainingData);
         if (occupiedObstacle) occupiedObstacle.SetActive(true);
         yield return new WaitForSeconds(trainingData.trainingDuration);
-        agent.StopTraining(trainingData);
+        agent.StopTraining();
         if (occupiedObstacle) occupiedObstacle.SetActive(false);
         RequestSpotRelease();
     }

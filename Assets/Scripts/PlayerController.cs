@@ -23,7 +23,8 @@ public class PlayerController : MonoBehaviour
     private Transform enemy;
 
     public bool playerAttack;
-    private bool playerInteract;
+    public bool playerAttackLeft;
+    public bool playerAttackRight;
 
     public JumpZone CurrentJumpZone;
 
@@ -98,15 +99,16 @@ public class PlayerController : MonoBehaviour
     public void ChangeState(State nextState)
     {
         if (CurrentState == nextState) return;
+
         ResetSubStatesLeavingState(CurrentState);
         CurrentState = nextState;
         SetKinematicProperty(CurrentState);
+
         if (CurrentState == State.Walking) ReinitCameraPlace();
     }
 
     private void ReinitCameraPlace()
     {
-        // if (currentState != State.Walking) return;
         playerCameraPlace.localPosition = new Vector3(0, 1.9f, -1f);
     }
 
@@ -504,8 +506,6 @@ public class PlayerController : MonoBehaviour
 
     private void ReleaseJump()
     {
-        Debug.Log(JumpChargeCoeff);
-
         if (jumpPhase != JumpPhase.Charging && jumpPhase != JumpPhase.Squatting) return;
 
         ChangeJumpPhase(JumpPhase.Released);
@@ -614,9 +614,14 @@ public class PlayerController : MonoBehaviour
         playerAttack = ctx.ReadValueAsButton();
     }
 
-    public void OnInteract(InputAction.CallbackContext ctx)
+    public void OnAttackLeft(InputAction.CallbackContext ctx)
     {
-        playerInteract = ctx.ReadValueAsButton();
+        playerAttackLeft = ctx.ReadValueAsButton();
+    }
+
+    public void OnAttackRight(InputAction.CallbackContext ctx)
+    {
+        playerAttackRight = ctx.ReadValueAsButton();
     }
 
     public void OnJump(InputAction.CallbackContext ctx)

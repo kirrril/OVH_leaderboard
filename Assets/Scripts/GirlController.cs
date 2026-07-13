@@ -4,7 +4,7 @@ using UnityEngine.SceneManagement;
 using System.Collections;
 using System.Reflection;
 
-public class GirlController : MonoBehaviour, IAgent
+public class GirlController : MonoBehaviour/*, IAgent*/
 {
     private enum SceneMode { Gameplay, YouWin }
     private enum State { MovingToTarget, Training, Fleeing, Welcoming }
@@ -192,15 +192,15 @@ public class GirlController : MonoBehaviour, IAgent
         animator.SetBool(trainingData.agentAnimatorBool, true);
     }
 
-    public void StopTraining(TrainingData trainingData)
-    {
-        animator.SetBool(trainingData.agentAnimatorBool, false);
-        transform.position = trainingData.exitPos.position;
-        transform.rotation = trainingData.exitPos.rotation;
-        agent.enabled = true;
-        agent.isStopped = false;
-        currentState = State.MovingToTarget;
-    }
+    // public void StopTraining()
+    // {
+    //     animator.SetBool(trainingData.agentAnimatorBool, false);
+    //     transform.position = trainingData.exitPos.position;
+    //     transform.rotation = trainingData.exitPos.rotation;
+    //     agent.enabled = true;
+    //     agent.isStopped = false;
+    //     currentState = State.MovingToTarget;
+    // }
 
     private IEnumerator DoInsult(string message, int scoreDelta)
     {

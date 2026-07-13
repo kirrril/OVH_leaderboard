@@ -4,17 +4,16 @@ using NodeCanvas.Framework;
 using UnityEngine;
 using UnityEngine.AI;
 
-public class ManController : MonoBehaviour, IAgent
+public class ManController : MonoBehaviour/*, IAgent*/
 {
     public Blackboard blackboard;
     public NavMeshAgent agent;
-    [SerializeField] private GameObject agents;
+    // [SerializeField] private GameObject agents;
     public PlayerController playerController;
     public Animator animator;
     private Transform targetSpot;
     [SerializeField] Transform[] trainingSpots;
     int lastSpotIndex = -1;
-    public GameObject fightZone;
 
 
     void Awake()
@@ -79,29 +78,26 @@ public class ManController : MonoBehaviour, IAgent
         animator.SetBool(trainingData.agentAnimatorBool, true);
     }
 
-    public void StopTraining(TrainingData trainingData)
-    {
-        animator.SetBool(trainingData.agentAnimatorBool, false);
-        transform.position = trainingData.exitPos.position;
-        transform.rotation = trainingData.exitPos.rotation;
-        agent.enabled = true;
-        agent.isStopped = false;
-        blackboard.SetVariableValue("isTraining", false);
-    }
+    // public void StopTraining()
+    // {
+    //     animator.SetBool(trainingData.agentAnimatorBool, false);
+    //     transform.position = trainingData.exitPos.position;
+    //     transform.rotation = trainingData.exitPos.rotation;
+    //     agent.enabled = true;
+    //     agent.isStopped = false;
+    //     blackboard.SetVariableValue("isTraining", false);
+    // }
 
     public void DoInsult()
     {
         Debug.Log("You little nerd!");
-        GameManager.Instance.ModifyScore(-1);
     }
 
     public void DoAttack()
     {
-        playerController.isBeingAttacked = true;
         agent.ResetPath();
         agent.isStopped = true;
         agent.enabled = false;
         transform.LookAt(playerController.transform);
-        fightZone.SetActive(true);
     }
 }
