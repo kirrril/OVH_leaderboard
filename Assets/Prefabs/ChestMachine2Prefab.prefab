@@ -405,8 +405,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e4beeac904d17834c8be1210c7cc750e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TrainingSpot
-  trainingType: 6
-  agentAnimatorBool: isTrainingChest_2
+  playerTrainingType: 6
+  manTrainingType: 6
+  girlTrainingType: 0
   cameraTarget: {fileID: 7614618940857618706}
   cameraPlace: {fileID: 5418800637510079637}
   trainingPos: {fileID: 1930918187959157986}

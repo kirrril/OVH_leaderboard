@@ -52,7 +52,7 @@ public class PlayerController : MonoBehaviour
     public JumpPhase jumpPhase;
     public DoorPhase doorPhase;
     public ClimbPhase climbPhase;
-    public TrainingType CurrentTrainingType { get; private set; }
+    public PlayerTrainingType CurrentTrainingType { get; private set; }
 
     private bool isGrounded;
     [SerializeField] private LayerMask groundMask;
@@ -174,7 +174,7 @@ public class PlayerController : MonoBehaviour
         climbPhase = nextPhase;
     }
 
-    private void SetTrainingType(TrainingType type)
+    private void SetTrainingType(PlayerTrainingType type)
     {
         if (CurrentTrainingType == type) return;
 
@@ -237,7 +237,7 @@ public class PlayerController : MonoBehaviour
             currentTrainingHost?.ReleaseTrainingSpot();
             currentTrainingHost = null;
             CurrentTrainingData = null;
-            SetTrainingType(TrainingType.None);
+            SetTrainingType(PlayerTrainingType.None);
         }
 
         CurrentDoor = null;
@@ -699,9 +699,9 @@ public class PlayerController : MonoBehaviour
         currentTrainingHost = host;
         transform.position = CurrentTrainingData.trainingPos.position;
         transform.rotation = CurrentTrainingData.trainingPos.rotation;
-        SetTrainingType(data.trainingType);
+        SetTrainingType(data.playerTrainingType);
         ChangeState(State.Training);
-        GameManager.Instance.TrainingStarted(data.trainingType);
+        GameManager.Instance.TrainingStarted(data.playerTrainingType);
         Cursor.visible = true;
     }
 
@@ -714,7 +714,7 @@ public class PlayerController : MonoBehaviour
         currentTrainingHost?.ReleaseTrainingSpot();
         currentTrainingHost = null;
         CurrentTrainingData = null;
-        SetTrainingType(TrainingType.None);
+        SetTrainingType(PlayerTrainingType.None);
         ChangeState(State.Walking);
     }
 

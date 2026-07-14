@@ -20,10 +20,12 @@ public class ManControllerFSM : MonoBehaviour, IAgent
     public bool wasBeaten;
 
     public enum State { Patrol, Chasing, Fleeing, Training, Fighting }
+    public enum WalkingPhase { None, Idle, Walking };
     public enum FightPhase { None, Attack, Defeat, Victory }
 
     public State CurrentState { get; private set; } = State.Patrol;
     private TrainingData currentTrainingData;
+    public WalkingPhase CurrentWalkingPhase { get; private set; }
 
     void Awake()
     {
@@ -86,13 +88,6 @@ public class ManControllerFSM : MonoBehaviour, IAgent
     {
         switch (state)
         {
-            case State.Training:
-                if (currentTrainingData != null)
-                {
-                    animator.SetBool(currentTrainingData.agentAnimatorBool, false);
-                }
-                break;
-
             case State.Fighting:
                 SwitchFightColliders("Off");
                 break;
@@ -123,7 +118,6 @@ public class ManControllerFSM : MonoBehaviour, IAgent
                 agent.enabled = false;
                 transform.position = currentTrainingData.trainingPos.position;
                 transform.rotation = currentTrainingData.trainingPos.rotation;
-                animator.SetBool(currentTrainingData.agentAnimatorBool, true);
                 break;
 
             case State.Fighting:
@@ -209,7 +203,14 @@ public class ManControllerFSM : MonoBehaviour, IAgent
     private void HandlePatrol()
     {
         MoveToSpot();
+        UpdateWalkingPhase();
     }
+
+    private void UpdateWalkingPhase()
+    {
+        CurrentWalkingPhase = agent.velocity.magnitude > 0.1f ? WalkingPhase.Walking : WalkingPhase.Idle;
+    }
+
 
     private void HandleChasing()
     {
@@ -267,7 +268,6 @@ public class ManControllerFSM : MonoBehaviour, IAgent
     {
         if (currentTrainingData != null)
         {
-            animator.SetBool(currentTrainingData.agentAnimatorBool, false);
             transform.position = currentTrainingData.exitPos.position;
             transform.rotation = currentTrainingData.exitPos.rotation;
         }

@@ -9,7 +9,7 @@ AnimatorStateTransition:
   m_Name: 
   m_Conditions:
   - m_ConditionMode: 1
-    m_ConditionEvent: mobileIsMakingSelfie
+    m_ConditionEvent: isMoving1
     m_EventTreshold: 0
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: -1073573209195410149}
@@ -32,7 +32,7 @@ AnimatorState:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: MobileSelfie
+  m_Name: Moving1
   m_Speed: 0.3
   m_CycleOffset: 0
   m_Transitions:
@@ -61,13 +61,13 @@ AnimatorController:
   m_Name: Mobile
   serializedVersion: 5
   m_AnimatorParameters:
-  - m_Name: mobileIsMakingSelfie
+  - m_Name: isMoving1
     m_Type: 4
     m_DefaultFloat: 0
     m_DefaultInt: 0
     m_DefaultBool: 0
     m_Controller: {fileID: 9100000}
-  - m_Name: mobileIsMakingSelfie2
+  - m_Name: isMoving2
     m_Type: 4
     m_DefaultFloat: 0
     m_DefaultInt: 0
@@ -93,7 +93,7 @@ AnimatorState:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: MobileSelfieDouble
+  m_Name: Moving2
   m_Speed: 1
   m_CycleOffset: 0
   m_Transitions:
@@ -122,7 +122,7 @@ AnimatorStateTransition:
   m_Name: 
   m_Conditions:
   - m_ConditionMode: 2
-    m_ConditionEvent: mobileIsMakingSelfie2
+    m_ConditionEvent: isMoving2
     m_EventTreshold: 0
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: 5557655967731952642}
@@ -203,7 +203,7 @@ AnimatorStateTransition:
   m_Name: 
   m_Conditions:
   - m_ConditionMode: 1
-    m_ConditionEvent: mobileIsMakingSelfie2
+    m_ConditionEvent: isMoving2
     m_EventTreshold: 0
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: 3650919092855110024}
@@ -228,7 +228,7 @@ AnimatorStateTransition:
   m_Name: 
   m_Conditions:
   - m_ConditionMode: 2
-    m_ConditionEvent: mobileIsMakingSelfie
+    m_ConditionEvent: isMoving1
     m_EventTreshold: 0
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: 5557655967731952642}

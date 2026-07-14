@@ -3,7 +3,6 @@ using UnityEngine;
 
 public class TrainingLogic_Dumbbells : MonoBehaviour
 {
-    [SerializeField] private ExcludedUserKind excludedUserKind;
     [SerializeField] private Animator selfAnimator;
     [SerializeField] private GameObject accessObstacle;
     [SerializeField] private GameObject occupiedObstacle;
@@ -12,14 +11,20 @@ public class TrainingLogic_Dumbbells : MonoBehaviour
     private PlayerController playerController;
     private bool isAvailable = true;
     private bool blockedByPlayer;
-    [SerializeField] private string[] agentAnimationBools;
+
     [SerializeField] private string[] selfAnimationBools;
 
     void OnEnable()
     {
         if (occupiedObstacle) occupiedObstacle.SetActive(false);
         if (accessObstacle) accessObstacle.SetActive(true);
-        if (selfAnimator & trainingData.selfAnimatorBool != "") selfAnimator.SetBool(trainingData.selfAnimatorBool, false);
+        if (selfAnimator != null)
+        {
+            foreach (string boolName in selfAnimationBools)
+            {
+                selfAnimator.SetBool(boolName, false);
+            }
+        }
     }
 
     void OnDisable()
@@ -29,71 +34,115 @@ public class TrainingLogic_Dumbbells : MonoBehaviour
 
     void OnTriggerEnter(Collider other)
     {
-        GameObject user;
-        user = other.gameObject;
+        GameObject user = other.gameObject;
 
-        ExcludePlayer(user);
+        if (user.CompareTag("Player"))
+        {
+            HandlePlayerEnter(user);
+            return;
+        }
+
+        if (user.CompareTag("Man"))
+        {
+            HandleManEnter(user);
+            return;
+        }
+
+        if (user.CompareTag("Girl"))
+        {
+            HandleGirlEnter(user);
+            return;
+        }
     }
 
     void OnTriggerExit(Collider other)
     {
         if (!other.CompareTag("Player")) return;
         if (!blockedByPlayer) return;
-        
+
         RequestSpotRelease();
     }
 
-    private void ExcludePlayer(GameObject user)
+    private void HandlePlayerEnter(GameObject user)
     {
-        if (user.CompareTag("Girl") || user.CompareTag("Man"))
-        {
-            IAgent agent;
-            agent = user.GetComponent<IAgent>();
-            string tag = user.tag;
-
-            if (!isAvailable)
-            {
-                // agent.CancelTraining();
-                return;
-            }
-
-            if (tag == "Girl")
-            {
-                int training = Random.Range(1, 3);
-                trainingData.agentAnimatorBool = agentAnimationBools[training];
-                trainingData.selfAnimatorBool = selfAnimationBools[training];
-            }
-
-            if (tag == "Man")
-            {
-                trainingData.agentAnimatorBool = agentAnimationBools[0];
-                trainingData.selfAnimatorBool = selfAnimationBools[0];
-            }
-
-            StartCoroutine(TrainAgent(agent));
-            return;
-        }
-
-        if (user.CompareTag("Player"))
-        {
-            isAvailable = false;
-            blockedByPlayer = true;
-            return;
-        }
+        isAvailable = false;
+        blockedByPlayer = true;
+        return;
     }
 
-    private IEnumerator TrainAgent(IAgent agent)
+    private void HandleManEnter(GameObject user)
+    {
+        if (!isAvailable) return;
+
+        IAgent agent = user.GetComponent<IAgent>();
+        if (agent == null) return;
+
+        StartCoroutine(TrainMan(agent));
+    }
+
+    private void HandleGirlEnter(GameObject user)
+    {
+        if (!isAvailable) return;
+
+        GirlController girl = user.GetComponent<GirlController>();
+        if (girl == null) return;
+
+        StartCoroutine(TrainGirl(girl));
+    }
+
+    private IEnumerator TrainMan(IAgent agent)
     {
         isAvailable = false;
         if (accessObstacle) accessObstacle.SetActive(false);
         agent.StartTraining(trainingData);
-        if (selfAnimator) selfAnimator.SetBool(trainingData.selfAnimatorBool, true);
+        selfAnimator.SetBool(selfAnimationBools[2], true);
         if (occupiedObstacle) occupiedObstacle.SetActive(true);
         yield return new WaitForSeconds(trainingData.trainingDuration);
         agent.StopTraining();
-        if (selfAnimator) selfAnimator.SetBool(trainingData.selfAnimatorBool, false);
+        selfAnimator.SetBool(selfAnimationBools[2], false);
         if (occupiedObstacle) occupiedObstacle.SetActive(false);
         if (accessObstacle) accessObstacle.SetActive(true);
+        RequestSpotRelease();
+    }
+
+    private int GetSpotAnimationIndex()
+    {
+        return Random.Range(0, 2);
+    }
+
+    private GirlTrainingType GetGirlTrainingType(int index)
+    {
+        if (index == 0)
+        {
+            return GirlTrainingType.DumbbellsStand1;
+        }
+        else
+        {
+            return GirlTrainingType.DumbbellsStand2;
+        }
+    }
+
+    private IEnumerator TrainGirl(GirlController girl)
+    {
+        int index = GetSpotAnimationIndex();
+        GirlTrainingType trainingType = GetGirlTrainingType(index);
+
+        isAvailable = false;
+        if (accessObstacle) accessObstacle.SetActive(false);
+        
+        girl.StartTraining(trainingData, trainingType);
+        selfAnimator.SetBool(selfAnimationBools[index], true);
+
+        if (occupiedObstacle) occupiedObstacle.SetActive(true);
+
+        yield return new WaitForSeconds(trainingData.trainingDuration);
+
+        girl.StopTraining();
+        selfAnimator.SetBool(selfAnimationBools[index], false);
+
+        if (occupiedObstacle) occupiedObstacle.SetActive(false);
+        if (accessObstacle) accessObstacle.SetActive(true);
+
         RequestSpotRelease();
     }
 

@@ -215,28 +215,28 @@ public class GameSceneHUD : MonoBehaviour
             case CurrentLevelZone.Legs:
                 switch (GameManager.Instance.CurrentTrainingType)
                 {
-                    case TrainingType.Treadmill:
+                    case PlayerTrainingType.Treadmill:
                         foreach (Image panel in legsProgressBarPanels)
                         {
                             panel.color = new Color(0, 0, 0, 0f);
                         }
                         legsProgressBarPanels[0].color = new Color(0, 0, 0, 0.3f);
                         break;
-                    case TrainingType.Bike:
+                    case PlayerTrainingType.Bike:
                         foreach (Image panel in legsProgressBarPanels)
                         {
                             panel.color = new Color(0, 0, 0, 0f);
                         }
                         legsProgressBarPanels[1].color = new Color(0, 0, 0, 0.3f);
                         break;
-                    case TrainingType.JumpBox:
+                    case PlayerTrainingType.JumpBox:
                         foreach (Image panel in legsProgressBarPanels)
                         {
                             panel.color = new Color(0, 0, 0, 0f);
                         }
                         legsProgressBarPanels[2].color = new Color(0, 0, 0, 0.3f);
                         break;
-                    case TrainingType.None:
+                    case PlayerTrainingType.None:
                         foreach (Image panel in legsProgressBarPanels)
                         {
                             panel.color = new Color(0, 0, 0, 0f);
@@ -247,35 +247,35 @@ public class GameSceneHUD : MonoBehaviour
             case CurrentLevelZone.Chest:
                 switch (GameManager.Instance.CurrentTrainingType)
                 {
-                    case TrainingType.BenchPress:
+                    case PlayerTrainingType.BenchPress:
                         foreach (Image panel in chestProgressBarPanels)
                         {
                             panel.color = new Color(0, 0, 0, 0f);
                         }
                         chestProgressBarPanels[0].color = new Color(0, 0, 0, 0.3f);
                         break;
-                    case TrainingType.PecFly:
+                    case PlayerTrainingType.PecFly:
                         foreach (Image panel in chestProgressBarPanels)
                         {
                             panel.color = new Color(0, 0, 0, 0f);
                         }
                         chestProgressBarPanels[1].color = new Color(0, 0, 0, 0.3f);
                         break;
-                    case TrainingType.Crossover:
+                    case PlayerTrainingType.Crossover:
                         foreach (Image panel in chestProgressBarPanels)
                         {
                             panel.color = new Color(0, 0, 0, 0f);
                         }
                         chestProgressBarPanels[2].color = new Color(0, 0, 0, 0.3f);
                         break;
-                    case TrainingType.Dips:
+                    case PlayerTrainingType.Dips:
                         foreach (Image panel in chestProgressBarPanels)
                         {
                             panel.color = new Color(0, 0, 0, 0f);
                         }
                         chestProgressBarPanels[3].color = new Color(0, 0, 0, 0.3f);
                         break;
-                    case TrainingType.None:
+                    case PlayerTrainingType.None:
                         foreach (Image panel in chestProgressBarPanels)
                         {
                             panel.color = new Color(0, 0, 0, 0f);
@@ -286,49 +286,49 @@ public class GameSceneHUD : MonoBehaviour
             case CurrentLevelZone.Back:
                 switch (GameManager.Instance.CurrentTrainingType)
                 {
-                    case TrainingType.LatPull:
+                    case PlayerTrainingType.LatPull:
                         foreach (Image panel in backProgressBarPanels)
                         {
                             panel.color = new Color(0, 0, 0, 0f);
                         }
                         backProgressBarPanels[0].color = new Color(0, 0, 0, 0.3f);
                         break;
-                    case TrainingType.CableRow:
+                    case PlayerTrainingType.CableRow:
                         foreach (Image panel in backProgressBarPanels)
                         {
                             panel.color = new Color(0, 0, 0, 0f);
                         }
                         backProgressBarPanels[1].color = new Color(0, 0, 0, 0.3f);
                         break;
-                    case TrainingType.Rower:
+                    case PlayerTrainingType.Rower:
                         foreach (Image panel in backProgressBarPanels)
                         {
                             panel.color = new Color(0, 0, 0, 0f);
                         }
                         backProgressBarPanels[2].color = new Color(0, 0, 0, 0.3f);
                         break;
-                    case TrainingType.BackExtension:
+                    case PlayerTrainingType.BackExtension:
                         foreach (Image panel in backProgressBarPanels)
                         {
                             panel.color = new Color(0, 0, 0, 0f);
                         }
                         backProgressBarPanels[3].color = new Color(0, 0, 0, 0.3f);
                         break;
-                    case TrainingType.TBar:
+                    case PlayerTrainingType.TBar:
                         foreach (Image panel in backProgressBarPanels)
                         {
                             panel.color = new Color(0, 0, 0, 0f);
                         }
                         backProgressBarPanels[4].color = new Color(0, 0, 0, 0.3f);
                         break;
-                    case TrainingType.PullUps:
+                    case PlayerTrainingType.PullUps:
                         foreach (Image panel in backProgressBarPanels)
                         {
                             panel.color = new Color(0, 0, 0, 0f);
                         }
                         backProgressBarPanels[5].color = new Color(0, 0, 0, 0.3f);
                         break;
-                    case TrainingType.None:
+                    case PlayerTrainingType.None:
                         foreach (Image panel in backProgressBarPanels)
                         {
                             panel.color = new Color(0, 0, 0, 0f);
@@ -383,7 +383,7 @@ public class GameSceneHUD : MonoBehaviour
     private void DisplayContextMessage()
     {
         if (playerController.CurrentState == PlayerController.State.Training
-            && playerController.CurrentTrainingType != TrainingType.None
+            && playerController.CurrentTrainingType != PlayerTrainingType.None
             && GameManager.Instance.IsTrainingCompleted(playerController.CurrentTrainingType))
         {
             contextMessageText.text = GetTrainingCompletedAlertMessage(playerController.CurrentTrainingType);
@@ -435,35 +435,35 @@ public class GameSceneHUD : MonoBehaviour
         contextMessageText.color = Color.Lerp(idle, alert, t);
     }
 
-    private string GetTrainingCompletedAlertMessage(TrainingType type)
+    private string GetTrainingCompletedAlertMessage(PlayerTrainingType type)
     {
         switch (type)
         {
-            case TrainingType.Treadmill:
+            case PlayerTrainingType.Treadmill:
                 return "Treadmill training completed";
-            case TrainingType.Bike:
+            case PlayerTrainingType.Bike:
                 return "Bike training completed";
-            case TrainingType.JumpBox:
+            case PlayerTrainingType.JumpBox:
                 return "Jump box training completed";
-            case TrainingType.BenchPress:
+            case PlayerTrainingType.BenchPress:
                 return "Bench press training completed";
-            case TrainingType.PecFly:
+            case PlayerTrainingType.PecFly:
                 return "Pec fly training completed";
-            case TrainingType.Crossover:
+            case PlayerTrainingType.Crossover:
                 return "Crossover training completed";
-            case TrainingType.Dips:
+            case PlayerTrainingType.Dips:
                 return "Dips training completed";
-            case TrainingType.LatPull:
+            case PlayerTrainingType.LatPull:
                 return "Lat pull training completed";
-            case TrainingType.CableRow:
+            case PlayerTrainingType.CableRow:
                 return "Cable row training completed";
-            case TrainingType.Rower:
+            case PlayerTrainingType.Rower:
                 return "Rower training completed";
-            case TrainingType.BackExtension:
+            case PlayerTrainingType.BackExtension:
                 return "Back extension training completed";
-            case TrainingType.TBar:
+            case PlayerTrainingType.TBar:
                 return "T-bar training completed";
-            case TrainingType.PullUps:
+            case PlayerTrainingType.PullUps:
                 return "Pull-ups training completed";
             default:
                 return "Training completed";

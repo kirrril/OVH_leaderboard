@@ -23,7 +23,7 @@ public class PlayerAnimationController : MonoBehaviour
 
         switch (playerController.CurrentTrainingType)
         {
-            case TrainingType.PullUps:
+            case PlayerTrainingType.PullUps:
                 if (GameManager.Instance.PullUpsTraining < 0.33f)
                 {
                     value = 13;
