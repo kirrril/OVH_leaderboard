@@ -26,6 +26,7 @@ public class ManControllerFSM : MonoBehaviour, IAgent
     public State CurrentState { get; private set; } = State.Patrol;
     private TrainingData currentTrainingData;
     public WalkingPhase CurrentWalkingPhase { get; private set; }
+    public ManTrainingType CurrentTrainingType { get; private set; }
 
     void Awake()
     {
@@ -91,6 +92,15 @@ public class ManControllerFSM : MonoBehaviour, IAgent
             case State.Fighting:
                 SwitchFightColliders("Off");
                 break;
+            case State.Patrol:
+                ChangeWalkingPhase(WalkingPhase.None);
+                break;
+            case State.Fleeing:
+                ChangeWalkingPhase(WalkingPhase.None);
+                break;
+            case State.Chasing:
+                ChangeWalkingPhase(WalkingPhase.None);
+                break;
         }
     }
 
@@ -134,6 +144,12 @@ public class ManControllerFSM : MonoBehaviour, IAgent
                 agent.ResetPath();
                 break;
         }
+    }
+
+    private void ChangeWalkingPhase(WalkingPhase nextPhase)
+    {
+        if (CurrentWalkingPhase == nextPhase) return;
+        CurrentWalkingPhase = nextPhase;
     }
 
     private int ChoseNewTrainingSpot()
@@ -208,13 +224,15 @@ public class ManControllerFSM : MonoBehaviour, IAgent
 
     private void UpdateWalkingPhase()
     {
-        CurrentWalkingPhase = agent.velocity.magnitude > 0.1f ? WalkingPhase.Walking : WalkingPhase.Idle;
+        WalkingPhase nextPhase = agent.velocity.magnitude > 0.1f ? WalkingPhase.Walking : WalkingPhase.Idle;
+        ChangeWalkingPhase(nextPhase);
     }
 
 
     private void HandleChasing()
     {
         agent.SetDestination(playerController.transform.position);
+        UpdateWalkingPhase();
     }
 
     private void HandleFleeing()
@@ -226,6 +244,7 @@ public class ManControllerFSM : MonoBehaviour, IAgent
         {
             agent.SetDestination(hit.position);
         }
+        UpdateWalkingPhase();
     }
 
     private void HandleTraining()
@@ -261,6 +280,7 @@ public class ManControllerFSM : MonoBehaviour, IAgent
     public void StartTraining(TrainingData trainingData)
     {
         currentTrainingData = trainingData;
+        CurrentTrainingType = currentTrainingData.manTrainingType;
         ChangeState(State.Training);
     }
 
@@ -270,9 +290,10 @@ public class ManControllerFSM : MonoBehaviour, IAgent
         {
             transform.position = currentTrainingData.exitPos.position;
             transform.rotation = currentTrainingData.exitPos.rotation;
+            currentTrainingData = null;
         }
-
-        currentTrainingData = null;
+        
+        CurrentTrainingType = ManTrainingType.None;
         ChangeState(State.Patrol);
     }
 

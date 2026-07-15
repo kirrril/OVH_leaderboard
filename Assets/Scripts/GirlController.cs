@@ -1,14 +1,12 @@
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.SceneManagement;
-using System.Collections;
-using System.Reflection;
 
 public class GirlController : MonoBehaviour, IAgent
 {
     private enum SceneMode { Gameplay, YouWin }
 
-    public enum State { Patrol, Chasing, Fleeing, Training, Welcoming }
+    public enum State { Patrol,/* Chasing,*/ Fleeing, Training, Welcoming }
     public enum WalkingPhase { None, Idle, Walking };
 
     [SerializeField] private NavMeshAgent agent;
@@ -21,13 +19,12 @@ public class GirlController : MonoBehaviour, IAgent
     private TrainingData currentTrainingData;
 
     public WalkingPhase CurrentWalkingPhase { get; private set; }
-    public GirlTrainingType CurrentTrainingType { get; private set; } // pour les variantes d'animation sur DumbbellsStand
-
+    public GirlTrainingType CurrentTrainingType { get; private set; }
     private Transform targetSpot;
     private int lastSpotIndex = -1;
-    private float awarenessDistance = 3f;
     private float interactionDistance = 2.5f;
     private float fleeStopDistance = 4f;
+
     private bool hasInteracted;
 
     public State CurrentState { get; private set; } = State.Patrol;
@@ -72,7 +69,7 @@ public class GirlController : MonoBehaviour, IAgent
                 break;
 
             case State.Fleeing:
-                // HandleFleeing();
+                HandleFleeing();
                 break;
 
             case State.Welcoming:
@@ -101,6 +98,9 @@ public class GirlController : MonoBehaviour, IAgent
             case State.Patrol:
                 ChangeWalkingPhase(WalkingPhase.None);
                 break;
+            case State.Fleeing:
+                ChangeWalkingPhase(WalkingPhase.None);
+                break;
         }
     }
 
@@ -115,19 +115,19 @@ public class GirlController : MonoBehaviour, IAgent
                 MoveToSpot();
                 break;
 
-            case State.Chasing:
-                agent.enabled = true;
-                agent.isStopped = false;
-                agent.ResetPath();
-                break;
+            // case State.Chasing:
+            //     agent.enabled = true;
+            //     agent.isStopped = false;
+            //     agent.ResetPath();
+            //     break;
 
             case State.Training:
-                hasInteracted = false;
                 agent.isStopped = true;
                 agent.ResetPath();
                 agent.enabled = false;
                 transform.position = currentTrainingData.trainingPos.position;
                 transform.rotation = currentTrainingData.trainingPos.rotation;
+                hasInteracted = false;
                 break;
 
             case State.Fleeing:
@@ -142,6 +142,16 @@ public class GirlController : MonoBehaviour, IAgent
     {
         WalkingPhase nextPhase = agent.velocity.magnitude > 0.1f ? WalkingPhase.Walking : WalkingPhase.Idle;
         ChangeWalkingPhase(nextPhase);
+    }
+
+    private void ReinitHasInteracted()
+    {
+        float distanceToPlayer = Vector3.Distance(transform.position, player.position);
+
+        if (distanceToPlayer > interactionDistance)
+        {
+            hasInteracted = false;
+        }
     }
 
     private void ChangeWalkingPhase(WalkingPhase nextPhase)
@@ -187,6 +197,7 @@ public class GirlController : MonoBehaviour, IAgent
     {
         MoveToSpot();
         UpdateWalkingPhase();
+        ReinitHasInteracted();
     }
 
     private void HandleTraining()
@@ -194,31 +205,33 @@ public class GirlController : MonoBehaviour, IAgent
 
     }
 
-    // private void HandleFleeing()
-    // {
-    //     float distanceToPlayer = Vector3.Distance(transform.position, player.position);
+    private void HandleFleeing()
+    {
+        float distanceToPlayer = Vector3.Distance(transform.position, player.position);
 
-    //     if (distanceToPlayer < interactionDistance)
-    //     {
-    //         StartCoroutine(DoInsult("Fuck off loser!", -1));
-    //         return;
-    //     }
+        if (distanceToPlayer < interactionDistance)
+        {
+            DoInsult("Fuck off loser!", -1);
+            return;
+        }
 
-    //     if (distanceToPlayer > fleeStopDistance)
-    //     {
-    //         currentState = State.MovingToTarget;
-    //         agent.ResetPath();
-    //         return;
-    //     }
+        if (distanceToPlayer > fleeStopDistance)
+        {
+            ChangeState(State.Patrol);
+            return;
+        }
 
-    //     Vector3 dirAway = (transform.position - player.position).normalized;
-    //     Vector3 target = transform.position + dirAway * 6f;
+        Vector3 dirAway = (transform.position - player.position).normalized;
+        Vector3 target = transform.position + dirAway * 6f;
 
-    //     if (NavMesh.SamplePosition(target, out NavMeshHit hit, 8f, NavMesh.AllAreas))
-    //     {
-    //         agent.SetDestination(hit.position);
-    //     }
-    // }
+        if (NavMesh.SamplePosition(target, out NavMeshHit hit, 8f, NavMesh.AllAreas))
+        {
+            agent.SetDestination(hit.position);
+        }
+
+        UpdateWalkingPhase();
+        ReinitHasInteracted();
+    }
 
     // private void HandleWelcoming()
     // {
@@ -254,30 +267,30 @@ public class GirlController : MonoBehaviour, IAgent
 
     public void StopTraining()
     {
-        transform.position = currentTrainingData.exitPos.position;
-        transform.rotation = currentTrainingData.exitPos.rotation;
+        if (currentTrainingData != null)
+        {
+            transform.position = currentTrainingData.exitPos.position;
+            transform.rotation = currentTrainingData.exitPos.rotation;
+            currentTrainingData = null;
+        }
 
-        currentTrainingData = null;
         CurrentTrainingType = GirlTrainingType.None;
 
         ChangeState(State.Patrol);
     }
 
-    // private IEnumerator DoInsult(string message, int scoreDelta)
-    // {
-    //     if (hasInteracted) yield break;
+    private void DoInsult(string message, int scoreDelta)
+    {
+        if (GameManager.Instance.CurrentScore < 1) return;
 
-    //     hasInteracted = true;
-    //     isPerformingInteraction = true;
-    //     agent.ResetPath();
-    //     agent.isStopped = true;
-    //     Debug.Log(message);
-    //     GameManager.Instance.ModifyScore(scoreDelta);
-    //     yield return new WaitForSeconds(0.1f);
-    //     agent.isStopped = false;
-    //     isPerformingInteraction = false;
-    //     currentState = State.MovingToTarget;
-    // }
+        if (hasInteracted) return;
+        hasInteracted = true;
+
+        Debug.Log(message);
+
+        GameManager.Instance.ModifyScore(scoreDelta);
+        ChangeState(State.Fleeing);
+    }
 
     // private IEnumerator DoWelcome(string message)
     // {

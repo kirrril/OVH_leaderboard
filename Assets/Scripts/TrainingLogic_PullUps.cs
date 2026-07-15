@@ -15,7 +15,7 @@ public class TrainingLogic_PullUps : MonoBehaviour, IPlayerTrainingHost
     void OnEnable()
     {
         if (occupiedObstacle) occupiedObstacle.SetActive(false);
-        if (selfAnimator) selfAnimator.SetBool(assistedTrainingData.selfAnimatorBool, false);
+        if (selfAnimator) selfAnimator.SetBool("isMoving", false);
     }
 
     void OnDisable()
@@ -25,44 +25,50 @@ public class TrainingLogic_PullUps : MonoBehaviour, IPlayerTrainingHost
 
     void OnTriggerEnter(Collider other)
     {
-        GameObject user;
-        user = other.gameObject;
+        GameObject user = other.gameObject;
 
-        AllowAllUsers(user);
-    }
-
-    private void AllowAllUsers(GameObject user)
-    {
-        if (user.CompareTag("Girl"))
+        if (user.CompareTag("Player"))
         {
-            IAgent agent;
-            agent = user.GetComponent<IAgent>();
-
-            if (!isAvailable)
-            {
-                return;
-            }
-            StartCoroutine(TrainAgent(agent, australianTrainingData));
+            HandlePlayerEnter(user);
             return;
         }
 
         if (user.CompareTag("Man"))
         {
-            IAgent agent;
-            agent = user.GetComponent<IAgent>();
-
-            if (!isAvailable)
-            {
-                return;
-            }
-            StartCoroutine(TrainAgent(agent, regularTrainingData));
+            HandleManEnter(user);
             return;
         }
 
-        if (user.CompareTag("Player"))
+        if (user.CompareTag("Girl"))
         {
-            TrainPlayer(user.gameObject);
+            HandleGirlEnter(user);
+            return;
         }
+    }
+
+    private void HandlePlayerEnter(GameObject user)
+    {
+        TrainPlayer(user);
+    }
+
+    private void HandleManEnter(GameObject user)
+    {
+        if (!isAvailable) return;
+
+        IAgent agent = user.GetComponent<IAgent>();
+        if (agent == null) return;
+
+        StartCoroutine(TrainAgent(agent, regularTrainingData));
+    }
+
+    private void HandleGirlEnter(GameObject user)
+    {
+        if (!isAvailable) return;
+
+        IAgent agent = user.GetComponent<IAgent>();
+        if (agent == null) return;
+
+        StartCoroutine(TrainAgent(agent, australianTrainingData));
     }
 
     private IEnumerator TrainAgent(IAgent agent, TrainingData trainingData)
@@ -90,24 +96,21 @@ public class TrainingLogic_PullUps : MonoBehaviour, IPlayerTrainingHost
         if (GameManager.Instance.PullUpsTraining < 0.33f)
         {
             playerController.StartTraining(australianTrainingData, this);
-            if (selfAnimator) selfAnimator.SetBool(assistedTrainingData.selfAnimatorBool, false);
             return;
         }
 
         if (GameManager.Instance.PullUpsTraining > 0.66f)
         {
             playerController.StartTraining(regularTrainingData, this);
-            if (selfAnimator) selfAnimator.SetBool(assistedTrainingData.selfAnimatorBool, false);
             return;
         }
 
         playerController.StartTraining(assistedTrainingData, this);
-        if (selfAnimator) selfAnimator.SetBool(assistedTrainingData.selfAnimatorBool, true);
+        if (selfAnimator) selfAnimator.SetBool("isMoving", true);
     }
 
     public void ReleaseTrainingSpot()
     {
-        if (selfAnimator) selfAnimator.SetBool(assistedTrainingData.selfAnimatorBool, false);
         if (occupiedObstacle) occupiedObstacle.SetActive(false);
         RequestSpotRelease();
     }

@@ -17,7 +17,7 @@ public class TrainingLogic_mobile : MonoBehaviour
     {
         if (occupiedObstacle) occupiedObstacle.SetActive(false);
         if (accessObstacle) accessObstacle.SetActive(true);
-        if (selfAnimator) selfAnimator.SetBool(trainingData.selfAnimatorBool, false);
+        // if (selfAnimator) selfAnimator.SetBool(trainingData.selfAnimatorBool, false);
         if (mobile) mobile.SetActive(false);
     }
 
@@ -79,11 +79,11 @@ public class TrainingLogic_mobile : MonoBehaviour
         if (accessObstacle) accessObstacle.SetActive(false);
         agent.StartTraining(trainingData);
         mobile.SetActive(true);
-        if (selfAnimator) selfAnimator.SetBool(trainingData.selfAnimatorBool, true);
+        // if (selfAnimator) selfAnimator.SetBool(trainingData.selfAnimatorBool, true);
         if (occupiedObstacle) occupiedObstacle.SetActive(true);
         yield return new WaitForSeconds(trainingData.trainingDuration);
         agent.StopTraining();
-        if (selfAnimator) selfAnimator.SetBool(trainingData.selfAnimatorBool, false);
+        // if (selfAnimator) selfAnimator.SetBool(trainingData.selfAnimatorBool, false);
         mobile.SetActive(false);
         if (occupiedObstacle) occupiedObstacle.SetActive(false);
         if (accessObstacle) accessObstacle.SetActive(true);
