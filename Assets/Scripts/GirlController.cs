@@ -22,10 +22,10 @@ public class GirlController : MonoBehaviour, IAgent
     public GirlTrainingType CurrentTrainingType { get; private set; }
     private Transform targetSpot;
     private int lastSpotIndex = -1;
-    private float interactionDistance = 2.5f;
-    private float fleeStopDistance = 4f;
+    private float insultDistance = 2.5f;
+    private float fleeDistance = 3f;
 
-    private bool hasInteracted;
+    private bool hasInsulted;
 
     public State CurrentState { get; private set; } = State.Patrol;
 
@@ -65,10 +65,20 @@ public class GirlController : MonoBehaviour, IAgent
         switch (CurrentState)
         {
             case State.Patrol:
+                if (NeedToFlee())
+                {
+                    ChangeState(State.Fleeing);
+                    return;
+                }
                 HandlePatrol();
                 break;
 
             case State.Fleeing:
+                if (!NeedToFlee())
+                {
+                    ChangeState(State.Patrol);
+                    return;
+                }
                 HandleFleeing();
                 break;
 
@@ -127,7 +137,7 @@ public class GirlController : MonoBehaviour, IAgent
                 agent.enabled = false;
                 transform.position = currentTrainingData.trainingPos.position;
                 transform.rotation = currentTrainingData.trainingPos.rotation;
-                hasInteracted = false;
+                hasInsulted = false;
                 break;
 
             case State.Fleeing:
@@ -148,9 +158,9 @@ public class GirlController : MonoBehaviour, IAgent
     {
         float distanceToPlayer = Vector3.Distance(transform.position, player.position);
 
-        if (distanceToPlayer > interactionDistance)
+        if (distanceToPlayer > insultDistance)
         {
-            hasInteracted = false;
+            hasInsulted = false;
         }
     }
 
@@ -197,6 +207,7 @@ public class GirlController : MonoBehaviour, IAgent
     {
         MoveToSpot();
         UpdateWalkingPhase();
+        BeReadyToInsult();
         ReinitHasInteracted();
     }
 
@@ -207,20 +218,6 @@ public class GirlController : MonoBehaviour, IAgent
 
     private void HandleFleeing()
     {
-        float distanceToPlayer = Vector3.Distance(transform.position, player.position);
-
-        if (distanceToPlayer < interactionDistance)
-        {
-            DoInsult("Fuck off loser!", -1);
-            return;
-        }
-
-        if (distanceToPlayer > fleeStopDistance)
-        {
-            ChangeState(State.Patrol);
-            return;
-        }
-
         Vector3 dirAway = (transform.position - player.position).normalized;
         Vector3 target = transform.position + dirAway * 6f;
 
@@ -230,7 +227,22 @@ public class GirlController : MonoBehaviour, IAgent
         }
 
         UpdateWalkingPhase();
+        BeReadyToInsult();
         ReinitHasInteracted();
+    }
+
+    private bool NeedToFlee()
+    {
+        float distanceToPlayer = Vector3.Distance(transform.position, player.position);
+
+        if (distanceToPlayer < fleeDistance)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
     }
 
     // private void HandleWelcoming()
@@ -279,17 +291,18 @@ public class GirlController : MonoBehaviour, IAgent
         ChangeState(State.Patrol);
     }
 
-    private void DoInsult(string message, int scoreDelta)
+    private void BeReadyToInsult()
     {
         if (GameManager.Instance.CurrentScore < 1) return;
 
-        if (hasInteracted) return;
-        hasInteracted = true;
+        float distanceToPlayer = Vector3.Distance(transform.position, player.position);
+        if (distanceToPlayer > insultDistance) return;
 
-        Debug.Log(message);
+        if (hasInsulted) return;
+        hasInsulted = true;
 
-        GameManager.Instance.ModifyScore(scoreDelta);
-        ChangeState(State.Fleeing);
+        Debug.Log("Fuck off loser!");
+        GameManager.Instance.ModifyScore(-1);
     }
 
     // private IEnumerator DoWelcome(string message)

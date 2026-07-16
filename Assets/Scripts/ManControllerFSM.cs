@@ -5,6 +5,8 @@ public class ManControllerFSM : MonoBehaviour, IAgent
 {
     [SerializeField] private NavMeshAgent agent;
     [SerializeField] private PlayerController playerController;
+    [SerializeField] private Transform player;
+
     public Animator animator;
     private Transform targetSpot;
     [SerializeField] Transform[] trainingSpots;
@@ -17,6 +19,8 @@ public class ManControllerFSM : MonoBehaviour, IAgent
     private float awarenessDistance = 4f;
     private float awarenessAngle = 120f;
     private float fleeDistance = 3f;
+    private float insultDistance = 1.5f;
+    private bool hasInsulted;
     public bool wasBeaten;
 
     public enum State { Patrol, Chasing, Fleeing, Training, Fighting }
@@ -123,6 +127,7 @@ public class ManControllerFSM : MonoBehaviour, IAgent
 
             case State.Training:
                 wasBeaten = false;
+                hasInsulted = false;
                 agent.isStopped = true;
                 agent.ResetPath();
                 agent.enabled = false;
@@ -131,10 +136,11 @@ public class ManControllerFSM : MonoBehaviour, IAgent
                 break;
 
             case State.Fighting:
+                hasInsulted = false;
                 agent.ResetPath();
                 agent.isStopped = true;
                 agent.enabled = false;
-                transform.LookAt(playerController.transform);
+                transform.LookAt(player);
                 SwitchFightColliders("On");
                 break;
 
@@ -204,7 +210,7 @@ public class ManControllerFSM : MonoBehaviour, IAgent
     {
         if (!wasBeaten) return false;
 
-        float distanceToPlayer = Vector3.Distance(transform.position, playerController.transform.position);
+        float distanceToPlayer = Vector3.Distance(transform.position, player.position);
 
         if (distanceToPlayer < fleeDistance)
         {
@@ -233,11 +239,12 @@ public class ManControllerFSM : MonoBehaviour, IAgent
     {
         agent.SetDestination(playerController.transform.position);
         UpdateWalkingPhase();
+        BeReadyToInsult();
     }
 
     private void HandleFleeing()
     {
-        Vector3 dirAway = (transform.position - playerController.transform.position).normalized;
+        Vector3 dirAway = (transform.position - player.position).normalized;
         Vector3 target = transform.position + dirAway * 6f;
 
         if (NavMesh.SamplePosition(target, out NavMeshHit hit, 8f, NavMesh.AllAreas))
@@ -245,6 +252,7 @@ public class ManControllerFSM : MonoBehaviour, IAgent
             agent.SetDestination(hit.position);
         }
         UpdateWalkingPhase();
+        BeReadyToInsult();
     }
 
     private void HandleTraining()
@@ -259,10 +267,10 @@ public class ManControllerFSM : MonoBehaviour, IAgent
 
     private bool CanChase()
     {
-        if (playerController == null) return false;
+        if (player == null) return false;
         if (wasBeaten) return false;
 
-        Vector3 toPlayer = playerController.transform.position - transform.position;
+        Vector3 toPlayer = player.position - transform.position;
         float distanceToPlayer = toPlayer.magnitude;
 
         if (distanceToPlayer > awarenessDistance) return false;
@@ -292,7 +300,7 @@ public class ManControllerFSM : MonoBehaviour, IAgent
             transform.rotation = currentTrainingData.exitPos.rotation;
             currentTrainingData = null;
         }
-        
+
         CurrentTrainingType = ManTrainingType.None;
         ChangeState(State.Patrol);
     }
@@ -300,5 +308,20 @@ public class ManControllerFSM : MonoBehaviour, IAgent
     public void CancelTraining()
     {
         agent.ResetPath();
+    }
+
+    private void BeReadyToInsult()
+    {
+        if (GameManager.Instance.CurrentScore < 1) return;
+
+        float distanceToPlayer = Vector3.Distance(transform.position, player.position);
+        if (CurrentState == State.Fleeing && distanceToPlayer > insultDistance + 1f) hasInsulted = false;
+        if (distanceToPlayer > insultDistance) return;
+
+        if (hasInsulted) return;
+        hasInsulted = true;
+
+        Debug.Log("You little nerd!");
+        GameManager.Instance.ModifyScore(-1);
     }
 }

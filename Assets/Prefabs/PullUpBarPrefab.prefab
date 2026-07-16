@@ -79,14 +79,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e4beeac904d17834c8be1210c7cc750e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TrainingData
-  trainingType: 13
-  agentAnimatorBool: isMakingPullUps2
+  playerTrainingType: 0
+  manTrainingType: 0
+  girlTrainingType: 0
   cameraTarget: {fileID: 3988270335591906906}
   cameraPlace: {fileID: 5597003414220994354}
   trainingPos: {fileID: 2203115490442421672}
   exitPos: {fileID: 9014716753359079758}
   trainingDuration: 10
-  selfAnimatorBool: 
 --- !u!1 &1384939102487106331
 GameObject:
   m_ObjectHideFlags: 0
@@ -326,7 +326,7 @@ MonoBehaviour:
   selfAnimator: {fileID: 3949197552461831910}
   occupiedObstacle: {fileID: 7201840883158734989}
   australianTrainingData: {fileID: 8381641001616376926}
-  assistedTrainingData: {fileID: 2558346342236061114}
+  assistedTrainingData: {fileID: 3514406379321800694}
   regularTrainingData: {fileID: 2769007447175561433}
 --- !u!65 &7385985526635676267
 BoxCollider:
@@ -459,14 +459,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e4beeac904d17834c8be1210c7cc750e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TrainingData
-  trainingType: 13
-  agentAnimatorBool: isMakingAustralianPullUps
+  playerTrainingType: 0
+  manTrainingType: 0
+  girlTrainingType: 0
   cameraTarget: {fileID: 5882660342506200012}
   cameraPlace: {fileID: 4607496364507718593}
   trainingPos: {fileID: 9006579650230999669}
   exitPos: {fileID: 7855571616661201764}
   trainingDuration: 10
-  selfAnimatorBool: 
 --- !u!1 &6208694312465162598
 GameObject:
   m_ObjectHideFlags: 0
@@ -705,7 +705,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3070439453820494280}
-  - component: {fileID: 2558346342236061114}
+  - component: {fileID: 3514406379321800694}
   m_Layer: 0
   m_Name: Assisted
   m_TagString: Untagged
@@ -732,7 +732,7 @@ Transform:
   - {fileID: 8802842520082958013}
   m_Father: {fileID: 4351224770552918509}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &2558346342236061114
+--- !u!114 &3514406379321800694
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -744,14 +744,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e4beeac904d17834c8be1210c7cc750e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TrainingData
-  trainingType: 13
-  agentAnimatorBool: 
+  playerTrainingType: 13
+  manTrainingType: 0
+  girlTrainingType: 0
   cameraTarget: {fileID: 5957911575819511598}
   cameraPlace: {fileID: 8802842520082958013}
   trainingPos: {fileID: 9047803676880022226}
   exitPos: {fileID: 6352628792458681687}
-  trainingDuration: 10
-  selfAnimatorBool: RubberIsPulled
+  trainingDuration: 0
 --- !u!1001 &3352631961596351732
 PrefabInstance:
   m_ObjectHideFlags: 0
