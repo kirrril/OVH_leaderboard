@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7626204495602610553}
   - component: {fileID: 1765336813301184825}
+  - component: {fileID: 7241109229789763476}
   - component: {fileID: 8951132866494659077}
   - component: {fileID: 8712754540535881930}
   - component: {fileID: 1237906904204333367}
@@ -68,6 +69,21 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
+  agentPriority: 0
+--- !u!114 &7241109229789763476
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9186059866667798038}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5235c109a5ed34246a9be47ec9fb1a03, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::GirlAnimationController
+  girlController: {fileID: 1765336813301184825}
+  animator: {fileID: 8889837674519598973}
 --- !u!54 &8951132866494659077
 Rigidbody:
   m_ObjectHideFlags: 0

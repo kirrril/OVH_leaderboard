@@ -9,10 +9,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 549968618520790017}
-  - component: {fileID: 6061731484835432720}
+  - component: {fileID: 758515800148603601}
+  - component: {fileID: 4027737264590916104}
   - component: {fileID: 5606934872989776763}
-  - component: {fileID: 5709488978760916807}
-  - component: {fileID: 8024722827093402007}
   - component: {fileID: 7127911877827881349}
   - component: {fileID: 2386004535829777886}
   m_Layer: 0
@@ -40,7 +39,7 @@ Transform:
   - {fileID: 1277115775536013637}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &6061731484835432720
+--- !u!114 &758515800148603601
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -49,30 +48,31 @@ MonoBehaviour:
   m_GameObject: {fileID: 1289906196322191111}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7e701a7be458bcc4682284695c30635f, type: 3}
+  m_Script: {fileID: 11500000, guid: 9b26bcc5348769a48b2bd43e980918c9, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: 
-  blackboard: {fileID: 8024722827093402007}
+  m_EditorClassIdentifier: Assembly-CSharp::ManController
   agent: {fileID: 2386004535829777886}
-  agents: {fileID: 0}
   playerController: {fileID: 0}
+  player: {fileID: 0}
   animator: {fileID: 558019426436172908}
-  trainingSpots:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  fightZone: {fileID: 2196616139800006013}
+  trainingSpots: []
+  fightColliders: []
+  agentPriority: 0
+  wasBeaten: 0
+--- !u!114 &4027737264590916104
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1289906196322191111}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 708278173d3f2e246a2ec25af89be56c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ManAnimationController
+  manController: {fileID: 758515800148603601}
+  animator: {fileID: 558019426436172908}
 --- !u!54 &5606934872989776763
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -100,79 +100,6 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 112
   m_CollisionDetection: 1
---- !u!114 &5709488978760916807
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1289906196322191111}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: aad115aca74ce3c4891b3f6de0b4aae8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _serializedExposedParameters: []
-  _boundGraphSerialization: 
-  _boundGraphObjectReferences: []
-  _boundGraphSource:
-    _version: 0
-    _category: 
-    _comments: 
-    _translation: {x: 0, y: 0}
-    _zoomFactor: 1
-  _firstActivation: 0
-  _enableAction: 0
-  _disableAction: 0
-  _lockBoundGraphPrefabOverrides: 1
-  _preInitializeSubGraphs: 0
-  _updateMode: 0
-  _graph: {fileID: 11400000, guid: 8da543f40b93b6d4fb5b4db918534645, type: 2}
-  _blackboard: {fileID: 8024722827093402007}
---- !u!114 &8024722827093402007
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1289906196322191111}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b98a6db0b653f764eac834f85857a9dd, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _parentBlackboard: {fileID: 0}
-  _serializedBlackboard: '{"_variables":{"player":{"_name":"player","_id":"9888eece-1889-4e00-b40b-f0c784a2cebe","$type":"NodeCanvas.Framework.Variable`1[[UnityEngine.GameObject,
-    UnityEngine.CoreModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null]]"},"playerScore":{"_name":"playerScore","_id":"b3b9e64e-5ffa-4cb1-ae11-895342c5cb66","$type":"NodeCanvas.Framework.Variable`1[[System.Int32,
-    mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]"},"hasInteracted":{"_name":"hasInteracted","_id":"ce9dcba3-b438-40e8-896f-ae603ca212fd","$type":"NodeCanvas.Framework.Variable`1[[System.Boolean,
-    mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]"},"isTraining":{"_name":"isTraining","_id":"8320a5ec-2b11-47db-874f-003ce4a27006","$type":"NodeCanvas.Framework.Variable`1[[System.Boolean,
-    mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]"},"trainingDuration":{"_name":"trainingDuration","_id":"f45efa50-47f1-41de-a3dc-98e831278a7d","$type":"NodeCanvas.Framework.Variable`1[[System.Single,
-    mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]"},"targetSpot":{"_name":"targetSpot","_id":"a75a2392-7add-4dbf-b048-72af63e20d74","$type":"NodeCanvas.Framework.Variable`1[[UnityEngine.GameObject,
-    UnityEngine.CoreModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null]]"},"isAvailable":{"_name":"isAvailable","_id":"355c979e-920b-46f2-9afc-515ca209db48","$type":"NodeCanvas.Framework.Variable`1[[System.Boolean,
-    mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]"}}}'
-  _objectReferences: []
-  _serializedVariables:
-  - _json: '{"_name":"player","_id":"9888eece-1889-4e00-b40b-f0c784a2cebe","$type":"NodeCanvas.Framework.Variable`1[[UnityEngine.GameObject,
-      UnityEngine.CoreModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null]]"}'
-    _references: []
-  - _json: '{"_name":"playerScore","_id":"b3b9e64e-5ffa-4cb1-ae11-895342c5cb66","$type":"NodeCanvas.Framework.Variable`1[[System.Int32,
-      mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]"}'
-    _references: []
-  - _json: '{"_name":"hasInteracted","_id":"ce9dcba3-b438-40e8-896f-ae603ca212fd","$type":"NodeCanvas.Framework.Variable`1[[System.Boolean,
-      mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]"}'
-    _references: []
-  - _json: '{"_name":"isTraining","_id":"8320a5ec-2b11-47db-874f-003ce4a27006","$type":"NodeCanvas.Framework.Variable`1[[System.Boolean,
-      mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]"}'
-    _references: []
-  - _json: '{"_name":"trainingDuration","_id":"f45efa50-47f1-41de-a3dc-98e831278a7d","$type":"NodeCanvas.Framework.Variable`1[[System.Single,
-      mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]"}'
-    _references: []
-  - _json: '{"_name":"targetSpot","_id":"a75a2392-7add-4dbf-b048-72af63e20d74","$type":"NodeCanvas.Framework.Variable`1[[UnityEngine.GameObject,
-      UnityEngine.CoreModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null]]"}'
-    _references: []
-  - _json: '{"_name":"isAvailable","_id":"355c979e-920b-46f2-9afc-515ca209db48","$type":"NodeCanvas.Framework.Variable`1[[System.Boolean,
-      mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]"}'
-    _references: []
 --- !u!136 &7127911877827881349
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -280,12 +207,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: db4f4b3add832a94399cd7f111a40cb2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  manTransform: {fileID: 549968618520790017}
-  manController: {fileID: 6061731484835432720}
-  manAnimator: {fileID: 558019426436172908}
+  manController: {fileID: 0}
   agent: {fileID: 2386004535829777886}
-  fightLight: {fileID: 6898709387013915670}
-  blackboard: {fileID: 8024722827093402007}
+  navMeshObstacle: {fileID: 0}
 --- !u!1 &6898709387013915670
 GameObject:
   m_ObjectHideFlags: 0
@@ -413,6 +337,118 @@ MonoBehaviour:
   m_ShadowLayerMask: 1
   m_RenderingLayers: 1
   m_ShadowRenderingLayers: 1
+--- !u!1 &7292031655702963611
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2470651274299336992}
+  - component: {fileID: 88080434756332017}
+  - component: {fileID: 4599933961882726946}
+  - component: {fileID: 6547460308985898365}
+  m_Layer: 0
+  m_Name: Sphere
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2470651274299336992
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7292031655702963611}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0.045445822, y: -0.040612776, z: -0.2031662, w: 0.97724557}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 0.0019999994, y: 0.002, z: 0.0020000003}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 9082624455512806354}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!33 &88080434756332017
+MeshFilter:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7292031655702963611}
+  m_Mesh: {fileID: 10207, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!23 &4599933961882726946
+MeshRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7292031655702963611}
+  m_Enabled: 1
+  m_CastShadows: 1
+  m_ReceiveShadows: 1
+  m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 2
+  m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
+  m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
+  m_RenderingLayerMask: 1
+  m_RendererPriority: 0
+  m_Materials:
+  - {fileID: 2100000, guid: b59aaa2f4d005dd4ebe0d780aff2ea04, type: 2}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 1
+  m_SelectedEditorRenderState: 3
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+  m_MaskInteraction: 0
+  m_AdditionalVertexStreams: {fileID: 0}
+--- !u!135 &6547460308985898365
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7292031655702963611}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Radius: 0.5
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1001 &1599766833183999662
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -571,7 +607,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
-    m_AddedGameObjects: []
+    m_AddedGameObjects:
+    - targetCorrespondingSourceObject: {fileID: -2382375419177788348, guid: 5fb6c47e936f72045974f4a2aa1263bc, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 2470651274299336992}
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 5fb6c47e936f72045974f4a2aa1263bc, type: 3}
       insertIndex: -1
@@ -609,3 +648,8 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!4 &9082624455512806354 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: -2382375419177788348, guid: 5fb6c47e936f72045974f4a2aa1263bc, type: 3}
+  m_PrefabInstance: {fileID: 2376753811304009622}
+  m_PrefabAsset: {fileID: 0}

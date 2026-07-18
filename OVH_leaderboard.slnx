@@ -1,5 +1,3 @@
 ﻿<Solution>
-  <Project Path="NodeCanvas.csproj" />
   <Project Path="Assembly-CSharp.csproj" />
-  <Project Path="ParadoxNotion.csproj" />
 </Solution>

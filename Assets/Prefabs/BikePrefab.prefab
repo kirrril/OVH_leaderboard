@@ -52,14 +52,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e4beeac904d17834c8be1210c7cc750e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TrainingSpot
-  trainingType: 2
-  agentAnimatorBool: isCycling
+  playerTrainingType: 2
+  manTrainingType: 4
+  girlTrainingType: 4
   cameraTarget: {fileID: 1207223695823467492}
   cameraPlace: {fileID: 397579627104519767}
   trainingPos: {fileID: 4697776712461452959}
   exitPos: {fileID: 3510417796451996684}
   trainingDuration: 8
-  selfAnimatorBool: 
 --- !u!114 &2485896959257352051
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -72,7 +72,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 83ce90be8c066c745b60e62c8a30d28e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TrainingLogic
-  excludedUserKind: 6
   selfAnimator: {fileID: 0}
   accessObstacle: {fileID: 0}
   occupiedObstacle: {fileID: 7234754067963226854}
