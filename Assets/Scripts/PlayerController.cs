@@ -19,14 +19,15 @@ public class PlayerController : MonoBehaviour
     public TrainingData CurrentTrainingData { get; private set; }
     private IPlayerTrainingHost currentTrainingHost;
 
-    public bool isBeingAttacked;
-    private Transform enemy;
+    public FightZone CurrentFightZone { get; private set; }
 
-    public bool playerAttack;
-    public bool playerAttackLeft;
-    public bool playerAttackRight;
+    public bool playerFightAttack;
+    public bool playerFightLeft;
+    public bool playerFightRight;
+    public bool isAttacking;
 
-    public JumpZone CurrentJumpZone;
+    public JumpZone CurrentJumpZone { get; private set; }
+    [SerializeField] Collider[] fightColliders;
 
     private float landedTimer;
     public float JumpChargeCoeff { get; private set; }
@@ -41,24 +42,31 @@ public class PlayerController : MonoBehaviour
     float fullClimbingHeight = 20f;
     float climbingHeightLimit;
 
-    public enum State { Walking, Gaming, Training, Fighting, Falling, BeingSubmissed, Jumping, PushingTheDoor, ClimbingThePole, MakingDoubleSelfie };
+    public enum State { Walking, Gaming, Training, Fighting, Falling, Jumping, PushingTheDoor, ClimbingThePole, MakingDoubleSelfie };
     public enum WalkingPhase { None, Idle, Walking };
     public enum JumpPhase { None, Charging, Squatting, Released, Airborne, Landed };
     public enum DoorPhase { None, Pushing, Releasing }
     public enum ClimbPhase { None, ClimbingUp, SlidingDown }
+    public enum FightPhase { None, Block, Attack, Victory, Defeat }
+    public enum FightSide { None, Left, Right, Front }
 
     public State CurrentState { get; private set; } = State.Walking;
-    public WalkingPhase walkingPhase;
-    public JumpPhase jumpPhase;
-    public DoorPhase doorPhase;
-    public ClimbPhase climbPhase;
+    public WalkingPhase CurrentWalkingPhase { get; private set; }
+    public JumpPhase CurrentJumpPhase { get; private set; }
+    public DoorPhase CurrentDoorPhase { get; private set; }
+    public ClimbPhase CurrentClimbPhase { get; private set; }
     public PlayerTrainingType CurrentTrainingType { get; private set; }
+    public FightPhase CurrentFightPhase { get; private set; }
+    public FightSide CurrentFightSide { get; private set; }
 
-    private bool isGrounded;
     [SerializeField] private LayerMask groundMask;
 
     public event Action OpenTheDoor;
 
+    void Awake()
+    {
+        SwitchFightColliders(false);
+    }
 
     void FixedUpdate()
     {
@@ -85,9 +93,6 @@ public class PlayerController : MonoBehaviour
             case State.ClimbingThePole:
                 HandleClimbingThePole();
                 break;
-            case State.BeingSubmissed:
-                HandleBeingSubmissed();
-                break;
             case State.MakingDoubleSelfie:
                 HandleMakingDoubleSelfie();
                 break;
@@ -104,7 +109,11 @@ public class PlayerController : MonoBehaviour
         CurrentState = nextState;
         SetKinematicProperty(CurrentState);
 
-        if (CurrentState == State.Walking) ReinitCameraPlace();
+        if (CurrentState == State.Walking)
+        {
+            ReinitCameraPlace();
+            SwitchFightColliders(false);
+        }
     }
 
     private void ReinitCameraPlace()
@@ -137,9 +146,6 @@ public class PlayerController : MonoBehaviour
             case State.ClimbingThePole:
                 rb.isKinematic = true;
                 break;
-            case State.BeingSubmissed:
-                rb.isKinematic = false;
-                break;
             case State.MakingDoubleSelfie:
                 rb.isKinematic = false;
                 break;
@@ -148,30 +154,44 @@ public class PlayerController : MonoBehaviour
 
     private void ChangeWalkingPhase(WalkingPhase nextPhase)
     {
-        if (walkingPhase == nextPhase) return;
+        if (CurrentWalkingPhase == nextPhase) return;
 
-        walkingPhase = nextPhase;
+        CurrentWalkingPhase = nextPhase;
     }
 
     private void ChangeJumpPhase(JumpPhase nextPhase)
     {
-        if (jumpPhase == nextPhase) return;
+        if (CurrentJumpPhase == nextPhase) return;
 
-        jumpPhase = nextPhase;
+        CurrentJumpPhase = nextPhase;
     }
 
     private void ChangeDoorPhase(DoorPhase nextPhase)
     {
-        if (doorPhase == nextPhase) return;
+        if (CurrentDoorPhase == nextPhase) return;
 
-        doorPhase = nextPhase;
+        CurrentDoorPhase = nextPhase;
     }
 
     private void ChangeClimbPhase(ClimbPhase nextPhase)
     {
-        if (climbPhase == nextPhase) return;
+        if (CurrentClimbPhase == nextPhase) return;
 
-        climbPhase = nextPhase;
+        CurrentClimbPhase = nextPhase;
+    }
+
+    private void ChangeFightPhase(FightPhase nextPhase)
+    {
+        if (CurrentFightPhase == nextPhase) return;
+
+        CurrentFightPhase = nextPhase;
+    }
+
+    private void ChangeFightSide(FightSide nextSide)
+    {
+        if (CurrentFightSide == nextSide) return;
+
+        CurrentFightSide = nextSide;
     }
 
     private void SetTrainingType(PlayerTrainingType type)
@@ -186,19 +206,26 @@ public class PlayerController : MonoBehaviour
         switch (state)
         {
             case State.Walking:
-                walkingPhase = WalkingPhase.None;
+                ChangeWalkingPhase(WalkingPhase.None);
                 break;
 
             case State.Jumping:
-                jumpPhase = JumpPhase.None;
+                ChangeJumpPhase(JumpPhase.None);
                 break;
 
             case State.PushingTheDoor:
-                doorPhase = DoorPhase.None;
+                ChangeDoorPhase(DoorPhase.None);
                 break;
 
             case State.ClimbingThePole:
-                climbPhase = ClimbPhase.None;
+                ChangeClimbPhase(ClimbPhase.None);
+                break;
+
+            case State.Fighting:
+                ChangeFightPhase(FightPhase.None);
+                ChangeFightSide(FightSide.None);
+                SwitchFightColliders(false);
+                isAttacking = false;
                 break;
         }
     }
@@ -225,6 +252,73 @@ public class PlayerController : MonoBehaviour
     {
         RotatePlayer();
         MoveCameraTarget();
+        ProcessFightInputs();
+    }
+
+    private void ProcessFightInputs()
+    {
+        if (CurrentFightPhase == FightPhase.Victory || CurrentFightPhase == FightPhase.Defeat)
+            return;
+
+        if (isAttacking)
+            return;
+
+        if (GameManager.Instance.BackTraining >= 0.5f)
+        {
+            if (playerFightLeft)
+            {
+                if (playerFightAttack)
+                {
+                    playerFightAttack = false;
+                    ChangeFightPhase(FightPhase.Attack);
+                    ChangeFightSide(FightSide.Left);
+                    isAttacking = true;
+                }
+                else
+                {
+                    ChangeFightPhase(FightPhase.Block);
+                    ChangeFightSide(FightSide.Left);
+                }
+                return;
+            }
+
+            if (playerFightRight)
+            {
+                if (playerFightAttack)
+                {
+                    playerFightAttack = false;
+                    ChangeFightPhase(FightPhase.Attack);
+                    ChangeFightSide(FightSide.Right);
+                    isAttacking = true;
+                }
+                else
+                {
+                    ChangeFightPhase(FightPhase.Block);
+                    ChangeFightSide(FightSide.Right);
+                }
+                return;
+            }
+        }
+
+        if (GameManager.Instance.ChestTraining >= 0.5f && playerFightAttack)
+        {
+            playerFightAttack = false;
+            ChangeFightPhase(FightPhase.Attack);
+            ChangeFightSide(FightSide.Front);
+            isAttacking = true;
+            return;
+        }
+
+        playerFightAttack = false;
+        ChangeFightPhase(FightPhase.None);
+        ChangeFightSide(FightSide.None);
+    }
+
+    public void CanAttackAgain()
+    {
+        isAttacking = false;
+        ChangeFightPhase(FightPhase.None);
+        ChangeFightSide(FightSide.None);
     }
 
     private void AbortCurrentContextForDeath()
@@ -245,14 +339,18 @@ public class PlayerController : MonoBehaviour
         climbingHeightLimit = 0f;
         CurrentJumpZone = null;
 
-        walkingPhase = WalkingPhase.None;
-        jumpPhase = JumpPhase.None;
-        doorPhase = DoorPhase.None;
-        climbPhase = ClimbPhase.None;
+        ChangeWalkingPhase(WalkingPhase.None);
+        ChangeJumpPhase(JumpPhase.None);
+        ChangeDoorPhase(DoorPhase.None);
+        ChangeClimbPhase(ClimbPhase.None);
+
+        CurrentFightPhase = FightPhase.None;
+        CurrentFightSide = FightSide.None;
     }
+
     private void HandleJumping()
     {
-        switch (jumpPhase)
+        switch (CurrentJumpPhase)
         {
             case JumpPhase.Charging:
                 HandleJumpCharging();
@@ -303,7 +401,7 @@ public class PlayerController : MonoBehaviour
     {
         rb.angularVelocity = Vector3.zero;
 
-        if (jumpPhase != JumpPhase.Airborne) return;
+        if (CurrentJumpPhase != JumpPhase.Airborne) return;
         if (CheckIfIsGrounded())
         {
             landedTimer = 0.5f;
@@ -345,7 +443,7 @@ public class PlayerController : MonoBehaviour
 
     private void HandlePushingTheDoor()
     {
-        if (doorPhase == DoorPhase.Releasing) WaitAndWalk();
+        if (CurrentDoorPhase == DoorPhase.Releasing) WaitAndWalk();
 
         rb.position = CurrentDoor.pushingPos.position;
         rb.rotation = CurrentDoor.pushingPos.rotation;
@@ -370,7 +468,7 @@ public class PlayerController : MonoBehaviour
 
         float climbingMaxHeight = CurrentPole.transform.position.y + climbingHeightLimit;
 
-        switch (climbPhase)
+        switch (CurrentClimbPhase)
         {
             case ClimbPhase.ClimbingUp:
                 rb.MovePosition(rb.position + Vector3.up * Time.fixedDeltaTime * 2);
@@ -382,11 +480,6 @@ public class PlayerController : MonoBehaviour
 
         if (CheckIfIsGrounded()) ChangeState(State.Walking);
         if (transform.position.y >= climbingMaxHeight) ChangeClimbPhase(ClimbPhase.SlidingDown);
-    }
-
-    private void HandleBeingSubmissed()
-    {
-        rb.angularVelocity = Vector3.zero;
     }
 
     private void HandleFalling()
@@ -450,6 +543,31 @@ public class PlayerController : MonoBehaviour
         return Mathf.Abs(playerMovement.x) > 0.1f || Mathf.Abs(playerMovement.y) > 0.1f;
     }
 
+    public void EnterFightZone(FightZone fightZone)
+    {
+        CurrentFightZone = fightZone;
+        ChangeState(State.Fighting);
+        ChangeFightPhase(FightPhase.None);
+        ChangeFightSide(FightSide.None);
+        SwitchFightColliders(true);
+    }
+
+    public void ExitFightZone()
+    {
+        CurrentFightZone = null;
+        ChangeState(State.Walking);
+        SwitchFightColliders(false);
+    }
+
+    private void SwitchFightColliders(bool isEnabled)
+    {
+        foreach (Collider collider in fightColliders)
+        {
+            collider.enabled = isEnabled;
+            collider.gameObject.SetActive(isEnabled);
+        }
+    }
+
     public void EnterJumpZone(JumpZone jumpZone)
     {
         CurrentJumpZone = jumpZone;
@@ -506,7 +624,7 @@ public class PlayerController : MonoBehaviour
 
     private void ReleaseJump()
     {
-        if (jumpPhase != JumpPhase.Charging && jumpPhase != JumpPhase.Squatting) return;
+        if (CurrentJumpPhase != JumpPhase.Charging && CurrentJumpPhase != JumpPhase.Squatting) return;
 
         ChangeJumpPhase(JumpPhase.Released);
 
@@ -601,6 +719,7 @@ public class PlayerController : MonoBehaviour
 
     public void OnMove(InputAction.CallbackContext ctx)
     {
+        if (CurrentFightZone != null) return;
         playerMovement = ctx.ReadValue<Vector2>();
     }
 
@@ -611,17 +730,25 @@ public class PlayerController : MonoBehaviour
 
     public void OnAttack(InputAction.CallbackContext ctx)
     {
-        playerAttack = ctx.ReadValueAsButton();
+        if (CurrentFightZone == null) return;
+        if (isAttacking) return;
+
+        if (ctx.started)
+        {
+            playerFightAttack = true;
+        }
     }
 
-    public void OnAttackLeft(InputAction.CallbackContext ctx)
+    public void OnAttackSideLeft(InputAction.CallbackContext ctx)
     {
-        playerAttackLeft = ctx.ReadValueAsButton();
+        if (CurrentFightZone == null) return;
+        playerFightLeft = ctx.ReadValueAsButton();
     }
 
-    public void OnAttackRight(InputAction.CallbackContext ctx)
+    public void OnAttackSideRight(InputAction.CallbackContext ctx)
     {
-        playerAttackRight = ctx.ReadValueAsButton();
+        if (CurrentFightZone == null) return;
+        playerFightRight = ctx.ReadValueAsButton();
     }
 
     public void OnJump(InputAction.CallbackContext ctx)
@@ -723,10 +850,5 @@ public class PlayerController : MonoBehaviour
         Vector3 targetPosition = new Vector3(0, 1.04f, 0.6f);
         await Awaitable.WaitForSecondsAsync(3);
         // cameraPlace.localPosition = targetPosition;
-    }
-
-    public void SufferSubmission()
-    {
-        ChangeState(State.BeingSubmissed);
     }
 }

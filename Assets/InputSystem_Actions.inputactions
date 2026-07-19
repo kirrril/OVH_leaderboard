@@ -61,18 +61,18 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "AttackLeft",
+                    "name": "AttackSideLeft",
                     "type": "Button",
-                    "id": "4631378f-ce4f-4076-af21-0bf47977d3d3",
+                    "id": "46533300-eeb9-49a8-a32e-0d6cb319deb5",
                     "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
                 },
                 {
-                    "name": "AttackRight",
+                    "name": "AttackSideRight",
                     "type": "Button",
-                    "id": "6cfcb669-54ac-42ce-8cae-4b0b4ef0bcbc",
+                    "id": "90051994-b315-4ca2-99ac-ec4b6dd2f90e",
                     "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
@@ -236,23 +236,23 @@
                 },
                 {
                     "name": "",
-                    "id": "826c2fda-4628-41d3-a035-95452fcaa7af",
-                    "path": "<Keyboard>/a",
+                    "id": "66eed636-2ca6-4cd8-b59f-7eb9a53ad3fc",
+                    "path": "<Keyboard>/q",
                     "interactions": "",
                     "processors": "",
-                    "groups": ";Keyboard&Mouse",
-                    "action": "AttackLeft",
+                    "groups": "",
+                    "action": "AttackSideLeft",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
                 {
                     "name": "",
-                    "id": "93656ac3-ff57-42db-a73d-24dd21187961",
+                    "id": "4e2fd9b8-f8dc-4922-b9d2-da9a460d60a7",
                     "path": "<Keyboard>/d",
                     "interactions": "",
                     "processors": "",
-                    "groups": ";Keyboard&Mouse",
-                    "action": "AttackRight",
+                    "groups": "",
+                    "action": "AttackSideRight",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

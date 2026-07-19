@@ -1,3 +1,4 @@
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -22,20 +23,25 @@ public class ManController : MonoBehaviour, IAgent
     private float insultDistance = 1.5f;
     private bool hasInsulted;
     public bool wasBeaten;
+    private bool fightResolved;
+    private float nextAttackTimer;
 
     public enum State { Patrol, Chasing, Fleeing, Training, Fighting }
     public enum WalkingPhase { None, Idle, Walking };
-    public enum FightPhase { None, Attack, Defeat, Victory }
+    public enum FightPhase { None, Attack, Victory, Defeat }
+    public enum FightSide { None, Left, Right }
 
     public State CurrentState { get; private set; } = State.Patrol;
     private TrainingData currentTrainingData;
     public WalkingPhase CurrentWalkingPhase { get; private set; }
     public ManTrainingType CurrentTrainingType { get; private set; }
+    public FightPhase CurrentFightPhase { get; private set; }
+    public FightSide CurrentFightSide { get; private set; }
 
     void Awake()
     {
         agent.avoidancePriority = agentPriority;
-        SwitchFightColliders("Off");
+        SwitchFightColliders(false);
     }
 
     void Update()
@@ -80,7 +86,7 @@ public class ManController : MonoBehaviour, IAgent
         }
     }
 
-    private void ChangeState(State nextState)
+    public void ChangeState(State nextState)
     {
         if (CurrentState == nextState) return;
 
@@ -94,7 +100,9 @@ public class ManController : MonoBehaviour, IAgent
         switch (state)
         {
             case State.Fighting:
-                SwitchFightColliders("Off");
+                SwitchFightColliders(false);
+                ChangeFightPhase(FightPhase.None);
+                ChangeFightSide(FightSide.None);
                 break;
             case State.Patrol:
                 ChangeWalkingPhase(WalkingPhase.None);
@@ -113,6 +121,7 @@ public class ManController : MonoBehaviour, IAgent
         switch (state)
         {
             case State.Patrol:
+                SwitchFightColliders(false);
                 agent.enabled = true;
                 agent.isStopped = false;
                 agent.ResetPath();
@@ -141,7 +150,8 @@ public class ManController : MonoBehaviour, IAgent
                 agent.isStopped = true;
                 agent.enabled = false;
                 transform.LookAt(player);
-                SwitchFightColliders("On");
+                SwitchFightColliders(true);
+                Attack();
                 break;
 
             case State.Fleeing:
@@ -156,6 +166,45 @@ public class ManController : MonoBehaviour, IAgent
     {
         if (CurrentWalkingPhase == nextPhase) return;
         CurrentWalkingPhase = nextPhase;
+    }
+
+    private void ChangeFightPhase(FightPhase nextPhase)
+    {
+        if (CurrentFightPhase == nextPhase) return;
+        CurrentFightPhase = nextPhase;
+    }
+
+    private void ChangeFightSide(FightSide nextSide)
+    {
+        if (CurrentFightSide == nextSide) return;
+        CurrentFightSide = nextSide;
+    }
+
+    public void Attack()
+    {
+        int fightSide = Random.Range(1, 3);
+
+        switch (fightSide)
+        {
+            case 1:
+                ChangeFightSide(FightSide.Left);
+                break;
+            case 2:
+                ChangeFightSide(FightSide.Right);
+                break;
+        }
+
+        ChangeFightPhase(FightPhase.Attack);
+    }
+
+    public void OnAttackAnimationFinished()
+    {
+        if (CurrentState != State.Fighting) return;
+        if (fightResolved) return;
+
+        ChangeFightPhase(FightPhase.None);
+        ChangeFightSide(FightSide.None);
+        nextAttackTimer = 0.5f;
     }
 
     private int ChoseNewTrainingSpot()
@@ -186,23 +235,12 @@ public class ManController : MonoBehaviour, IAgent
         agent.SetDestination(targetSpot.position);
     }
 
-    private void SwitchFightColliders(string onOff)
+    private void SwitchFightColliders(bool isEnabled)
     {
-        switch (onOff)
+        foreach (Collider collider in fightColliders)
         {
-            case "On":
-                foreach (Collider collider in fightColliders)
-                {
-                    collider.enabled = true;
-                }
-                break;
-
-            case "Off":
-                foreach (Collider collider in fightColliders)
-                {
-                    collider.enabled = false;
-                }
-                break;
+            collider.enabled = isEnabled;
+            collider.gameObject.SetActive(isEnabled);
         }
     }
 
@@ -262,7 +300,14 @@ public class ManController : MonoBehaviour, IAgent
 
     private void HandleFighting()
     {
+        if (fightResolved) return;
 
+        if (CurrentFightPhase != FightPhase.None) return;
+
+        nextAttackTimer -= Time.deltaTime;
+        if (nextAttackTimer > 0f) return;
+
+        Attack();
     }
 
     private bool CanChase()

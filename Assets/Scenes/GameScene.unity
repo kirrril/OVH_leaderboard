@@ -1060,6 +1060,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: ManPrefab (8)
       objectReference: {fileID: 0}
+    - target: {fileID: 1289906196322191111, guid: f5a898421e6ddc6498bda1693de28afb, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 2386004535829777886, guid: f5a898421e6ddc6498bda1693de28afb, type: 3}
       propertyPath: avoidancePriority
       value: 28
@@ -1852,6 +1856,11 @@ CanvasRenderer:
 Transform:
   m_CorrespondingSourceObject: {fileID: 4819015238887158657, guid: 608b71ab62a981148872e9d0d49ca61e, type: 3}
   m_PrefabInstance: {fileID: 5875282860110091466}
+  m_PrefabAsset: {fileID: 0}
+--- !u!208 &139576824 stripped
+NavMeshObstacle:
+  m_CorrespondingSourceObject: {fileID: 8362338707065705958, guid: f5a898421e6ddc6498bda1693de28afb, type: 3}
+  m_PrefabInstance: {fileID: 8976047155673942150}
   m_PrefabAsset: {fileID: 0}
 --- !u!1 &142515345
 GameObject:
@@ -7475,6 +7484,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: ManPrefab (5)
       objectReference: {fileID: 0}
+    - target: {fileID: 1289906196322191111, guid: f5a898421e6ddc6498bda1693de28afb, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 2386004535829777886, guid: f5a898421e6ddc6498bda1693de28afb, type: 3}
       propertyPath: avoidancePriority
       value: 25
@@ -9082,6 +9095,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: ManPrefab (4)
       objectReference: {fileID: 0}
+    - target: {fileID: 1289906196322191111, guid: f5a898421e6ddc6498bda1693de28afb, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 2386004535829777886, guid: f5a898421e6ddc6498bda1693de28afb, type: 3}
       propertyPath: avoidancePriority
       value: 24
@@ -10039,6 +10056,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: ManPrefab (2)
       objectReference: {fileID: 0}
+    - target: {fileID: 1289906196322191111, guid: f5a898421e6ddc6498bda1693de28afb, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 2386004535829777886, guid: f5a898421e6ddc6498bda1693de28afb, type: 3}
       propertyPath: avoidancePriority
       value: 22
@@ -10961,6 +10982,10 @@ PrefabInstance:
     - target: {fileID: 1289906196322191111, guid: f5a898421e6ddc6498bda1693de28afb, type: 3}
       propertyPath: m_Name
       value: ManPrefab (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 1289906196322191111, guid: f5a898421e6ddc6498bda1693de28afb, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2386004535829777886, guid: f5a898421e6ddc6498bda1693de28afb, type: 3}
       propertyPath: avoidancePriority
@@ -14556,6 +14581,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: ManPrefab (7)
       objectReference: {fileID: 0}
+    - target: {fileID: 1289906196322191111, guid: f5a898421e6ddc6498bda1693de28afb, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 2386004535829777886, guid: f5a898421e6ddc6498bda1693de28afb, type: 3}
       propertyPath: avoidancePriority
       value: 27
@@ -15644,6 +15673,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: ManPrefab (3)
       objectReference: {fileID: 0}
+    - target: {fileID: 1289906196322191111, guid: f5a898421e6ddc6498bda1693de28afb, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 2386004535829777886, guid: f5a898421e6ddc6498bda1693de28afb, type: 3}
       propertyPath: avoidancePriority
       value: 23
@@ -16277,6 +16310,10 @@ PrefabInstance:
     - target: {fileID: 1289906196322191111, guid: f5a898421e6ddc6498bda1693de28afb, type: 3}
       propertyPath: m_Name
       value: ManPrefab (9)
+      objectReference: {fileID: 0}
+    - target: {fileID: 1289906196322191111, guid: f5a898421e6ddc6498bda1693de28afb, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2386004535829777886, guid: f5a898421e6ddc6498bda1693de28afb, type: 3}
       propertyPath: avoidancePriority
@@ -18963,6 +19000,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: ManPrefab (6)
       objectReference: {fileID: 0}
+    - target: {fileID: 1289906196322191111, guid: f5a898421e6ddc6498bda1693de28afb, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 2386004535829777886, guid: f5a898421e6ddc6498bda1693de28afb, type: 3}
       propertyPath: avoidancePriority
       value: 26
@@ -19245,6 +19286,10 @@ PrefabInstance:
     - target: {fileID: 1289906196322191111, guid: f5a898421e6ddc6498bda1693de28afb, type: 3}
       propertyPath: m_Name
       value: ManPrefab (10)
+      objectReference: {fileID: 0}
+    - target: {fileID: 1289906196322191111, guid: f5a898421e6ddc6498bda1693de28afb, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2386004535829777886, guid: f5a898421e6ddc6498bda1693de28afb, type: 3}
       propertyPath: avoidancePriority
@@ -27823,6 +27868,10 @@ PrefabInstance:
       value: 13
       objectReference: {fileID: 0}
     - target: {fileID: 758515800148603601, guid: f5a898421e6ddc6498bda1693de28afb, type: 3}
+      propertyPath: fightColliders.Array.size
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 758515800148603601, guid: f5a898421e6ddc6498bda1693de28afb, type: 3}
       propertyPath: 'trainingSpots.Array.data[0]'
       value: 
       objectReference: {fileID: 2037138103}
@@ -27878,9 +27927,21 @@ PrefabInstance:
       propertyPath: m_Name
       value: ManPrefab
       objectReference: {fileID: 0}
-    - target: {fileID: 2386004535829777886, guid: f5a898421e6ddc6498bda1693de28afb, type: 3}
-      propertyPath: avoidancePriority
-      value: 20
+    - target: {fileID: 7006743359449978257, guid: f5a898421e6ddc6498bda1693de28afb, type: 3}
+      propertyPath: player
+      value: 
+      objectReference: {fileID: 437535146}
+    - target: {fileID: 7006743359449978257, guid: f5a898421e6ddc6498bda1693de28afb, type: 3}
+      propertyPath: navMeshObstacle
+      value: 
+      objectReference: {fileID: 139576824}
+    - target: {fileID: 7006743359449978257, guid: f5a898421e6ddc6498bda1693de28afb, type: 3}
+      propertyPath: playerController
+      value: 
+      objectReference: {fileID: 437535149}
+    - target: {fileID: 8362338707065705958, guid: f5a898421e6ddc6498bda1693de28afb, type: 3}
+      propertyPath: m_Enabled
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

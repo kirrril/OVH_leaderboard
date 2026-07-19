@@ -60,7 +60,7 @@ public class PlayerAnimationController : MonoBehaviour
     {
         float target = 0f;
 
-        switch (playerController.walkingPhase)
+        switch (playerController.CurrentWalkingPhase)
         {
             case PlayerController.WalkingPhase.Walking:
                 target = 1f;
@@ -79,7 +79,7 @@ public class PlayerAnimationController : MonoBehaviour
     {
         float target = 0f;
 
-        switch (playerController.jumpPhase)
+        switch (playerController.CurrentJumpPhase)
         {
             case PlayerController.JumpPhase.Charging:
                 target = playerController.JumpChargeBounce;
@@ -111,7 +111,7 @@ public class PlayerAnimationController : MonoBehaviour
 
     private void SyncLandingTrigger()
     {
-        PlayerController.JumpPhase currentJumpPhase = playerController.jumpPhase;
+        PlayerController.JumpPhase currentJumpPhase = playerController.CurrentJumpPhase;
 
         if (currentJumpPhase == PlayerController.JumpPhase.Landed &&
             lastJumpPhase != PlayerController.JumpPhase.Landed)
@@ -126,7 +126,7 @@ public class PlayerAnimationController : MonoBehaviour
     {
         float target = 0f;
 
-        switch (playerController.doorPhase)
+        switch (playerController.CurrentDoorPhase)
         {
             case PlayerController.DoorPhase.Pushing:
                 target = 0f;
@@ -148,7 +148,7 @@ public class PlayerAnimationController : MonoBehaviour
     {
         float target = 0f;
 
-        switch (playerController.climbPhase)
+        switch (playerController.CurrentClimbPhase)
         {
             case PlayerController.ClimbPhase.SlidingDown:
                 target = 0f;

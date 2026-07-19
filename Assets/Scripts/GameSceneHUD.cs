@@ -369,7 +369,7 @@ public class GameSceneHUD : MonoBehaviour
     {
         if (playerController.CurrentJumpZone == null
         || playerController.CurrentJumpZone.jumpType != JumpZone.JumpType.Charged
-        || playerController.jumpPhase != PlayerController.JumpPhase.Charging)
+        || playerController.CurrentJumpPhase != PlayerController.JumpPhase.Charging)
         {
             jumpChargeProgressFill.fillAmount = 0;
             jumpChargeProgress.SetActive(false);
@@ -402,7 +402,7 @@ public class GameSceneHUD : MonoBehaviour
             }
         }
         else if (playerController.CurrentState == PlayerController.State.Jumping
-            && playerController.jumpPhase == PlayerController.JumpPhase.Charging)
+            && playerController.CurrentJumpPhase == PlayerController.JumpPhase.Charging)
         {
             contextMessageText.text = "Release Space to jump";
         }
