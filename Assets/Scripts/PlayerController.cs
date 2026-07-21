@@ -48,6 +48,7 @@ public class PlayerController : MonoBehaviour
     public enum DoorPhase { None, Pushing, Releasing }
     public enum ClimbPhase { None, ClimbingUp, SlidingDown }
     public enum FightPhase { None, Block, Attack, Victory, Defeat }
+    public enum FallDirection { Front, Back, Left, Right }
     public enum FightSide { None, Left, Right, Front }
 
     public State CurrentState { get; private set; } = State.Walking;
@@ -57,6 +58,7 @@ public class PlayerController : MonoBehaviour
     public ClimbPhase CurrentClimbPhase { get; private set; }
     public PlayerTrainingType CurrentTrainingType { get; private set; }
     public FightPhase CurrentFightPhase { get; private set; }
+    public FallDirection CurrentFallDirection { get; private set; }
     public FightSide CurrentFightSide { get; private set; }
 
     [SerializeField] private LayerMask groundMask;
@@ -180,7 +182,7 @@ public class PlayerController : MonoBehaviour
         CurrentClimbPhase = nextPhase;
     }
 
-    private void ChangeFightPhase(FightPhase nextPhase)
+    public void ChangeFightPhase(FightPhase nextPhase)
     {
         if (CurrentFightPhase == nextPhase) return;
 
@@ -193,6 +195,13 @@ public class PlayerController : MonoBehaviour
 
         CurrentFightSide = nextSide;
     }
+
+    public void ChangeFallDirection(FallDirection nextDirection)
+    {
+        if (CurrentFallDirection == nextDirection) return;
+        CurrentFallDirection = nextDirection;
+    }
+
 
     private void SetTrainingType(PlayerTrainingType type)
     {

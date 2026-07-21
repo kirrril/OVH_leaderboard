@@ -30,6 +30,7 @@ public class ManController : MonoBehaviour, IAgent
     public enum WalkingPhase { None, Idle, Walking };
     public enum FightPhase { None, Attack, Victory, Defeat }
     public enum FightSide { None, Left, Right }
+    public enum FallDirection { Front, Back, Left, Right }
 
     public State CurrentState { get; private set; } = State.Patrol;
     private TrainingData currentTrainingData;
@@ -37,6 +38,7 @@ public class ManController : MonoBehaviour, IAgent
     public ManTrainingType CurrentTrainingType { get; private set; }
     public FightPhase CurrentFightPhase { get; private set; }
     public FightSide CurrentFightSide { get; private set; }
+    public FallDirection CurrentFallDirection { get; private set; }
 
     void Awake()
     {
@@ -168,7 +170,7 @@ public class ManController : MonoBehaviour, IAgent
         CurrentWalkingPhase = nextPhase;
     }
 
-    private void ChangeFightPhase(FightPhase nextPhase)
+    public void ChangeFightPhase(FightPhase nextPhase)
     {
         if (CurrentFightPhase == nextPhase) return;
         CurrentFightPhase = nextPhase;
@@ -178,6 +180,12 @@ public class ManController : MonoBehaviour, IAgent
     {
         if (CurrentFightSide == nextSide) return;
         CurrentFightSide = nextSide;
+    }
+
+    public void ChangeFallDirection(FallDirection nextDirection)
+    {
+        if (CurrentFallDirection == nextDirection) return;
+        CurrentFallDirection = nextDirection;
     }
 
     public void Attack()

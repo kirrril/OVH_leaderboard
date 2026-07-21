@@ -38,4 +38,59 @@ public class FightZone : MonoBehaviour
 
         fightHasStarted = false;
     }
+
+    public void HurtboxTouched(FightHitbox.AttackerType attackerType, FightHurtbox.HurtboxType hurtboxType)
+    {
+        switch (attackerType)
+        {
+            case FightHitbox.AttackerType.Player:
+                manController.ChangeFightPhase(ManController.FightPhase.Defeat);
+                switch (hurtboxType)
+                {
+                    case FightHurtbox.HurtboxType.Chest:
+                    case FightHurtbox.HurtboxType.HeadFront:
+                        manController.ChangeFallDirection(ManController.FallDirection.Back);
+                        break;
+                    case FightHurtbox.HurtboxType.HeadBack:
+                        manController.ChangeFallDirection(ManController.FallDirection.Front);
+                        break;
+                    case FightHurtbox.HurtboxType.HeadLeft:
+                        manController.ChangeFallDirection(ManController.FallDirection.Right);
+                        break;
+                    case FightHurtbox.HurtboxType.HeadRight:
+                        manController.ChangeFallDirection(ManController.FallDirection.Left);
+                        break;
+                }
+                playerController.ChangeFightPhase(PlayerController.FightPhase.Victory);
+                break;
+            case FightHitbox.AttackerType.Man:
+                switch (hurtboxType)
+                {
+                    case FightHurtbox.HurtboxType.ArmLeft:
+                    case FightHurtbox.HurtboxType.ArmRight:
+                        break;
+                    case FightHurtbox.HurtboxType.HeadFront:
+                        playerController.ChangeFightPhase(PlayerController.FightPhase.Defeat);
+                        playerController.ChangeFallDirection(PlayerController.FallDirection.Back);
+                        manController.ChangeFightPhase(ManController.FightPhase.Victory);
+                        break;
+                    case FightHurtbox.HurtboxType.HeadBack:
+                        playerController.ChangeFightPhase(PlayerController.FightPhase.Defeat);
+                        playerController.ChangeFallDirection(PlayerController.FallDirection.Front);
+                        manController.ChangeFightPhase(ManController.FightPhase.Victory);
+                        break;
+                    case FightHurtbox.HurtboxType.HeadLeft:
+                        playerController.ChangeFightPhase(PlayerController.FightPhase.Defeat);
+                        playerController.ChangeFallDirection(PlayerController.FallDirection.Right);
+                        manController.ChangeFightPhase(ManController.FightPhase.Victory);
+                        break;
+                    case FightHurtbox.HurtboxType.HeadRight:
+                        playerController.ChangeFightPhase(PlayerController.FightPhase.Defeat);
+                        playerController.ChangeFallDirection(PlayerController.FallDirection.Left);
+                        manController.ChangeFightPhase(ManController.FightPhase.Victory);
+                        break;
+                }
+                break;
+        }
+    }
 }
