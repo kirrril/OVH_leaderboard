@@ -24,7 +24,7 @@ public class PlayerController : MonoBehaviour
     public bool playerFightAttack;
     public bool playerFightLeft;
     public bool playerFightRight;
-    public bool isAttacking;
+    public bool isThrowing;
 
     public JumpZone CurrentJumpZone { get; private set; }
     [SerializeField] Collider[] fightColliders;
@@ -50,6 +50,21 @@ public class PlayerController : MonoBehaviour
     public enum FightPhase { None, Block, Attack, Victory, Defeat }
     public enum FallDirection { Front, Back, Left, Right }
     public enum FightSide { None, Left, Right, Front }
+    public enum PlayerFightAction
+    {
+        None = 0,
+        Idle = 1,
+        AttackFront = 2,
+        AttackLeft = 3,
+        AttackRight = 4,
+        BlockLeft = 5,
+        BlockRight = 6,
+        FallBack = 7,
+        FallFront = 8,
+        FallLeft = 9,
+        FallRight = 10,
+        Victory = 11
+    }
 
     public State CurrentState { get; private set; } = State.Walking;
     public WalkingPhase CurrentWalkingPhase { get; private set; }
@@ -60,6 +75,7 @@ public class PlayerController : MonoBehaviour
     public FightPhase CurrentFightPhase { get; private set; }
     public FallDirection CurrentFallDirection { get; private set; }
     public FightSide CurrentFightSide { get; private set; }
+    public PlayerFightAction CurrentFightAction { get; private set; }
 
     [SerializeField] private LayerMask groundMask;
 
@@ -234,7 +250,7 @@ public class PlayerController : MonoBehaviour
                 ChangeFightPhase(FightPhase.None);
                 ChangeFightSide(FightSide.None);
                 SwitchFightColliders(false);
-                isAttacking = false;
+                isThrowing = false;
                 break;
         }
     }
@@ -262,6 +278,7 @@ public class PlayerController : MonoBehaviour
         RotatePlayer();
         MoveCameraTarget();
         ProcessFightInputs();
+        SwitchFightActions();
     }
 
     private void ProcessFightInputs()
@@ -269,7 +286,7 @@ public class PlayerController : MonoBehaviour
         if (CurrentFightPhase == FightPhase.Victory || CurrentFightPhase == FightPhase.Defeat)
             return;
 
-        if (isAttacking)
+        if (isThrowing)
             return;
 
         if (GameManager.Instance.BackTraining >= 0.5f)
@@ -281,12 +298,13 @@ public class PlayerController : MonoBehaviour
                     playerFightAttack = false;
                     ChangeFightPhase(FightPhase.Attack);
                     ChangeFightSide(FightSide.Left);
-                    isAttacking = true;
+                    isThrowing = true;
                 }
                 else
                 {
                     ChangeFightPhase(FightPhase.Block);
                     ChangeFightSide(FightSide.Left);
+                    isThrowing = true;
                 }
                 return;
             }
@@ -298,12 +316,13 @@ public class PlayerController : MonoBehaviour
                     playerFightAttack = false;
                     ChangeFightPhase(FightPhase.Attack);
                     ChangeFightSide(FightSide.Right);
-                    isAttacking = true;
+                    isThrowing = true;
                 }
                 else
                 {
                     ChangeFightPhase(FightPhase.Block);
                     ChangeFightSide(FightSide.Right);
+                    isThrowing = true;
                 }
                 return;
             }
@@ -314,7 +333,7 @@ public class PlayerController : MonoBehaviour
             playerFightAttack = false;
             ChangeFightPhase(FightPhase.Attack);
             ChangeFightSide(FightSide.Front);
-            isAttacking = true;
+            isThrowing = true;
             return;
         }
 
@@ -323,11 +342,71 @@ public class PlayerController : MonoBehaviour
         ChangeFightSide(FightSide.None);
     }
 
-    public void CanAttackAgain()
+    private void SwitchFightActions()
     {
-        isAttacking = false;
+        switch (CurrentFightPhase)
+        {
+            case FightPhase.None:
+                CurrentFightAction = PlayerFightAction.Idle;
+                break;
+            case FightPhase.Block:
+                switch (CurrentFightSide)
+                {
+                    case FightSide.Left:
+                        CurrentFightAction = PlayerFightAction.BlockLeft;
+                        break;
+                    case FightSide.Right:
+                        CurrentFightAction = PlayerFightAction.BlockRight;
+                        break;
+                }
+                break;
+            case FightPhase.Attack:
+                switch (CurrentFightSide)
+                {
+                    case FightSide.Left:
+                        CurrentFightAction = PlayerFightAction.AttackLeft;
+                        break;
+                    case FightSide.Right:
+                        CurrentFightAction = PlayerFightAction.AttackRight;
+                        break;
+                }
+                break;
+            case FightPhase.Victory:
+                CurrentFightAction = PlayerFightAction.Victory;
+                break;
+            case FightPhase.Defeat:
+                switch (CurrentFallDirection)
+                {
+                    case FallDirection.Back:
+                        CurrentFightAction = PlayerFightAction.FallBack;
+                        break;
+                    case FallDirection.Front:
+                        CurrentFightAction = PlayerFightAction.FallFront;
+                        break;
+                    case FallDirection.Left:
+                        CurrentFightAction = PlayerFightAction.FallLeft;
+                        break;
+                    case FallDirection.Right:
+                        CurrentFightAction = PlayerFightAction.FallRight;
+                        break;
+                }
+                break;
+        }
+    }
+
+    public void OnThrowFinished()
+    {
+        isThrowing = false;
         ChangeFightPhase(FightPhase.None);
         ChangeFightSide(FightSide.None);
+    }
+
+    public void OnDefeatAnimationFinished()
+    {
+        if (CurrentState != State.Fighting) return;
+        if (CurrentFightPhase != FightPhase.Defeat) return;
+
+        GameManager.Instance.RequestDeath(GameManager.DeathReason.Fight);
     }
 
     private void AbortCurrentContextForDeath()
@@ -555,6 +634,10 @@ public class PlayerController : MonoBehaviour
     public void EnterFightZone(FightZone fightZone)
     {
         CurrentFightZone = fightZone;
+
+        rb.linearVelocity = Vector3.zero;
+        rb.angularVelocity = Vector3.zero;
+
         ChangeState(State.Fighting);
         ChangeFightPhase(FightPhase.None);
         ChangeFightSide(FightSide.None);
@@ -740,7 +823,7 @@ public class PlayerController : MonoBehaviour
     public void OnAttack(InputAction.CallbackContext ctx)
     {
         if (CurrentFightZone == null) return;
-        if (isAttacking) return;
+        if (isThrowing) return;
 
         if (ctx.started)
         {
@@ -751,12 +834,14 @@ public class PlayerController : MonoBehaviour
     public void OnAttackSideLeft(InputAction.CallbackContext ctx)
     {
         if (CurrentFightZone == null) return;
+
         playerFightLeft = ctx.ReadValueAsButton();
     }
 
     public void OnAttackSideRight(InputAction.CallbackContext ctx)
     {
         if (CurrentFightZone == null) return;
+
         playerFightRight = ctx.ReadValueAsButton();
     }
 

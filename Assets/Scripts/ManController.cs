@@ -23,12 +23,12 @@ public class ManController : MonoBehaviour, IAgent
     private float insultDistance = 1.5f;
     private bool hasInsulted;
     public bool wasBeaten;
-    private bool fightResolved;
+    public bool IsFightResolved { get; private set; }
     private float nextAttackTimer;
 
     public enum State { Patrol, Chasing, Fleeing, Training, Fighting }
     public enum WalkingPhase { None, Idle, Walking };
-    public enum FightPhase { None, Attack, Victory, Defeat }
+    public enum FightPhase { None, Attack, Blocked, Victory, Defeat }
     public enum FightSide { None, Left, Right }
     public enum FallDirection { Front, Back, Left, Right }
 
@@ -39,6 +39,23 @@ public class ManController : MonoBehaviour, IAgent
     public FightPhase CurrentFightPhase { get; private set; }
     public FightSide CurrentFightSide { get; private set; }
     public FallDirection CurrentFallDirection { get; private set; }
+
+    public enum ManFightAction
+    {
+        None = 0,
+        Idle = 1,
+        AttackLeft = 2,
+        AttackRight = 3,
+        BlockedLeft = 4,
+        BlockedRight = 5,
+        FallBack = 6,
+        FallFront = 7,
+        FallLeft = 8,
+        FallRight = 9,
+        Victory = 10
+    }
+
+    public ManFightAction CurrentFightAction { get; private set; }
 
     void Awake()
     {
@@ -205,14 +222,27 @@ public class ManController : MonoBehaviour, IAgent
         ChangeFightPhase(FightPhase.Attack);
     }
 
-    public void OnAttackAnimationFinished()
+    public void OnBlockedAnimationFinished()
     {
         if (CurrentState != State.Fighting) return;
-        if (fightResolved) return;
-
+        if (CurrentFightPhase != FightPhase.Blocked) return;
         ChangeFightPhase(FightPhase.None);
         ChangeFightSide(FightSide.None);
         nextAttackTimer = 0.5f;
+    }
+
+    public void OnDefeatAnimationFinished()
+    {
+        if (CurrentState != State.Fighting) return;
+        if (CurrentFightPhase != FightPhase.Defeat) return;
+
+        wasBeaten = true;
+        ChangeState(State.Fleeing);
+    }
+
+    public void SetFightResolved(bool value)
+    {
+        IsFightResolved = value;
     }
 
     private int ChoseNewTrainingSpot()
@@ -308,7 +338,9 @@ public class ManController : MonoBehaviour, IAgent
 
     private void HandleFighting()
     {
-        if (fightResolved) return;
+        SwitchFightActions();
+
+        if (IsFightResolved) return;
 
         if (CurrentFightPhase != FightPhase.None) return;
 
@@ -316,6 +348,58 @@ public class ManController : MonoBehaviour, IAgent
         if (nextAttackTimer > 0f) return;
 
         Attack();
+    }
+
+    private void SwitchFightActions()
+    {
+        switch (CurrentFightPhase)
+        {
+            case FightPhase.None:
+                CurrentFightAction = ManFightAction.Idle;
+                break;
+            case FightPhase.Attack:
+                switch (CurrentFightSide)
+                {
+                    case FightSide.Left:
+                        CurrentFightAction = ManFightAction.AttackLeft;
+                        break;
+                    case FightSide.Right:
+                        CurrentFightAction = ManFightAction.AttackRight;
+                        break;
+                }
+                break;
+            case FightPhase.Blocked:
+                switch (CurrentFightSide)
+                {
+                    case FightSide.Left:
+                        CurrentFightAction = ManFightAction.BlockedLeft;
+                        break;
+                    case FightSide.Right:
+                        CurrentFightAction = ManFightAction.BlockedRight;
+                        break;
+                }
+                break;
+            case FightPhase.Victory:
+                CurrentFightAction = ManFightAction.Victory;
+                break;
+            case FightPhase.Defeat:
+                switch (CurrentFallDirection)
+                {
+                    case FallDirection.Back:
+                        CurrentFightAction = ManFightAction.FallBack;
+                        break;
+                    case FallDirection.Front:
+                        CurrentFightAction = ManFightAction.FallFront;
+                        break;
+                    case FallDirection.Left:
+                        CurrentFightAction = ManFightAction.FallLeft;
+                        break;
+                    case FallDirection.Right:
+                        CurrentFightAction = ManFightAction.FallRight;
+                        break;
+                }
+                break;
+        }
     }
 
     private bool CanChase()

@@ -10,6 +10,7 @@ public class ManAnimationController : MonoBehaviour
         SyncTrainingType();
         SyncStateBools();
         SyncMoveBlend();
+        SyncFightAction();
     }
 
     private void SyncTrainingType()
@@ -22,8 +23,6 @@ public class ManAnimationController : MonoBehaviour
         ManController.State state = manController.CurrentState;
 
         animator.SetBool("isTraining", state == ManController.State.Training);
-        // animator.SetBool("isChasing", state == ManController.State.Chasing);
-        // animator.SetBool("isFleeing", state == ManController.State.Fleeing);
         animator.SetBool("isFighting", state == ManController.State.Fighting);
     }
 
@@ -44,5 +43,11 @@ public class ManAnimationController : MonoBehaviour
         }
 
         animator.SetFloat("walkingSpeed", target, 0.1f, Time.deltaTime);
+    }
+
+    private void SyncFightAction()
+    {
+        int value = (int)manController.CurrentFightAction;
+        animator.SetInteger("fightAction", value);
     }
 }

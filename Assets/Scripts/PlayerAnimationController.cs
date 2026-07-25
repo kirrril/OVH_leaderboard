@@ -15,6 +15,7 @@ public class PlayerAnimationController : MonoBehaviour
         SyncLandingTrigger();
         SyncDoorBlend();
         SyncClimbBlend();
+        SyncFightAction();
     }
 
     private void SyncTrainingType()
@@ -54,6 +55,7 @@ public class PlayerAnimationController : MonoBehaviour
         animator.SetBool("isFalling", state == PlayerController.State.Falling);
         animator.SetBool("isPushingTheDoor", state == PlayerController.State.PushingTheDoor);
         animator.SetBool("isClimbing", state == PlayerController.State.ClimbingThePole);
+        animator.SetBool("isFighting", state == PlayerController.State.Fighting);
     }
 
     private void SyncMoveBlend()
@@ -164,5 +166,11 @@ public class PlayerAnimationController : MonoBehaviour
         }
 
         animator.SetFloat("climbingState", target);
+    }
+
+    private void SyncFightAction()
+    {
+        int value = (int)playerController.CurrentFightAction;
+        animator.SetInteger("fightAction", value);
     }
 }

@@ -54,7 +54,7 @@ MonoBehaviour:
   agent: {fileID: 2386004535829777886}
   playerController: {fileID: 0}
   player: {fileID: 0}
-  animator: {fileID: 558019426436172908}
+  animator: {fileID: 5417564691264727376}
   trainingSpots: []
   fightColliders:
   - {fileID: 2978204523414645037}
@@ -62,8 +62,6 @@ MonoBehaviour:
   - {fileID: 5372751955711148518}
   - {fileID: 7171443667055995841}
   - {fileID: 2638985592622722150}
-  - {fileID: 7863294226169422831}
-  - {fileID: 0}
   agentPriority: 0
   wasBeaten: 0
 --- !u!114 &4027737264590916104
@@ -79,7 +77,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ManAnimationController
   manController: {fileID: 758515800148603601}
-  animator: {fileID: 558019426436172908}
+  animator: {fileID: 5417564691264727376}
 --- !u!54 &5606934872989776763
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -164,6 +162,7 @@ GameObject:
   - component: {fileID: 5372751955711148518}
   - component: {fileID: 1411252385763893835}
   - component: {fileID: 6994430925995025899}
+  - component: {fileID: 6025291041787918680}
   m_Layer: 0
   m_Name: HeadLeftHurtbox
   m_TagString: Untagged
@@ -264,6 +263,19 @@ MeshRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!114 &6025291041787918680
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1695120517198701819}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c1337ce344280d8498415475cf772c54, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::FightHurtbox
+  hurtboxType: 1
 --- !u!1 &2196616139800006013
 GameObject:
   m_ObjectHideFlags: 0
@@ -366,6 +378,7 @@ GameObject:
   - component: {fileID: 7370805152453046928}
   - component: {fileID: 4939228186373440640}
   - component: {fileID: 9078678590231502478}
+  - component: {fileID: 3454054311575399366}
   m_Layer: 0
   m_Name: RightHitbox
   m_TagString: Untagged
@@ -468,6 +481,19 @@ CapsuleCollider:
   m_Height: 2
   m_Direction: 1
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &3454054311575399366
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5155494529845417821}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 00fc1d7232cf51a4bb81545d6fe4424f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::FightHitbox
+  attackerType: 1
 --- !u!1 &5214424164071446723
 GameObject:
   m_ObjectHideFlags: 0
@@ -480,6 +506,7 @@ GameObject:
   - component: {fileID: 9168037048586797371}
   - component: {fileID: 8563191015112272245}
   - component: {fileID: 7188469626049723539}
+  - component: {fileID: 1160670668700858452}
   m_Layer: 0
   m_Name: HeadBackHurtbox
   m_TagString: Untagged
@@ -580,6 +607,19 @@ MeshRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!114 &1160670668700858452
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5214424164071446723}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c1337ce344280d8498415475cf772c54, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::FightHurtbox
+  hurtboxType: 3
 --- !u!1 &5341323342615715094
 GameObject:
   m_ObjectHideFlags: 0
@@ -592,6 +632,7 @@ GameObject:
   - component: {fileID: 2978204523414645037}
   - component: {fileID: 3559531665299933381}
   - component: {fileID: 3519260287463465811}
+  - component: {fileID: 1298109372895467895}
   m_Layer: 0
   m_Name: HeadFrontHurtbox
   m_TagString: Untagged
@@ -692,6 +733,19 @@ MeshRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!114 &1298109372895467895
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5341323342615715094}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c1337ce344280d8498415475cf772c54, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::FightHurtbox
+  hurtboxType: 0
 --- !u!1 &7292031655702963611
 GameObject:
   m_ObjectHideFlags: 0
@@ -704,6 +758,7 @@ GameObject:
   - component: {fileID: 88080434756332017}
   - component: {fileID: 1875635174297615042}
   - component: {fileID: 7863294226169422831}
+  - component: {fileID: 4544102150812860641}
   m_Layer: 0
   m_Name: LeftHitbox
   m_TagString: Untagged
@@ -806,6 +861,19 @@ CapsuleCollider:
   m_Height: 2
   m_Direction: 1
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &4544102150812860641
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7292031655702963611}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 00fc1d7232cf51a4bb81545d6fe4424f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::FightHitbox
+  attackerType: 1
 --- !u!1 &8817480219219382596
 GameObject:
   m_ObjectHideFlags: 0
@@ -818,6 +886,7 @@ GameObject:
   - component: {fileID: 7171443667055995841}
   - component: {fileID: 3547097993110576014}
   - component: {fileID: 377811330185454818}
+  - component: {fileID: 7233389670652806458}
   m_Layer: 0
   m_Name: HeadRightHurtbox
   m_TagString: Untagged
@@ -918,6 +987,19 @@ MeshRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!114 &7233389670652806458
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8817480219219382596}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c1337ce344280d8498415475cf772c54, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::FightHurtbox
+  hurtboxType: 2
 --- !u!1 &9016971491841506417
 GameObject:
   m_ObjectHideFlags: 0
@@ -930,6 +1012,7 @@ GameObject:
   - component: {fileID: 2638985592622722150}
   - component: {fileID: 3194104698444552361}
   - component: {fileID: 2245029862768667317}
+  - component: {fileID: 4476864567239597329}
   m_Layer: 0
   m_Name: ChestHurtbox
   m_TagString: Untagged
@@ -1030,6 +1113,19 @@ MeshRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!114 &4476864567239597329
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9016971491841506417}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c1337ce344280d8498415475cf772c54, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::FightHurtbox
+  hurtboxType: 6
 --- !u!1001 &1599766833183999662
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1213,7 +1309,10 @@ PrefabInstance:
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 5fb6c47e936f72045974f4a2aa1263bc, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 558019426436172908}
+      addedObject: {fileID: 5417564691264727376}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 5fb6c47e936f72045974f4a2aa1263bc, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1167433493881874780}
   m_SourcePrefab: {fileID: 100100000, guid: 5fb6c47e936f72045974f4a2aa1263bc, type: 3}
 --- !u!4 &1721855982398076401 stripped
 Transform:
@@ -1230,7 +1329,7 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 5fb6c47e936f72045974f4a2aa1263bc, type: 3}
   m_PrefabInstance: {fileID: 2376753811304009622}
   m_PrefabAsset: {fileID: 0}
---- !u!95 &558019426436172908
+--- !u!95 &5417564691264727376
 Animator:
   serializedVersion: 7
   m_ObjectHideFlags: 0
@@ -1252,6 +1351,19 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &1167433493881874780
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3187006120364995271}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fc4fbbfb3a82026449164fb41a9b8983, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ManAnimationEventRelay
+  manController: {fileID: 758515800148603601}
 --- !u!4 &5119607574191247847 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -1731753862953083279, guid: 5fb6c47e936f72045974f4a2aa1263bc, type: 3}
