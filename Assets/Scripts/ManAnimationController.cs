@@ -13,11 +13,6 @@ public class ManAnimationController : MonoBehaviour
         SyncFightAction();
     }
 
-    private void SyncTrainingType()
-    {
-        animator.SetInteger("trainingType", (int)manController.CurrentTrainingType);
-    }
-
     private void SyncStateBools()
     {
         ManController.State state = manController.CurrentState;
@@ -43,6 +38,11 @@ public class ManAnimationController : MonoBehaviour
         }
 
         animator.SetFloat("walkingSpeed", target, 0.1f, Time.deltaTime);
+    }
+
+    private void SyncTrainingType()
+    {
+        animator.SetInteger("trainingType", (int)manController.CurrentTrainingType);
     }
 
     private void SyncFightAction()

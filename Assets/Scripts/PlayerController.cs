@@ -363,6 +363,9 @@ public class PlayerController : MonoBehaviour
             case FightPhase.Attack:
                 switch (CurrentFightSide)
                 {
+                    case FightSide.Front:
+                        CurrentFightAction = PlayerFightAction.AttackFront;
+                        break;
                     case FightSide.Left:
                         CurrentFightAction = PlayerFightAction.AttackLeft;
                         break;
@@ -432,8 +435,15 @@ public class PlayerController : MonoBehaviour
         ChangeDoorPhase(DoorPhase.None);
         ChangeClimbPhase(ClimbPhase.None);
 
+        CurrentFightZone = null;
+        playerFightAttack = false;
+        playerFightLeft = false;
+        playerFightRight = false;
+        isThrowing = false;
         CurrentFightPhase = FightPhase.None;
         CurrentFightSide = FightSide.None;
+        CurrentFightAction = PlayerFightAction.None;
+        SwitchFightColliders(false);
     }
 
     private void HandleJumping()
@@ -833,6 +843,14 @@ public class PlayerController : MonoBehaviour
 
     public void OnAttackSideLeft(InputAction.CallbackContext ctx)
     {
+        // if (CurrentFightZone == null) return;
+        // if (isThrowing) return;
+
+        // if (ctx.started)
+        // {
+        //     playerFightLeft = true;
+        // }
+
         if (CurrentFightZone == null) return;
 
         playerFightLeft = ctx.ReadValueAsButton();

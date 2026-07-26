@@ -96,6 +96,8 @@ public class GameManager : MonoBehaviour
     {
         LegsTraining = 1f;
         ChestTraining = 1f;
+        BackTraining = 0.7f;
+        CurrentScore = 80;
     }
     /// </test setup>
     /// 

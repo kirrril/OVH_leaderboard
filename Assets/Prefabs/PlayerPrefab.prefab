@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 5928270483514093723}
   - component: {fileID: 6342917711692251781}
   - component: {fileID: 4760789384020209123}
-  m_Layer: 3
+  m_Layer: 9
   m_Name: RightHitbox
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -170,7 +170,7 @@ GameObject:
   - component: {fileID: 870424671076042804}
   - component: {fileID: 8748861689719524876}
   - component: {fileID: 2977727959345211526}
-  m_Layer: 3
+  m_Layer: 9
   m_Name: HeadRightHurtbox
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -264,7 +264,7 @@ BoxCollider:
     serializedVersion: 2
     m_Bits: 0
   m_LayerOverridePriority: 0
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
@@ -327,7 +327,7 @@ GameObject:
   - component: {fileID: 4757318595806504576}
   - component: {fileID: 41412085615948186}
   - component: {fileID: 1372223171399896173}
-  m_Layer: 3
+  m_Layer: 9
   m_Name: HeadBackHurtbox
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -421,7 +421,7 @@ BoxCollider:
     serializedVersion: 2
     m_Bits: 0
   m_LayerOverridePriority: 0
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
@@ -453,7 +453,7 @@ GameObject:
   - component: {fileID: 2022360587896892596}
   - component: {fileID: 3028024948818541952}
   - component: {fileID: 7411689023225567866}
-  m_Layer: 3
+  m_Layer: 9
   m_Name: RightHurtbox
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -547,7 +547,7 @@ CapsuleCollider:
     serializedVersion: 2
     m_Bits: 0
   m_LayerOverridePriority: 0
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 2
@@ -581,7 +581,7 @@ GameObject:
   - component: {fileID: 3862057334942827756}
   - component: {fileID: 6349939771914431056}
   - component: {fileID: 6650115826219357244}
-  m_Layer: 3
+  m_Layer: 9
   m_Name: LeftHitbox
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -707,7 +707,7 @@ GameObject:
   - component: {fileID: 5453300668654743089}
   - component: {fileID: 1796135663215229992}
   - component: {fileID: 2871117371824590980}
-  m_Layer: 3
+  m_Layer: 9
   m_Name: HeadFrontHurtbox
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -801,7 +801,7 @@ BoxCollider:
     serializedVersion: 2
     m_Bits: 0
   m_LayerOverridePriority: 0
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
@@ -1079,7 +1079,7 @@ MonoBehaviour:
   playerFightAttack: 0
   playerFightLeft: 0
   playerFightRight: 0
-  isAttacking: 0
+  isThrowing: 0
   fightColliders:
   - {fileID: 1796135663215229992}
   - {fileID: 41412085615948186}
@@ -1087,6 +1087,8 @@ MonoBehaviour:
   - {fileID: 8748861689719524876}
   - {fileID: 5712447537613547709}
   - {fileID: 3028024948818541952}
+  - {fileID: 6349939771914431056}
+  - {fileID: 6342917711692251781}
   groundMask:
     serializedVersion: 2
     m_Bits: 128
@@ -1183,7 +1185,7 @@ GameObject:
   - component: {fileID: 6511132594175087561}
   - component: {fileID: 5736542767323935532}
   - component: {fileID: 6419500454711527483}
-  m_Layer: 3
+  m_Layer: 9
   m_Name: HeadLeftHurtbox
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1277,7 +1279,7 @@ BoxCollider:
     serializedVersion: 2
     m_Bits: 0
   m_LayerOverridePriority: 0
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
@@ -1309,7 +1311,7 @@ GameObject:
   - component: {fileID: 1560913686484030042}
   - component: {fileID: 5712447537613547709}
   - component: {fileID: 5870323303284687108}
-  m_Layer: 3
+  m_Layer: 9
   m_Name: LeftHurtbox
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1403,7 +1405,7 @@ CapsuleCollider:
     serializedVersion: 2
     m_Bits: 0
   m_LayerOverridePriority: 0
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 2

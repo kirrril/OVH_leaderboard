@@ -24,7 +24,6 @@ public class FightZone : MonoBehaviour
 
         playerController.EnterFightZone(this);
         manController.ChangeState(ManController.State.Fighting);
-
         fightHasStarted = true;
         manController.SetFightResolved(false);
     }
@@ -35,7 +34,11 @@ public class FightZone : MonoBehaviour
         if (!fightHasStarted) return;
 
         playerController.ExitFightZone();
-        manController.ChangeState(ManController.State.Patrol);
+
+        if (manController.CurrentState == ManController.State.Fighting)
+        {
+            manController.ChangeState(ManController.State.Patrol);
+        }
 
         fightHasStarted = false;
         manController.SetFightResolved(true);
@@ -45,6 +48,7 @@ public class FightZone : MonoBehaviour
     {
         if (!fightHasStarted) return;
         if (manController.IsFightResolved) return;
+
         switch (attackerType)
         {
             case FightHitbox.AttackerType.Player:
@@ -90,13 +94,13 @@ public class FightZone : MonoBehaviour
                         break;
                     case FightHurtbox.HurtboxType.HeadLeft:
                         playerController.ChangeFightPhase(PlayerController.FightPhase.Defeat);
-                        playerController.ChangeFallDirection(PlayerController.FallDirection.Right);
+                        playerController.ChangeFallDirection(PlayerController.FallDirection.Left);
                         manController.ChangeFightPhase(ManController.FightPhase.Victory);
                         manController.SetFightResolved(true);
                         break;
                     case FightHurtbox.HurtboxType.HeadRight:
                         playerController.ChangeFightPhase(PlayerController.FightPhase.Defeat);
-                        playerController.ChangeFallDirection(PlayerController.FallDirection.Left);
+                        playerController.ChangeFallDirection(PlayerController.FallDirection.Right);
                         manController.ChangeFightPhase(ManController.FightPhase.Victory);
                         manController.SetFightResolved(true);
                         break;

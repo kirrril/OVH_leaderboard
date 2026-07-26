@@ -18,13 +18,13 @@ public class ManController : MonoBehaviour, IAgent
     [SerializeField] private int agentPriority;
 
     private float awarenessDistance = 4f;
-    private float awarenessAngle = 120f;
-    private float fleeDistance = 3f;
+    private float awarenessAngle = 220f;
+    private float fleeDistance = 6f;
     private float insultDistance = 1.5f;
     private bool hasInsulted;
     public bool wasBeaten;
     public bool IsFightResolved { get; private set; }
-    private float nextAttackTimer;
+    private float nextAttackTimer = 0.5f;
 
     public enum State { Patrol, Chasing, Fleeing, Training, Fighting }
     public enum WalkingPhase { None, Idle, Walking };
@@ -141,6 +141,8 @@ public class ManController : MonoBehaviour, IAgent
         {
             case State.Patrol:
                 SwitchFightColliders(false);
+                ChangeFightPhase(FightPhase.None); // Debug man attack
+                ChangeFightSide(FightSide.None); // Debug man attack
                 agent.enabled = true;
                 agent.isStopped = false;
                 agent.ResetPath();

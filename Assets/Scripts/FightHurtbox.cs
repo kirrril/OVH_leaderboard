@@ -18,7 +18,9 @@ public class FightHurtbox : MonoBehaviour
         if (other.transform.root == transform.root) return;
 
         fightZone = playerController.CurrentFightZone;
+        if (fightZone == null) return;
         fightHitbox = other.gameObject.GetComponent<FightHitbox>();
+        if (fightHitbox == null) return;
 
         fightZone.HurtboxTouched(fightHitbox.attackerType, hurtboxType);
     }
