@@ -4,58 +4,91 @@ using UnityEngine.AI;
 
 public class ManController : MonoBehaviour, IAgent
 {
-    [SerializeField] private NavMeshAgent agent;
+    // FIELDS //////////////////////////////////////////////////////////////////////
+
+
+    // Refs ________________________________________________________________________
+
     [SerializeField] private PlayerController playerController;
     [SerializeField] private Transform player;
-
+    [SerializeField] private NavMeshAgent agent;
     public Animator animator;
-    private Transform targetSpot;
-    [SerializeField] Transform[] trainingSpots;
-    private int lastSpotIndex = -1;
 
-    [SerializeField] Collider[] fightColliders;
+
+    // General ________________________________________________________________________
 
     [SerializeField] private int agentPriority;
 
-    private float awarenessDistance = 4f;
-    private float awarenessAngle = 220f;
+
+    // State __________________________________________________________________________
+
+    public enum State { Patrol, Chasing, Fleeing, Training, Fighting }
+    public State CurrentState { get; private set; } = State.Patrol;
+
+
+    // Patrol  ________________________________________________________________________
+
+    public enum WalkingPhase { None, Idle, Walking };
+    public WalkingPhase CurrentWalkingPhase { get; private set; }
+    [SerializeField] Transform[] trainingSpots;
+    private Transform targetSpot;
+    private int lastSpotIndex = -1;
+
+
+    // Chasing  ______________________________________________________________________
+
+    private float chasingDistance = 4f;
+    private float chasingAngle = 220f;
+
+
+    // Fleeing  ______________________________________________________________________
+
     private float fleeDistance = 6f;
+    public bool wasBeaten;
+
+
+    // Insult  ________________________________________________________________________
+
     private float insultDistance = 1.5f;
     private bool hasInsulted;
-    public bool wasBeaten;
+
+
+    // Training  ______________________________________________________________________
+
+    private TrainingData currentTrainingData;
+    public ManTrainingType CurrentTrainingType { get; private set; }
+
+
+    // Fighting  ______________________________________________________________________
+
+    [SerializeField] Collider[] fightColliders;
+
+
+    public enum FightPhase { None, Attack, Blocked, Victory, Defeat }
+    public FightPhase CurrentFightPhase { get; private set; }
+
+
+    public enum FightSide { None, Left, Right }
+    public FightSide CurrentFightSide { get; private set; }
+
+
+    public enum FallDirection { Front, Back, Left, Right }
+    public FallDirection CurrentFallDirection { get; private set; }
+
+
+    public enum ManFightAction //_______________ animation interface
+    {
+        None = 0, Idle = 1, AttackLeft = 2, AttackRight = 3, BlockedLeft = 4,
+        BlockedRight = 5, FallBack = 6, FallFront = 7, FallLeft = 8, FallRight = 9, Victory = 10
+    }
+    public ManFightAction CurrentFightAction { get; private set; } //_______________ animation interface
+
+
     public bool IsFightResolved { get; private set; }
     private float nextAttackTimer = 0.5f;
 
-    public enum State { Patrol, Chasing, Fleeing, Training, Fighting }
-    public enum WalkingPhase { None, Idle, Walking };
-    public enum FightPhase { None, Attack, Blocked, Victory, Defeat }
-    public enum FightSide { None, Left, Right }
-    public enum FallDirection { Front, Back, Left, Right }
 
-    public State CurrentState { get; private set; } = State.Patrol;
-    private TrainingData currentTrainingData;
-    public WalkingPhase CurrentWalkingPhase { get; private set; }
-    public ManTrainingType CurrentTrainingType { get; private set; }
-    public FightPhase CurrentFightPhase { get; private set; }
-    public FightSide CurrentFightSide { get; private set; }
-    public FallDirection CurrentFallDirection { get; private set; }
-
-    public enum ManFightAction
-    {
-        None = 0,
-        Idle = 1,
-        AttackLeft = 2,
-        AttackRight = 3,
-        BlockedLeft = 4,
-        BlockedRight = 5,
-        FallBack = 6,
-        FallFront = 7,
-        FallLeft = 8,
-        FallRight = 9,
-        Victory = 10
-    }
-
-    public ManFightAction CurrentFightAction { get; private set; }
+    // LIFECYCLE //////////////////////////////////////////////////////////////////////
 
     void Awake()
     {
@@ -105,6 +138,54 @@ public class ManController : MonoBehaviour, IAgent
         }
     }
 
+    // HANDLERS //////////////////////////////////////////////////////////////////////
+
+    private void HandlePatrol()
+    {
+        MoveToSpot();
+        UpdateWalkingPhase();
+    }
+    private void HandleChasing()
+    {
+        agent.SetDestination(playerController.transform.position);
+        UpdateWalkingPhase();
+        BeReadyToInsult();
+    }
+
+    private void HandleFleeing()
+    {
+        Vector3 dirAway = (transform.position - player.position).normalized;
+        Vector3 target = transform.position + dirAway * 6f;
+
+        if (NavMesh.SamplePosition(target, out NavMeshHit hit, 8f, NavMesh.AllAreas))
+        {
+            agent.SetDestination(hit.position);
+        }
+        UpdateWalkingPhase();
+        BeReadyToInsult();
+    }
+
+    private void HandleTraining()
+    {
+
+    }
+
+    private void HandleFighting()
+    {
+        SwitchFightActions();
+
+        if (IsFightResolved) return;
+
+        if (CurrentFightPhase != FightPhase.None) return;
+
+        nextAttackTimer -= Time.deltaTime;
+        if (nextAttackTimer > 0f) return;
+
+        Attack();
+    }
+
+    // TRANSITIONS /////////////////////////////////////////////////////////////////////
+
     public void ChangeState(State nextState)
     {
         if (CurrentState == nextState) return;
@@ -141,8 +222,8 @@ public class ManController : MonoBehaviour, IAgent
         {
             case State.Patrol:
                 SwitchFightColliders(false);
-                ChangeFightPhase(FightPhase.None); // Debug man attack
-                ChangeFightSide(FightSide.None); // Debug man attack
+                ChangeFightPhase(FightPhase.None);
+                ChangeFightSide(FightSide.None);
                 agent.enabled = true;
                 agent.isStopped = false;
                 agent.ResetPath();
@@ -183,10 +264,138 @@ public class ManController : MonoBehaviour, IAgent
         }
     }
 
+
+    // HELPERS ///////////////////////////////////////////////////////////////////////////
+
+    // Patrol  ___________________________________________________________________________
+
+    private void UpdateWalkingPhase()
+    {
+        WalkingPhase nextPhase = agent.velocity.magnitude > 0.1f ? WalkingPhase.Walking : WalkingPhase.Idle;
+        ChangeWalkingPhase(nextPhase);
+    }
+
     private void ChangeWalkingPhase(WalkingPhase nextPhase)
     {
         if (CurrentWalkingPhase == nextPhase) return;
         CurrentWalkingPhase = nextPhase;
+    }
+
+    private void MoveToSpot()
+    {
+        if (agent.pathPending) return;
+        if (agent.hasPath && agent.remainingDistance > 0.5f) return;
+
+        int spotIndex = ChoseNewTrainingSpot();
+        if (spotIndex < 0) return;
+
+        targetSpot = trainingSpots[spotIndex];
+
+        agent.SetDestination(targetSpot.position);
+    }
+
+    private int ChoseNewTrainingSpot()
+    {
+        if (trainingSpots.Length == 1) return 0;
+
+        int newSpotIndex;
+        do
+        {
+            newSpotIndex = Random.Range(0, trainingSpots.Length);
+        } while (newSpotIndex == lastSpotIndex);
+
+        lastSpotIndex = newSpotIndex;
+
+        return newSpotIndex;
+    }
+
+
+    // Patrol <-> Chasing  _________________________________________________________________
+
+    private bool CanChase()
+    {
+        if (player == null) return false;
+        if (wasBeaten) return false;
+
+        Vector3 toPlayer = player.position - transform.position;
+        float distanceToPlayer = toPlayer.magnitude;
+
+        if (distanceToPlayer > chasingDistance) return false;
+
+        Vector3 flatToPlayer = new Vector3(toPlayer.x, 0f, toPlayer.z);
+        Vector3 flatForward = new Vector3(transform.forward.x, 0f, transform.forward.z);
+
+        if (flatToPlayer.sqrMagnitude < 0.001f) return true;
+
+        float angleToPlayer = Vector3.Angle(flatForward, flatToPlayer);
+
+        return angleToPlayer <= chasingAngle * 0.5f;
+    }
+
+
+    // Patrol <-> Fleeing  _________________________________________________________________
+
+    private bool NeedToFlee()
+    {
+        if (!wasBeaten) return false;
+
+        float distanceToPlayer = Vector3.Distance(transform.position, player.position);
+
+        if (distanceToPlayer < fleeDistance)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
+
+    // Chasing, Fleeing -> Insult  __________________________________________________________
+
+    private void BeReadyToInsult()
+    {
+        if (GameManager.Instance.CurrentScore < 1) return;
+
+        float distanceToPlayer = Vector3.Distance(transform.position, player.position);
+        if (CurrentState == State.Fleeing && distanceToPlayer > insultDistance + 1f) hasInsulted = false;
+        if (distanceToPlayer > insultDistance) return;
+
+        if (hasInsulted) return;
+        hasInsulted = true;
+
+        Debug.Log("You little nerd!");
+        GameManager.Instance.ModifyScore(-1);
+    }
+
+
+    // Fighting  _____________________________________________________________________________
+
+    private void SwitchFightColliders(bool isEnabled)
+    {
+        foreach (Collider collider in fightColliders)
+        {
+            collider.enabled = isEnabled;
+            collider.gameObject.SetActive(isEnabled);
+        }
+    }
+
+    public void Attack()
+    {
+        int fightSide = Random.Range(1, 3);
+
+        switch (fightSide)
+        {
+            case 1:
+                ChangeFightSide(FightSide.Left);
+                break;
+            case 2:
+                ChangeFightSide(FightSide.Right);
+                break;
+        }
+
+        ChangeFightPhase(FightPhase.Attack);
     }
 
     public void ChangeFightPhase(FightPhase nextPhase)
@@ -207,24 +416,7 @@ public class ManController : MonoBehaviour, IAgent
         CurrentFallDirection = nextDirection;
     }
 
-    public void Attack()
-    {
-        int fightSide = Random.Range(1, 3);
-
-        switch (fightSide)
-        {
-            case 1:
-                ChangeFightSide(FightSide.Left);
-                break;
-            case 2:
-                ChangeFightSide(FightSide.Right);
-                break;
-        }
-
-        ChangeFightPhase(FightPhase.Attack);
-    }
-
-    public void OnBlockedAnimationFinished()
+    public void OnBlockedAnimationFinished() //_______________ animation event via Relay
     {
         if (CurrentState != State.Fighting) return;
         if (CurrentFightPhase != FightPhase.Blocked) return;
@@ -233,7 +425,7 @@ public class ManController : MonoBehaviour, IAgent
         nextAttackTimer = 0.5f;
     }
 
-    public void OnDefeatAnimationFinished()
+    public void OnDefeatAnimationFinished() //_______________ animation event via Relay
     {
         if (CurrentState != State.Fighting) return;
         if (CurrentFightPhase != FightPhase.Defeat) return;
@@ -242,117 +434,12 @@ public class ManController : MonoBehaviour, IAgent
         ChangeState(State.Fleeing);
     }
 
-    public void SetFightResolved(bool value)
+    public void SetFightResolved(bool value) //_______________ called by FightZone
     {
         IsFightResolved = value;
     }
 
-    private int ChoseNewTrainingSpot()
-    {
-        if (trainingSpots.Length == 1) return 0;
-
-        int newSpotIndex;
-        do
-        {
-            newSpotIndex = Random.Range(0, trainingSpots.Length);
-        } while (newSpotIndex == lastSpotIndex);
-
-        lastSpotIndex = newSpotIndex;
-
-        return newSpotIndex;
-    }
-
-    private void MoveToSpot()
-    {
-        if (agent.pathPending) return;
-        if (agent.hasPath && agent.remainingDistance > 0.5f) return;
-
-        int spotIndex = ChoseNewTrainingSpot();
-        if (spotIndex < 0) return;
-
-        targetSpot = trainingSpots[spotIndex];
-
-        agent.SetDestination(targetSpot.position);
-    }
-
-    private void SwitchFightColliders(bool isEnabled)
-    {
-        foreach (Collider collider in fightColliders)
-        {
-            collider.enabled = isEnabled;
-            collider.gameObject.SetActive(isEnabled);
-        }
-    }
-
-    private bool NeedToFlee()
-    {
-        if (!wasBeaten) return false;
-
-        float distanceToPlayer = Vector3.Distance(transform.position, player.position);
-
-        if (distanceToPlayer < fleeDistance)
-        {
-            return true;
-        }
-        else
-        {
-            return false;
-        }
-    }
-
-    private void HandlePatrol()
-    {
-        MoveToSpot();
-        UpdateWalkingPhase();
-    }
-
-    private void UpdateWalkingPhase()
-    {
-        WalkingPhase nextPhase = agent.velocity.magnitude > 0.1f ? WalkingPhase.Walking : WalkingPhase.Idle;
-        ChangeWalkingPhase(nextPhase);
-    }
-
-
-    private void HandleChasing()
-    {
-        agent.SetDestination(playerController.transform.position);
-        UpdateWalkingPhase();
-        BeReadyToInsult();
-    }
-
-    private void HandleFleeing()
-    {
-        Vector3 dirAway = (transform.position - player.position).normalized;
-        Vector3 target = transform.position + dirAway * 6f;
-
-        if (NavMesh.SamplePosition(target, out NavMeshHit hit, 8f, NavMesh.AllAreas))
-        {
-            agent.SetDestination(hit.position);
-        }
-        UpdateWalkingPhase();
-        BeReadyToInsult();
-    }
-
-    private void HandleTraining()
-    {
-
-    }
-
-    private void HandleFighting()
-    {
-        SwitchFightActions();
-
-        if (IsFightResolved) return;
-
-        if (CurrentFightPhase != FightPhase.None) return;
-
-        nextAttackTimer -= Time.deltaTime;
-        if (nextAttackTimer > 0f) return;
-
-        Attack();
-    }
-
-    private void SwitchFightActions()
+    private void SwitchFightActions() //_______________ animation interface
     {
         switch (CurrentFightPhase)
         {
@@ -404,25 +491,7 @@ public class ManController : MonoBehaviour, IAgent
         }
     }
 
-    private bool CanChase()
-    {
-        if (player == null) return false;
-        if (wasBeaten) return false;
-
-        Vector3 toPlayer = player.position - transform.position;
-        float distanceToPlayer = toPlayer.magnitude;
-
-        if (distanceToPlayer > awarenessDistance) return false;
-
-        Vector3 flatToPlayer = new Vector3(toPlayer.x, 0f, toPlayer.z);
-        Vector3 flatForward = new Vector3(transform.forward.x, 0f, transform.forward.z);
-
-        if (flatToPlayer.sqrMagnitude < 0.001f) return true;
-
-        float angleToPlayer = Vector3.Angle(flatForward, flatToPlayer);
-
-        return angleToPlayer <= awarenessAngle * 0.5f;
-    }
+    // Training  ____________________________________________________________________________
 
     public void StartTraining(TrainingData trainingData)
     {
@@ -442,25 +511,5 @@ public class ManController : MonoBehaviour, IAgent
 
         CurrentTrainingType = ManTrainingType.None;
         ChangeState(State.Patrol);
-    }
-
-    public void CancelTraining()
-    {
-        agent.ResetPath();
-    }
-
-    private void BeReadyToInsult()
-    {
-        if (GameManager.Instance.CurrentScore < 1) return;
-
-        float distanceToPlayer = Vector3.Distance(transform.position, player.position);
-        if (CurrentState == State.Fleeing && distanceToPlayer > insultDistance + 1f) hasInsulted = false;
-        if (distanceToPlayer > insultDistance) return;
-
-        if (hasInsulted) return;
-        hasInsulted = true;
-
-        Debug.Log("You little nerd!");
-        GameManager.Instance.ModifyScore(-1);
     }
 }
