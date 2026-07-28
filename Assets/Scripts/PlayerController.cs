@@ -843,17 +843,17 @@ public class PlayerController : MonoBehaviour
 
     public void OnAttackSideLeft(InputAction.CallbackContext ctx)
     {
-        // if (CurrentFightZone == null) return;
-        // if (isThrowing) return;
-
-        // if (ctx.started)
-        // {
-        //     playerFightLeft = true;
-        // }
-
         if (CurrentFightZone == null) return;
+        if (isThrowing) return;
 
-        playerFightLeft = ctx.ReadValueAsButton();
+        if (ctx.started)
+        {
+            playerFightLeft = true;
+        }
+
+        // if (CurrentFightZone == null) return;
+
+        // playerFightLeft = ctx.ReadValueAsButton();
     }
 
     public void OnAttackSideRight(InputAction.CallbackContext ctx)
