@@ -1,4 +1,3 @@
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -26,7 +25,7 @@ public class ManController : MonoBehaviour, IAgent
     public State CurrentState { get; private set; } = State.Patrol;
 
 
-    // Patrol  ________________________________________________________________________
+    // Patrol _________________________________________________________________________
 
     public enum WalkingPhase { None, Idle, Walking };
     public WalkingPhase CurrentWalkingPhase { get; private set; }
@@ -315,6 +314,8 @@ public class ManController : MonoBehaviour, IAgent
     private bool CanChase()
     {
         if (player == null) return false;
+        if (playerController.CurrentState == PlayerController.State.Training) return false;
+        if (playerController.CurrentState == PlayerController.State.Fighting) return false;
         if (wasBeaten) return false;
 
         Vector3 toPlayer = player.position - transform.position;
@@ -357,6 +358,8 @@ public class ManController : MonoBehaviour, IAgent
     private void BeReadyToInsult()
     {
         if (GameManager.Instance.CurrentScore < 1) return;
+        if (playerController.CurrentState == PlayerController.State.Training) return;
+        if (playerController.CurrentState == PlayerController.State.Fighting) return;
 
         float distanceToPlayer = Vector3.Distance(transform.position, player.position);
         if (CurrentState == State.Fleeing && distanceToPlayer > insultDistance + 1f) hasInsulted = false;

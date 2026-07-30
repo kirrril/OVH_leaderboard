@@ -107,5 +107,6 @@ public class FightZone : MonoBehaviour
                 }
                 break;
         }
+        playerController.ChangeFightSide(PlayerController.FightSide.None);
     }
 }
