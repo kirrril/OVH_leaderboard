@@ -150,7 +150,7 @@ public class PlayerController : MonoBehaviour
 
     public void OnMove(InputAction.CallbackContext ctx)
     {
-        if (CurrentFightZone != null) return;
+        // if (CurrentFightZone != null) return;
         playerMovement = ctx.ReadValue<Vector2>();
     }
 
@@ -217,32 +217,32 @@ public class PlayerController : MonoBehaviour
 
     public void OnAttackSideLeft(InputAction.CallbackContext ctx)
     {
-        if (CurrentFightZone == null) return;
-        if (isThrowing) return;
+        // if (CurrentFightZone == null) return;
+        // if (isThrowing) return;
 
-        if (ctx.started)
-        {
-            playerFightLeft = true;
-        }
+        // if (ctx.started)
+        // {
+        //     playerFightLeft = true;
+        // }
 
         // if (CurrentFightZone == null) return;
 
-        // playerFightLeft = ctx.ReadValueAsButton();
+        playerFightLeft = ctx.ReadValueAsButton();
     }
 
     public void OnAttackSideRight(InputAction.CallbackContext ctx)
     {
-        if (CurrentFightZone == null) return;
-        if (isThrowing) return;
+        // if (CurrentFightZone == null) return;
+        // if (isThrowing) return;
 
-        if (ctx.started)
-        {
-            playerFightRight = true;
-        }
+        // if (ctx.started)
+        // {
+        //     playerFightRight = true;
+        // }
 
         // if (CurrentFightZone == null) return;
 
-        // playerFightRight = ctx.ReadValueAsButton();
+        playerFightRight = ctx.ReadValueAsButton();
     }
 
     // TRIGGER ///////////////////////////////////////////////////////////////////////
@@ -475,14 +475,16 @@ public class PlayerController : MonoBehaviour
         ChangeClimbPhase(ClimbPhase.None);
 
         CurrentFightZone = null;
-        playerFightAttack = false;
-        playerFightLeft = false;
-        playerFightRight = false;
         isThrowing = false;
         CurrentFightPhase = FightPhase.None;
         CurrentFightSide = FightSide.None;
         CurrentFightAction = PlayerFightAction.None;
         SwitchFightColliders(false);
+
+        playerFightAttack = false;
+        playerFightLeft = false;
+        playerFightRight = false;
+        playerMovement = Vector2.zero;
     }
 
     public void RespawnAtEntryPoint()
@@ -884,6 +886,11 @@ public class PlayerController : MonoBehaviour
         ChangeFightPhase(FightPhase.None);
         ChangeFightSide(FightSide.None);
         SwitchFightColliders(true);
+
+        playerFightAttack = false;
+        playerFightLeft = false;
+        playerFightRight = false;
+        playerMovement = Vector2.zero;
     }
 
     public void ExitFightZone()
@@ -891,6 +898,11 @@ public class PlayerController : MonoBehaviour
         CurrentFightZone = null;
         ChangeState(State.Walking);
         SwitchFightColliders(false);
+
+        playerFightAttack = false;
+        playerFightLeft = false;
+        playerFightRight = false;
+        playerMovement = Vector2.zero;
     }
 
     public void ChangeFightPhase(FightPhase nextPhase)

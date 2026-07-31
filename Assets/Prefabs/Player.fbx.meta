@@ -292,7 +292,7 @@ ModelImporter:
       name: BlockLeft
       takeName: BlockLeft
       internalID: 5128068417426274002
-      firstFrame: 0
+      firstFrame: 10
       lastFrame: 39
       wrapMode: 0
       orientationOffsetY: 0
@@ -328,7 +328,7 @@ ModelImporter:
       name: BlockRight
       takeName: BlockRight
       internalID: 8373729000077737055
-      firstFrame: 0
+      firstFrame: 10
       lastFrame: 39
       wrapMode: 0
       orientationOffsetY: 0
@@ -617,14 +617,7 @@ ModelImporter:
       bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
       curves: []
       events:
-      - time: 1
-        functionName: OnDefeatAnimationFinished
-        data: 
-        objectReferenceParameter: {instanceID: 0}
-        floatParameter: 0
-        intParameter: 0
-        messageOptions: 0
-      - time: 1
+      - time: 0.6666667
         functionName: OnDefeatAnimationFinished
         data: 
         objectReferenceParameter: {instanceID: 0}
@@ -660,14 +653,7 @@ ModelImporter:
       bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
       curves: []
       events:
-      - time: 1
-        functionName: OnDefeatAnimationFinished
-        data: 
-        objectReferenceParameter: {instanceID: 0}
-        floatParameter: 0
-        intParameter: 0
-        messageOptions: 0
-      - time: 1
+      - time: 0.33333334
         functionName: OnDefeatAnimationFinished
         data: 
         objectReferenceParameter: {instanceID: 0}
@@ -703,14 +689,7 @@ ModelImporter:
       bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
       curves: []
       events:
-      - time: 1
-        functionName: OnDefeatAnimationFinished
-        data: 
-        objectReferenceParameter: {instanceID: 0}
-        floatParameter: 0
-        intParameter: 0
-        messageOptions: 0
-      - time: 1
+      - time: 0.17269078
         functionName: OnDefeatAnimationFinished
         data: 
         objectReferenceParameter: {instanceID: 0}
@@ -746,14 +725,7 @@ ModelImporter:
       bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
       curves: []
       events:
-      - time: 1
-        functionName: OnDefeatAnimationFinished
-        data: 
-        objectReferenceParameter: {instanceID: 0}
-        floatParameter: 0
-        intParameter: 0
-        messageOptions: 0
-      - time: 1
+      - time: 0.17269078
         functionName: OnDefeatAnimationFinished
         data: 
         objectReferenceParameter: {instanceID: 0}

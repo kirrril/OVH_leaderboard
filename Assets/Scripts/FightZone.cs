@@ -22,6 +22,9 @@ public class FightZone : MonoBehaviour
 
         if (other.tag != "Player") return;
 
+        if (fightHasStarted) return;
+        if (playerController.CurrentFightZone != null && playerController.CurrentFightZone != this) return;
+
         playerController.EnterFightZone(this);
         manController.ChangeState(ManController.State.Fighting);
         fightHasStarted = true;

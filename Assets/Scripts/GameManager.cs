@@ -180,7 +180,10 @@ public class GameManager : MonoBehaviour
     {
         isDeathSequenceActive = true;
 
-        TrainingStopped();
+        if (reason == DeathReason.Thirst)
+        {
+            TrainingStopped();
+        }
 
         if (gameSceneHUD != null)
         {
