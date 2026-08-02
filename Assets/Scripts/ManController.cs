@@ -63,7 +63,7 @@ public class ManController : MonoBehaviour, IAgent
     [SerializeField] Collider[] fightColliders;
 
 
-    public enum FightPhase { None, Attack, Blocked, Victory, Defeat }
+    public enum FightPhase { None, Attack, Victory, Defeat }
     public FightPhase CurrentFightPhase { get; private set; }
 
 
@@ -77,8 +77,7 @@ public class ManController : MonoBehaviour, IAgent
 
     public enum ManFightAction //_______________ animation interface
     {
-        None = 0, Idle = 1, AttackLeft = 2, AttackRight = 3, BlockedLeft = 4,
-        BlockedRight = 5, FallBack = 6, FallFront = 7, FallLeft = 8, FallRight = 9, Victory = 10
+        None = 0, Idle = 1, AttackLeft = 2, AttackRight = 3, FallBack = 4, FallFront = 5, FallLeft = 6, FallRight = 7, Victory = 8
     }
     public ManFightAction CurrentFightAction { get; private set; } //_______________ animation interface
 
@@ -405,27 +404,20 @@ public class ManController : MonoBehaviour, IAgent
     {
         if (CurrentFightPhase == nextPhase) return;
         CurrentFightPhase = nextPhase;
+        SwitchFightActions();
     }
 
     private void ChangeFightSide(FightSide nextSide)
     {
         if (CurrentFightSide == nextSide) return;
         CurrentFightSide = nextSide;
+        SwitchFightActions();
     }
 
     public void ChangeFallDirection(FallDirection nextDirection)
     {
         if (CurrentFallDirection == nextDirection) return;
         CurrentFallDirection = nextDirection;
-    }
-
-    public void OnBlockedAnimationFinished() //_______________ animation event via Relay
-    {
-        if (CurrentState != State.Fighting) return;
-        if (CurrentFightPhase != FightPhase.Blocked) return;
-        ChangeFightPhase(FightPhase.None);
-        ChangeFightSide(FightSide.None);
-        nextAttackTimer = 0.5f;
     }
 
     public void OnDefeatAnimationFinished() //_______________ animation event via Relay
@@ -460,17 +452,17 @@ public class ManController : MonoBehaviour, IAgent
                         break;
                 }
                 break;
-            case FightPhase.Blocked:
-                switch (CurrentFightSide)
-                {
-                    case FightSide.Left:
-                        CurrentFightAction = ManFightAction.BlockedLeft;
-                        break;
-                    case FightSide.Right:
-                        CurrentFightAction = ManFightAction.BlockedRight;
-                        break;
-                }
-                break;
+            // case FightPhase.Blocked:
+            //     switch (CurrentFightSide)
+            //     {
+            //         case FightSide.Left:
+            //             CurrentFightAction = ManFightAction.BlockedLeft;
+            //             break;
+            //         case FightSide.Right:
+            //             CurrentFightAction = ManFightAction.BlockedRight;
+            //             break;
+            //     }
+            //     break;
             case FightPhase.Victory:
                 CurrentFightAction = ManFightAction.Victory;
                 break;

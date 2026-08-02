@@ -357,8 +357,9 @@ public class PlayerController : MonoBehaviour
         else
         {
             RotatePlayer();
+            MoveCameraTarget();
         }
-        MoveCameraTarget();
+
         ProcessFightInputs();
         SwitchFightActions();
     }
@@ -386,7 +387,7 @@ public class PlayerController : MonoBehaviour
 
         if (CurrentState == State.Walking)
         {
-            ReinitCameraPlace();
+            ReinitCameraTargetAndPlace();
             SwitchFightColliders(false);
         }
     }
@@ -490,8 +491,7 @@ public class PlayerController : MonoBehaviour
     public void RespawnAtEntryPoint()
     {
         AbortCurrentContextForDeath();
-        ReinitCameraPlace();
-
+        ReinitCameraTargetAndPlace();
 
         ChangeState(State.Walking);
 
@@ -504,15 +504,39 @@ public class PlayerController : MonoBehaviour
 
     // CAMERA ////////////////////////////////////////////////////////////////////////
 
-    private void ReinitCameraPlace()
+    private void ReinitCameraTargetAndPlace()
     {
         playerCameraPlace.localPosition = new Vector3(0, 1.9f, -1f);
+        playerCameraTarget.localPosition = new Vector3(0, 1.7f, 0);
     }
 
     private void FreezeCameraHeight()
     {
         float frozenCameraHeight = playerCameraPlace.position.y;
         playerCameraPlace.position = new Vector3(transform.position.x, frozenCameraHeight, transform.position.z);
+    }
+
+    private void DefeatCameraPlace()
+    {
+        switch (CurrentFallDirection)
+        {
+            case FallDirection.Front:
+                playerCameraTarget.localPosition = new Vector3(0, 0.6f, 1.5f);
+                playerCameraPlace.localPosition = new Vector3(0, 0.6f, 1.9f);
+                break;
+            case FallDirection.Back:
+                playerCameraTarget.localPosition = new Vector3(0, 0.7f, -0.5f);
+                playerCameraPlace.localPosition = new Vector3(0, 1f, 0f);
+                break;
+            case FallDirection.Left:
+                playerCameraTarget.localPosition = new Vector3(-1.5f, 0.4f, 0f);
+                playerCameraPlace.localPosition = new Vector3(-2f, 0.8f, 0.9f);
+                break;
+            case FallDirection.Right:
+                playerCameraTarget.localPosition = new Vector3(1.5f, 0.4f, 0f);
+                playerCameraPlace.localPosition = new Vector3(2f, 0.8f, 0.9f);
+                break;
+        }
     }
 
     private async void PlaceCameraLookingAtSreen()
@@ -910,6 +934,16 @@ public class PlayerController : MonoBehaviour
         if (CurrentFightPhase == nextPhase) return;
 
         CurrentFightPhase = nextPhase;
+
+        if (CurrentFightPhase == FightPhase.None)
+        {
+            isThrowing = false;
+        }
+
+        if (CurrentFightPhase == FightPhase.Defeat)
+        {
+            DefeatCameraPlace();
+        }
     }
 
     public void ChangeFightSide(FightSide nextSide)
@@ -921,7 +955,6 @@ public class PlayerController : MonoBehaviour
 
     public void ChangeFallDirection(FallDirection nextDirection)
     {
-        if (CurrentFallDirection == nextDirection) return;
         CurrentFallDirection = nextDirection;
     }
 
@@ -1043,7 +1076,9 @@ public class PlayerController : MonoBehaviour
 
     public void OnThrowFinished() //_______________ animation event via Relay
     {
-        isThrowing = false;
+        if (CurrentFightPhase == FightPhase.Defeat || CurrentFightPhase == FightPhase.Victory)
+            return;
+            
         ChangeFightPhase(FightPhase.None);
         ChangeFightSide(FightSide.None);
     }

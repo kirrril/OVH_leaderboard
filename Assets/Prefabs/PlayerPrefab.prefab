@@ -186,8 +186,8 @@ Transform:
   m_GameObject: {fileID: 1694626677272804896}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0.7071068, z: 0, w: 0.7071068}
-  m_LocalPosition: {x: -0.00054, y: 0.00127, z: 0.00025}
-  m_LocalScale: {x: 0.002, y: 0.0025, z: 0.0015}
+  m_LocalPosition: {x: -0.00122, y: 0.00127, z: 0.00025}
+  m_LocalScale: {x: 0.001, y: 0.0025, z: 0.0005}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 8009676204977336129}
@@ -343,8 +343,8 @@ Transform:
   m_GameObject: {fileID: 5038433693663044226}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0, y: 0.00127, z: -0.00037}
-  m_LocalScale: {x: 0.002, y: 0.0025, z: 0.0015}
+  m_LocalPosition: {x: -0, y: 0.00127, z: -0.00071}
+  m_LocalScale: {x: 0.001, y: 0.0025, z: 0.0005}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 8009676204977336129}
@@ -723,8 +723,8 @@ Transform:
   m_GameObject: {fileID: 6709601283617019225}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.00127, z: 0.00083}
-  m_LocalScale: {x: 0.002, y: 0.0025, z: 0.0015}
+  m_LocalPosition: {x: -0, y: 0.00127, z: 0.00126}
+  m_LocalScale: {x: 0.001, y: 0.0025, z: 0.0005}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 8009676204977336129}
@@ -1076,10 +1076,9 @@ MonoBehaviour:
   playerCameraPlace: {fileID: 4445936120259145543}
   stopTrainingControl: {fileID: 0}
   entryPoint: {fileID: 0}
-  playerFightAttack: 0
-  playerFightLeft: 0
-  playerFightRight: 0
-  isThrowing: 0
+  groundMask:
+    serializedVersion: 2
+    m_Bits: 128
   fightColliders:
   - {fileID: 1796135663215229992}
   - {fileID: 41412085615948186}
@@ -1089,9 +1088,10 @@ MonoBehaviour:
   - {fileID: 3028024948818541952}
   - {fileID: 6349939771914431056}
   - {fileID: 6342917711692251781}
-  groundMask:
-    serializedVersion: 2
-    m_Bits: 128
+  isThrowing: 0
+  playerFightAttack: 0
+  playerFightLeft: 0
+  playerFightRight: 0
 --- !u!114 &8888472643783258362
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1201,8 +1201,8 @@ Transform:
   m_GameObject: {fileID: 8216234991217970754}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0.7071068, z: 0, w: 0.7071068}
-  m_LocalPosition: {x: 0.00058, y: 0.00127, z: 0.00025}
-  m_LocalScale: {x: 0.002, y: 0.0025, z: 0.0015}
+  m_LocalPosition: {x: 0.00111, y: 0.00127, z: 0.00025}
+  m_LocalScale: {x: 0.001, y: 0.0025, z: 0.0005}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 8009676204977336129}
