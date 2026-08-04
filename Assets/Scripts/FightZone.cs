@@ -10,6 +10,7 @@ public class FightZone : MonoBehaviour
     [SerializeField] private Transform player;
     [SerializeField] private NavMeshObstacle navMeshObstacle;
     private bool fightHasStarted;
+    private bool fightResolved;
 
     void Update()
     {
@@ -20,7 +21,7 @@ public class FightZone : MonoBehaviour
     {
         if (GameManager.Instance.CurrentScore < 10) return;
 
-        if (other.tag != "Player") return;
+        if (other != playerController.mainCollider) return;
 
         if (fightHasStarted) return;
         if (playerController.CurrentFightZone != null && playerController.CurrentFightZone != this) return;
@@ -28,14 +29,22 @@ public class FightZone : MonoBehaviour
         playerController.EnterFightZone(this);
         manController.ChangeState(ManController.State.Fighting);
         fightHasStarted = true;
-        manController.SetFightResolved(false);
+        fightResolved = false;
     }
 
     private void OnTriggerExit(Collider other)
     {
-        if (other.tag != "Player") return;
+        if (other != playerController.mainCollider) return;
         if (!fightHasStarted) return;
-        // if (!manController.IsFightResolved) return;
+        if (!fightResolved) return;
+
+        EndResolvedFight();
+    }
+
+    public void EndResolvedFight()
+    {
+        if (!fightHasStarted) return;
+        if (!fightResolved) return;
 
         playerController.ExitFightZone();
 
@@ -45,19 +54,54 @@ public class FightZone : MonoBehaviour
         }
 
         fightHasStarted = false;
-        manController.SetFightResolved(true);
+        fightResolved = false;
     }
 
     public void HurtboxTouched(FightHitbox.AttackerType attackerType, FightHurtbox.HurtboxType hurtboxType)
     {
         if (!fightHasStarted) return;
 
-        if (manController.IsFightResolved) return;
+        if (fightResolved) return;
 
-        if (attackerType == FightHitbox.AttackerType.Player // ________________ éviter les coups dans le ventre
-        && hurtboxType == FightHurtbox.HurtboxType.Chest
-        && (playerController.CurrentFightPhase != PlayerController.FightPhase.Attack
-        || playerController.CurrentFightSide != PlayerController.FightSide.Front))
+        if (attackerType == FightHitbox.AttackerType.Player
+            && playerController.CurrentFightPhase == PlayerController.FightPhase.Block)
+        {
+            return;
+        }
+
+        // if (attackerType == FightHitbox.AttackerType.Player
+        // && hurtboxType == FightHurtbox.HurtboxType.Chest
+        // && playerController.CurrentFightPhase == PlayerController.FightPhase.Attack
+        // && playerController.CurrentFightSide == PlayerController.FightSide.Left
+        // || attackerType == FightHitbox.AttackerType.Player
+        // && hurtboxType == FightHurtbox.HurtboxType.Chest
+        // && playerController.CurrentFightPhase == PlayerController.FightPhase.Attack
+        // && playerController.CurrentFightSide == PlayerController.FightSide.Right)
+        // {
+        //     return;
+        // }
+
+        // if (attackerType == FightHitbox.AttackerType.Player
+        // && hurtboxType == FightHurtbox.HurtboxType.Chest
+        // && playerController.CurrentFightPhase == PlayerController.FightPhase.Attack
+        // && playerController.CurrentFightSide != PlayerController.FightSide.Front)
+        // {
+        //     return;
+        // }
+
+        bool isPlayerLateralAttack =
+        attackerType == FightHitbox.AttackerType.Player
+        && playerController.CurrentFightPhase == PlayerController.FightPhase.Attack
+        && (playerController.CurrentFightSide == PlayerController.FightSide.Left
+        || playerController.CurrentFightSide == PlayerController.FightSide.Right);
+
+        if (attackerType == FightHitbox.AttackerType.Player
+            && playerController.CurrentFightPhase == PlayerController.FightPhase.Block)
+        {
+            return;
+        }
+
+        if (hurtboxType == FightHurtbox.HurtboxType.Chest && isPlayerLateralAttack)
         {
             return;
         }
@@ -86,7 +130,7 @@ public class FightZone : MonoBehaviour
                         break;
                 }
                 playerController.ChangeFightPhase(PlayerController.FightPhase.Victory);
-                manController.SetFightResolved(true);
+                fightResolved = true;
                 break;
             case FightHitbox.AttackerType.Man:
                 switch (hurtboxType)
@@ -107,25 +151,25 @@ public class FightZone : MonoBehaviour
                         playerController.ChangeFallDirection(PlayerController.FallDirection.Back);
                         playerController.ChangeFightPhase(PlayerController.FightPhase.Defeat);
                         manController.ChangeFightPhase(ManController.FightPhase.Victory);
-                        manController.SetFightResolved(true);
+                        fightResolved = true;
                         break;
                     case FightHurtbox.HurtboxType.HeadBack:
                         playerController.ChangeFallDirection(PlayerController.FallDirection.Front);
                         playerController.ChangeFightPhase(PlayerController.FightPhase.Defeat);
                         manController.ChangeFightPhase(ManController.FightPhase.Victory);
-                        manController.SetFightResolved(true);
+                        fightResolved = true;
                         break;
                     case FightHurtbox.HurtboxType.HeadLeft:
                         playerController.ChangeFallDirection(PlayerController.FallDirection.Left);
                         playerController.ChangeFightPhase(PlayerController.FightPhase.Defeat);
                         manController.ChangeFightPhase(ManController.FightPhase.Victory);
-                        manController.SetFightResolved(true);
+                        fightResolved = true;
                         break;
                     case FightHurtbox.HurtboxType.HeadRight:
                         playerController.ChangeFallDirection(PlayerController.FallDirection.Right);
                         playerController.ChangeFightPhase(PlayerController.FightPhase.Defeat);
                         manController.ChangeFightPhase(ManController.FightPhase.Victory);
-                        manController.SetFightResolved(true);
+                        fightResolved = true;
                         break;
                 }
                 break;

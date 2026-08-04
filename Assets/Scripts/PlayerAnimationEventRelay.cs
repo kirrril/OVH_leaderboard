@@ -4,9 +4,9 @@ public class PlayerAnimationEventRelay : MonoBehaviour
 {
     [SerializeField] private PlayerController playerController;
 
-    public void OnDefeatAnimationFinished()
+    public void OnDefeat()
     {
-        playerController.OnDefeatAnimationFinished();
+        playerController.OnDefeat();
     }
 
     public void OnThrowFinished()

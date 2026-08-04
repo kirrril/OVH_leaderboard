@@ -12,6 +12,7 @@ public class ManController : MonoBehaviour, IAgent
     [SerializeField] private Transform player;
     [SerializeField] private NavMeshAgent agent;
     public Animator animator;
+    [SerializeField] private FightZone fightZone;
 
 
     // General ________________________________________________________________________
@@ -82,7 +83,6 @@ public class ManController : MonoBehaviour, IAgent
     public ManFightAction CurrentFightAction { get; private set; } //_______________ animation interface
 
 
-    public bool IsFightResolved { get; private set; }
     private float nextAttackTimer = 0.5f;
 
 
@@ -171,8 +171,6 @@ public class ManController : MonoBehaviour, IAgent
     private void HandleFighting()
     {
         SwitchFightActions();
-
-        if (IsFightResolved) return;
 
         if (CurrentFightPhase != FightPhase.None) return;
 
@@ -427,11 +425,7 @@ public class ManController : MonoBehaviour, IAgent
 
         wasBeaten = true;
         ChangeState(State.Fleeing);
-    }
-
-    public void SetFightResolved(bool value) //_______________ called by FightZone
-    {
-        IsFightResolved = value;
+        fightZone?.EndResolvedFight();
     }
 
     private void SwitchFightActions() //_______________ animation interface
@@ -452,17 +446,6 @@ public class ManController : MonoBehaviour, IAgent
                         break;
                 }
                 break;
-            // case FightPhase.Blocked:
-            //     switch (CurrentFightSide)
-            //     {
-            //         case FightSide.Left:
-            //             CurrentFightAction = ManFightAction.BlockedLeft;
-            //             break;
-            //         case FightSide.Right:
-            //             CurrentFightAction = ManFightAction.BlockedRight;
-            //             break;
-            //     }
-            //     break;
             case FightPhase.Victory:
                 CurrentFightAction = ManFightAction.Victory;
                 break;

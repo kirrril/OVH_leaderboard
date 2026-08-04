@@ -10,6 +10,7 @@ public class PlayerController : MonoBehaviour
     // Refs ________________________________________________________________________
 
     public Rigidbody rb;
+    public Collider mainCollider;
     [SerializeField] private Animator animator;
     public Transform playerCameraTarget;
     public Transform playerCameraPlace;
@@ -474,6 +475,11 @@ public class PlayerController : MonoBehaviour
         ChangeJumpPhase(JumpPhase.None);
         ChangeDoorPhase(DoorPhase.None);
         ChangeClimbPhase(ClimbPhase.None);
+
+        if (CurrentState == State.Fighting && CurrentFightZone != null) // _______ sortie du combat au cas où FightZone.OnTriggerExit() a raté
+        {
+            CurrentFightZone.EndResolvedFight();
+        }
 
         CurrentFightZone = null;
         isThrowing = false;
@@ -1078,12 +1084,12 @@ public class PlayerController : MonoBehaviour
     {
         if (CurrentFightPhase == FightPhase.Defeat || CurrentFightPhase == FightPhase.Victory)
             return;
-            
+
         ChangeFightPhase(FightPhase.None);
         ChangeFightSide(FightSide.None);
     }
 
-    public void OnDefeatAnimationFinished() //_______________ animation event via Relay
+    public void OnDefeat() //_______________ animation event via Relay
     {
         if (CurrentState != State.Fighting) return;
         if (CurrentFightPhase != FightPhase.Defeat) return;

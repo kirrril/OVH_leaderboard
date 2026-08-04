@@ -9019,6 +9019,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 218628882}
     - target: {fileID: 775626146835990690, guid: f379125323592f34395f41efe94744f5, type: 3}
+      propertyPath: mainCollider
+      value: 
+      objectReference: {fileID: 1837448876}
+    - target: {fileID: 775626146835990690, guid: f379125323592f34395f41efe94744f5, type: 3}
       propertyPath: stopTrainingControl
       value: 
       objectReference: {fileID: 1982155941}
@@ -16375,6 +16379,11 @@ Transform:
   - {fileID: 437535146}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!136 &1837448876 stripped
+CapsuleCollider:
+  m_CorrespondingSourceObject: {fileID: 8948382738235279479, guid: f379125323592f34395f41efe94744f5, type: 3}
+  m_PrefabInstance: {fileID: 890705114}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1851019506
 GameObject:
   m_ObjectHideFlags: 0
