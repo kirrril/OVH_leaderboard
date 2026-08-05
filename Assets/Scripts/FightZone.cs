@@ -63,11 +63,11 @@ public class FightZone : MonoBehaviour
 
         if (fightResolved) return;
 
-        if (attackerType == FightHitbox.AttackerType.Player
-            && playerController.CurrentFightPhase == PlayerController.FightPhase.Block)
-        {
-            return;
-        }
+        // if (attackerType == FightHitbox.AttackerType.Player
+        //     && playerController.CurrentFightPhase == PlayerController.FightPhase.Block)
+        // {
+        //     return;
+        // }
 
         // if (attackerType == FightHitbox.AttackerType.Player
         // && hurtboxType == FightHurtbox.HurtboxType.Chest
@@ -174,6 +174,7 @@ public class FightZone : MonoBehaviour
                 }
                 break;
         }
-        playerController.ChangeFightSide(PlayerController.FightSide.None);
+        // playerController.ChangeFightSide(PlayerController.FightSide.None); // ___ commenté dans l'hypothèse
+        // que ça provoque un passage à FightSide.None prématuré
     }
 }
