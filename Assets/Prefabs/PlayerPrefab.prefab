@@ -1071,6 +1071,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   rb: {fileID: 1825947116902778187}
+  mainCollider: {fileID: 8948382738235279479}
   animator: {fileID: 5196658078557779710}
   playerCameraTarget: {fileID: 3726884547586270123}
   playerCameraPlace: {fileID: 4445936120259145543}

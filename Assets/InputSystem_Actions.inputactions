@@ -25,7 +25,7 @@
                     "initialStateCheck": true
                 },
                 {
-                    "name": "Attack",
+                    "name": "AttackChest",
                     "type": "Button",
                     "id": "6c2ab1b8-8984-453a-af3d-a3c78ae1679a",
                     "expectedControlType": "",
@@ -61,7 +61,7 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "AttackSideLeft",
+                    "name": "BlockLeft",
                     "type": "Button",
                     "id": "46533300-eeb9-49a8-a32e-0d6cb319deb5",
                     "expectedControlType": "",
@@ -70,9 +70,27 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "AttackSideRight",
+                    "name": "BlockRight",
                     "type": "Button",
                     "id": "90051994-b315-4ca2-99ac-ec4b6dd2f90e",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "DuckDown",
+                    "type": "Button",
+                    "id": "eaaa268e-d74e-4e37-b08a-af736a4564c5",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "AttackHead",
+                    "type": "Button",
+                    "id": "0c62efea-8467-4cc4-91bc-ec82b793cbb0",
                     "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
@@ -197,7 +215,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": ";Keyboard&Mouse",
-                    "action": "Attack",
+                    "action": "AttackChest",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -241,7 +259,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": ";Keyboard&Mouse",
-                    "action": "AttackSideLeft",
+                    "action": "BlockLeft",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -252,7 +270,29 @@
                     "interactions": "",
                     "processors": "",
                     "groups": ";Keyboard&Mouse",
-                    "action": "AttackSideRight",
+                    "action": "BlockRight",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "706c029d-9edd-4cb4-9571-ea2daea83af3",
+                    "path": "<Keyboard>/s",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Keyboard&Mouse",
+                    "action": "DuckDown",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "02f1533a-648d-4a6d-8275-ca925784cc21",
+                    "path": "<Keyboard>/w",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Keyboard&Mouse",
+                    "action": "AttackHead",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

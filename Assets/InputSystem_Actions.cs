@@ -111,7 +111,7 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
                     ""initialStateCheck"": true
                 },
                 {
-                    ""name"": ""Attack"",
+                    ""name"": ""AttackChest"",
                     ""type"": ""Button"",
                     ""id"": ""6c2ab1b8-8984-453a-af3d-a3c78ae1679a"",
                     ""expectedControlType"": """",
@@ -147,7 +147,7 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
                     ""initialStateCheck"": false
                 },
                 {
-                    ""name"": ""AttackSideLeft"",
+                    ""name"": ""BlockLeft"",
                     ""type"": ""Button"",
                     ""id"": ""46533300-eeb9-49a8-a32e-0d6cb319deb5"",
                     ""expectedControlType"": """",
@@ -156,9 +156,27 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
                     ""initialStateCheck"": false
                 },
                 {
-                    ""name"": ""AttackSideRight"",
+                    ""name"": ""BlockRight"",
                     ""type"": ""Button"",
                     ""id"": ""90051994-b315-4ca2-99ac-ec4b6dd2f90e"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""DuckDown"",
+                    ""type"": ""Button"",
+                    ""id"": ""eaaa268e-d74e-4e37-b08a-af736a4564c5"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""AttackHead"",
+                    ""type"": ""Button"",
+                    ""id"": ""0c62efea-8467-4cc4-91bc-ec82b793cbb0"",
                     ""expectedControlType"": """",
                     ""processors"": """",
                     ""interactions"": """",
@@ -283,7 +301,7 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": "";Keyboard&Mouse"",
-                    ""action"": ""Attack"",
+                    ""action"": ""AttackChest"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -327,7 +345,7 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": "";Keyboard&Mouse"",
-                    ""action"": ""AttackSideLeft"",
+                    ""action"": ""BlockLeft"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -338,7 +356,29 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": "";Keyboard&Mouse"",
-                    ""action"": ""AttackSideRight"",
+                    ""action"": ""BlockRight"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""706c029d-9edd-4cb4-9571-ea2daea83af3"",
+                    ""path"": ""<Keyboard>/s"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Keyboard&Mouse"",
+                    ""action"": ""DuckDown"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""02f1533a-648d-4a6d-8275-ca925784cc21"",
+                    ""path"": ""<Keyboard>/w"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Keyboard&Mouse"",
+                    ""action"": ""AttackHead"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -686,12 +726,14 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
         m_Player = asset.FindActionMap("Player", throwIfNotFound: true);
         m_Player_Move = m_Player.FindAction("Move", throwIfNotFound: true);
         m_Player_Look = m_Player.FindAction("Look", throwIfNotFound: true);
-        m_Player_Attack = m_Player.FindAction("Attack", throwIfNotFound: true);
+        m_Player_AttackChest = m_Player.FindAction("AttackChest", throwIfNotFound: true);
         m_Player_Jump = m_Player.FindAction("Jump", throwIfNotFound: true);
         m_Player_Push = m_Player.FindAction("Push", throwIfNotFound: true);
         m_Player_Climb = m_Player.FindAction("Climb", throwIfNotFound: true);
-        m_Player_AttackSideLeft = m_Player.FindAction("AttackSideLeft", throwIfNotFound: true);
-        m_Player_AttackSideRight = m_Player.FindAction("AttackSideRight", throwIfNotFound: true);
+        m_Player_BlockLeft = m_Player.FindAction("BlockLeft", throwIfNotFound: true);
+        m_Player_BlockRight = m_Player.FindAction("BlockRight", throwIfNotFound: true);
+        m_Player_DuckDown = m_Player.FindAction("DuckDown", throwIfNotFound: true);
+        m_Player_AttackHead = m_Player.FindAction("AttackHead", throwIfNotFound: true);
         // UI
         m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
         m_UI_Navigate = m_UI.FindAction("Navigate", throwIfNotFound: true);
@@ -787,12 +829,14 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
     private List<IPlayerActions> m_PlayerActionsCallbackInterfaces = new List<IPlayerActions>();
     private readonly InputAction m_Player_Move;
     private readonly InputAction m_Player_Look;
-    private readonly InputAction m_Player_Attack;
+    private readonly InputAction m_Player_AttackChest;
     private readonly InputAction m_Player_Jump;
     private readonly InputAction m_Player_Push;
     private readonly InputAction m_Player_Climb;
-    private readonly InputAction m_Player_AttackSideLeft;
-    private readonly InputAction m_Player_AttackSideRight;
+    private readonly InputAction m_Player_BlockLeft;
+    private readonly InputAction m_Player_BlockRight;
+    private readonly InputAction m_Player_DuckDown;
+    private readonly InputAction m_Player_AttackHead;
     /// <summary>
     /// Provides access to input actions defined in input action map "Player".
     /// </summary>
@@ -813,9 +857,9 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
         /// </summary>
         public InputAction @Look => m_Wrapper.m_Player_Look;
         /// <summary>
-        /// Provides access to the underlying input action "Player/Attack".
+        /// Provides access to the underlying input action "Player/AttackChest".
         /// </summary>
-        public InputAction @Attack => m_Wrapper.m_Player_Attack;
+        public InputAction @AttackChest => m_Wrapper.m_Player_AttackChest;
         /// <summary>
         /// Provides access to the underlying input action "Player/Jump".
         /// </summary>
@@ -829,13 +873,21 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
         /// </summary>
         public InputAction @Climb => m_Wrapper.m_Player_Climb;
         /// <summary>
-        /// Provides access to the underlying input action "Player/AttackSideLeft".
+        /// Provides access to the underlying input action "Player/BlockLeft".
         /// </summary>
-        public InputAction @AttackSideLeft => m_Wrapper.m_Player_AttackSideLeft;
+        public InputAction @BlockLeft => m_Wrapper.m_Player_BlockLeft;
         /// <summary>
-        /// Provides access to the underlying input action "Player/AttackSideRight".
+        /// Provides access to the underlying input action "Player/BlockRight".
         /// </summary>
-        public InputAction @AttackSideRight => m_Wrapper.m_Player_AttackSideRight;
+        public InputAction @BlockRight => m_Wrapper.m_Player_BlockRight;
+        /// <summary>
+        /// Provides access to the underlying input action "Player/DuckDown".
+        /// </summary>
+        public InputAction @DuckDown => m_Wrapper.m_Player_DuckDown;
+        /// <summary>
+        /// Provides access to the underlying input action "Player/AttackHead".
+        /// </summary>
+        public InputAction @AttackHead => m_Wrapper.m_Player_AttackHead;
         /// <summary>
         /// Provides access to the underlying input action map instance.
         /// </summary>
@@ -868,9 +920,9 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
             @Look.started += instance.OnLook;
             @Look.performed += instance.OnLook;
             @Look.canceled += instance.OnLook;
-            @Attack.started += instance.OnAttack;
-            @Attack.performed += instance.OnAttack;
-            @Attack.canceled += instance.OnAttack;
+            @AttackChest.started += instance.OnAttackChest;
+            @AttackChest.performed += instance.OnAttackChest;
+            @AttackChest.canceled += instance.OnAttackChest;
             @Jump.started += instance.OnJump;
             @Jump.performed += instance.OnJump;
             @Jump.canceled += instance.OnJump;
@@ -880,12 +932,18 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
             @Climb.started += instance.OnClimb;
             @Climb.performed += instance.OnClimb;
             @Climb.canceled += instance.OnClimb;
-            @AttackSideLeft.started += instance.OnAttackSideLeft;
-            @AttackSideLeft.performed += instance.OnAttackSideLeft;
-            @AttackSideLeft.canceled += instance.OnAttackSideLeft;
-            @AttackSideRight.started += instance.OnAttackSideRight;
-            @AttackSideRight.performed += instance.OnAttackSideRight;
-            @AttackSideRight.canceled += instance.OnAttackSideRight;
+            @BlockLeft.started += instance.OnBlockLeft;
+            @BlockLeft.performed += instance.OnBlockLeft;
+            @BlockLeft.canceled += instance.OnBlockLeft;
+            @BlockRight.started += instance.OnBlockRight;
+            @BlockRight.performed += instance.OnBlockRight;
+            @BlockRight.canceled += instance.OnBlockRight;
+            @DuckDown.started += instance.OnDuckDown;
+            @DuckDown.performed += instance.OnDuckDown;
+            @DuckDown.canceled += instance.OnDuckDown;
+            @AttackHead.started += instance.OnAttackHead;
+            @AttackHead.performed += instance.OnAttackHead;
+            @AttackHead.canceled += instance.OnAttackHead;
         }
 
         /// <summary>
@@ -903,9 +961,9 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
             @Look.started -= instance.OnLook;
             @Look.performed -= instance.OnLook;
             @Look.canceled -= instance.OnLook;
-            @Attack.started -= instance.OnAttack;
-            @Attack.performed -= instance.OnAttack;
-            @Attack.canceled -= instance.OnAttack;
+            @AttackChest.started -= instance.OnAttackChest;
+            @AttackChest.performed -= instance.OnAttackChest;
+            @AttackChest.canceled -= instance.OnAttackChest;
             @Jump.started -= instance.OnJump;
             @Jump.performed -= instance.OnJump;
             @Jump.canceled -= instance.OnJump;
@@ -915,12 +973,18 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
             @Climb.started -= instance.OnClimb;
             @Climb.performed -= instance.OnClimb;
             @Climb.canceled -= instance.OnClimb;
-            @AttackSideLeft.started -= instance.OnAttackSideLeft;
-            @AttackSideLeft.performed -= instance.OnAttackSideLeft;
-            @AttackSideLeft.canceled -= instance.OnAttackSideLeft;
-            @AttackSideRight.started -= instance.OnAttackSideRight;
-            @AttackSideRight.performed -= instance.OnAttackSideRight;
-            @AttackSideRight.canceled -= instance.OnAttackSideRight;
+            @BlockLeft.started -= instance.OnBlockLeft;
+            @BlockLeft.performed -= instance.OnBlockLeft;
+            @BlockLeft.canceled -= instance.OnBlockLeft;
+            @BlockRight.started -= instance.OnBlockRight;
+            @BlockRight.performed -= instance.OnBlockRight;
+            @BlockRight.canceled -= instance.OnBlockRight;
+            @DuckDown.started -= instance.OnDuckDown;
+            @DuckDown.performed -= instance.OnDuckDown;
+            @DuckDown.canceled -= instance.OnDuckDown;
+            @AttackHead.started -= instance.OnAttackHead;
+            @AttackHead.performed -= instance.OnAttackHead;
+            @AttackHead.canceled -= instance.OnAttackHead;
         }
 
         /// <summary>
@@ -1236,12 +1300,12 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnLook(InputAction.CallbackContext context);
         /// <summary>
-        /// Method invoked when associated input action "Attack" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// Method invoked when associated input action "AttackChest" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
         /// </summary>
         /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
-        void OnAttack(InputAction.CallbackContext context);
+        void OnAttackChest(InputAction.CallbackContext context);
         /// <summary>
         /// Method invoked when associated input action "Jump" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
         /// </summary>
@@ -1264,19 +1328,33 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnClimb(InputAction.CallbackContext context);
         /// <summary>
-        /// Method invoked when associated input action "AttackSideLeft" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// Method invoked when associated input action "BlockLeft" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
         /// </summary>
         /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
-        void OnAttackSideLeft(InputAction.CallbackContext context);
+        void OnBlockLeft(InputAction.CallbackContext context);
         /// <summary>
-        /// Method invoked when associated input action "AttackSideRight" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// Method invoked when associated input action "BlockRight" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
         /// </summary>
         /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
-        void OnAttackSideRight(InputAction.CallbackContext context);
+        void OnBlockRight(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "DuckDown" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnDuckDown(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "AttackHead" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnAttackHead(InputAction.CallbackContext context);
     }
     /// <summary>
     /// Interface to implement callback methods for all input action callbacks associated with input actions defined by "UI" which allows adding and removing callbacks.

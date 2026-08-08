@@ -63,45 +63,12 @@ public class FightZone : MonoBehaviour
 
         if (fightResolved) return;
 
-        // if (attackerType == FightHitbox.AttackerType.Player
-        //     && playerController.CurrentFightPhase == PlayerController.FightPhase.Block)
-        // {
-        //     return;
-        // }
-
-        // if (attackerType == FightHitbox.AttackerType.Player
-        // && hurtboxType == FightHurtbox.HurtboxType.Chest
-        // && playerController.CurrentFightPhase == PlayerController.FightPhase.Attack
-        // && playerController.CurrentFightSide == PlayerController.FightSide.Left
-        // || attackerType == FightHitbox.AttackerType.Player
-        // && hurtboxType == FightHurtbox.HurtboxType.Chest
-        // && playerController.CurrentFightPhase == PlayerController.FightPhase.Attack
-        // && playerController.CurrentFightSide == PlayerController.FightSide.Right)
-        // {
-        //     return;
-        // }
-
-        // if (attackerType == FightHitbox.AttackerType.Player
-        // && hurtboxType == FightHurtbox.HurtboxType.Chest
-        // && playerController.CurrentFightPhase == PlayerController.FightPhase.Attack
-        // && playerController.CurrentFightSide != PlayerController.FightSide.Front)
-        // {
-        //     return;
-        // }
-
-        bool isPlayerLateralAttack =
-        attackerType == FightHitbox.AttackerType.Player
-        && playerController.CurrentFightPhase == PlayerController.FightPhase.Attack
-        && (playerController.CurrentFightSide == PlayerController.FightSide.Left
-        || playerController.CurrentFightSide == PlayerController.FightSide.Right);
-
         if (attackerType == FightHitbox.AttackerType.Player
-            && playerController.CurrentFightPhase == PlayerController.FightPhase.Block)
-        {
-            return;
-        }
-
-        if (hurtboxType == FightHurtbox.HurtboxType.Chest && isPlayerLateralAttack)
+            && playerController.CurrentFightPhase == PlayerController.FightPhase.BlockLeft
+            || attackerType == FightHitbox.AttackerType.Player
+            && playerController.CurrentFightPhase == PlayerController.FightPhase.BlockRight
+            || attackerType == FightHitbox.AttackerType.Player
+            && playerController.CurrentFightPhase == PlayerController.FightPhase.DuckDown)
         {
             return;
         }
@@ -136,14 +103,12 @@ public class FightZone : MonoBehaviour
                 switch (hurtboxType)
                 {
                     case FightHurtbox.HurtboxType.ArmLeft:
-                        if (playerController.CurrentFightPhase != PlayerController.FightPhase.Block) break;
-                        if (playerController.CurrentFightSide != PlayerController.FightSide.Left) break;
+                        if (playerController.CurrentFightPhase != PlayerController.FightPhase.BlockLeft) break;
                         manController.ChangeFightPhase(ManController.FightPhase.None);
                         playerController.ChangeFightPhase(PlayerController.FightPhase.None);
                         break;
                     case FightHurtbox.HurtboxType.ArmRight:
-                        if (playerController.CurrentFightPhase != PlayerController.FightPhase.Block) break;
-                        if (playerController.CurrentFightSide != PlayerController.FightSide.Right) break;
+                        if (playerController.CurrentFightPhase != PlayerController.FightPhase.BlockRight) break;
                         manController.ChangeFightPhase(ManController.FightPhase.None);
                         playerController.ChangeFightPhase(PlayerController.FightPhase.None);
                         break;
@@ -174,7 +139,5 @@ public class FightZone : MonoBehaviour
                 }
                 break;
         }
-        // playerController.ChangeFightSide(PlayerController.FightSide.None); // ___ commenté dans l'hypothèse
-        // que ça provoque un passage à FightSide.None prématuré
     }
 }
