@@ -3510,6 +3510,7 @@ GameObject:
   - component: {fileID: 326420698}
   - component: {fileID: 326420700}
   - component: {fileID: 326420699}
+  - component: {fileID: 326420701}
   m_Layer: 0
   m_Name: WeightPlatesSpawnZones
   m_TagString: Untagged
@@ -3574,6 +3575,20 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 11.745149, y: 1, z: 10.12027}
   m_Center: {x: 0.078623295, y: 0, z: 3.4594193}
+--- !u!114 &326420701
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 326420697}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 01962611631f71e4ab450f195dc2f1f6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::WeightPlateSpawner
+  spawnZones: []
+  weightPlates: []
 --- !u!1 &335149284
 GameObject:
   m_ObjectHideFlags: 0
