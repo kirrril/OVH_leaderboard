@@ -3499,6 +3499,81 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 323984845}
   m_CullTransparentMesh: 1
+--- !u!1 &326420697
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 326420698}
+  - component: {fileID: 326420700}
+  - component: {fileID: 326420699}
+  m_Layer: 0
+  m_Name: WeightPlatesSpawnZones
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &326420698
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 326420697}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 7.1, y: 0, z: 77.2}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 352110535}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &326420699
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 326420697}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 19.659868, y: 1, z: 3.882843}
+  m_Center: {x: -0.15724659, y: 0, z: -3.0662994}
+--- !u!65 &326420700
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 326420697}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 11.745149, y: 1, z: 10.12027}
+  m_Center: {x: 0.078623295, y: 0, z: 3.4594193}
 --- !u!1 &335149284
 GameObject:
   m_ObjectHideFlags: 0
@@ -3988,6 +4063,7 @@ Transform:
   - {fileID: 417622415}
   - {fileID: 848884483}
   - {fileID: 1703255726}
+  - {fileID: 326420698}
   - {fileID: 928063678}
   - {fileID: 1945736976}
   m_Father: {fileID: 0}
@@ -20761,6 +20837,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: PlatformLegsPrefab
       objectReference: {fileID: 0}
+    - target: {fileID: 4330100319663965692, guid: 1de01b2ab24d1dd4fa6201281f32536c, type: 3}
+      propertyPath: playerController
+      value: 
+      objectReference: {fileID: 437535149}
     - target: {fileID: 5249992283057656985, guid: 1de01b2ab24d1dd4fa6201281f32536c, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0

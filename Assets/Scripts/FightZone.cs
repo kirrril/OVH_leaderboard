@@ -20,6 +20,7 @@ public class FightZone : MonoBehaviour
     private void OnTriggerEnter(Collider other)
     {
         if (GameManager.Instance.CurrentScore < 10) return;
+        if (playerController.CurrentSecurityZone != null) return;
 
         if (other != playerController.mainCollider) return;
 
@@ -57,6 +58,22 @@ public class FightZone : MonoBehaviour
         fightResolved = false;
     }
 
+    private void ResolvePlayerWin()
+    {
+        playerController.ChangeFightPhase(PlayerController.FightPhase.Victory);
+        manController.ChangeFightPhase(ManController.FightPhase.Defeat);
+        GameManager.Instance.ModifyScore(10);
+        fightResolved = true;
+    }
+
+    private void ResolveManWin()
+    {
+        manController.ChangeFightPhase(ManController.FightPhase.Victory);
+        playerController.ChangeFightPhase(PlayerController.FightPhase.Defeat);
+        GameManager.Instance.ModifyScore(-10);
+        fightResolved = true;
+    }
+
     public void HurtboxTouched(FightHitbox.AttackerType attackerType, FightHurtbox.HurtboxType hurtboxType)
     {
         if (!fightHasStarted) return;
@@ -81,23 +98,21 @@ public class FightZone : MonoBehaviour
                     case FightHurtbox.HurtboxType.Chest:
                     case FightHurtbox.HurtboxType.HeadFront:
                         manController.ChangeFallDirection(ManController.FallDirection.Back);
-                        manController.ChangeFightPhase(ManController.FightPhase.Defeat);
+                        ResolvePlayerWin();
                         break;
                     case FightHurtbox.HurtboxType.HeadBack:
                         manController.ChangeFallDirection(ManController.FallDirection.Front);
-                        manController.ChangeFightPhase(ManController.FightPhase.Defeat);
+                        ResolvePlayerWin();
                         break;
                     case FightHurtbox.HurtboxType.HeadLeft:
                         manController.ChangeFallDirection(ManController.FallDirection.Right);
-                        manController.ChangeFightPhase(ManController.FightPhase.Defeat);
+                        ResolvePlayerWin();
                         break;
                     case FightHurtbox.HurtboxType.HeadRight:
                         manController.ChangeFallDirection(ManController.FallDirection.Left);
-                        manController.ChangeFightPhase(ManController.FightPhase.Defeat);
+                        ResolvePlayerWin();
                         break;
                 }
-                playerController.ChangeFightPhase(PlayerController.FightPhase.Victory);
-                fightResolved = true;
                 break;
             case FightHitbox.AttackerType.Man:
                 switch (hurtboxType)
@@ -114,27 +129,19 @@ public class FightZone : MonoBehaviour
                         break;
                     case FightHurtbox.HurtboxType.HeadFront:
                         playerController.ChangeFallDirection(PlayerController.FallDirection.Back);
-                        playerController.ChangeFightPhase(PlayerController.FightPhase.Defeat);
-                        manController.ChangeFightPhase(ManController.FightPhase.Victory);
-                        fightResolved = true;
+                        ResolveManWin();
                         break;
                     case FightHurtbox.HurtboxType.HeadBack:
                         playerController.ChangeFallDirection(PlayerController.FallDirection.Front);
-                        playerController.ChangeFightPhase(PlayerController.FightPhase.Defeat);
-                        manController.ChangeFightPhase(ManController.FightPhase.Victory);
-                        fightResolved = true;
+                        ResolveManWin();
                         break;
                     case FightHurtbox.HurtboxType.HeadLeft:
                         playerController.ChangeFallDirection(PlayerController.FallDirection.Left);
-                        playerController.ChangeFightPhase(PlayerController.FightPhase.Defeat);
-                        manController.ChangeFightPhase(ManController.FightPhase.Victory);
-                        fightResolved = true;
+                        ResolveManWin();
                         break;
                     case FightHurtbox.HurtboxType.HeadRight:
                         playerController.ChangeFallDirection(PlayerController.FallDirection.Right);
-                        playerController.ChangeFightPhase(PlayerController.FightPhase.Defeat);
-                        manController.ChangeFightPhase(ManController.FightPhase.Victory);
-                        fightResolved = true;
+                        ResolveManWin();
                         break;
                 }
                 break;

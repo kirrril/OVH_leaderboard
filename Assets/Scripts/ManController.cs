@@ -83,8 +83,6 @@ public class ManController : MonoBehaviour, IAgent
     public ManFightAction CurrentFightAction { get; private set; } //_______________ animation interface
 
 
-    private float nextAttackTimer = 0.5f;
-
 
     // LIFECYCLE //////////////////////////////////////////////////////////////////////
 
@@ -142,6 +140,7 @@ public class ManController : MonoBehaviour, IAgent
     {
         MoveToSpot();
         UpdateWalkingPhase();
+        BeReadyToInsult();
     }
     private void HandleChasing()
     {
@@ -173,9 +172,6 @@ public class ManController : MonoBehaviour, IAgent
         SwitchFightActions();
 
         if (CurrentFightPhase != FightPhase.None) return;
-
-        nextAttackTimer -= Time.deltaTime;
-        if (nextAttackTimer > 0f) return;
 
         Attack();
     }
@@ -313,7 +309,9 @@ public class ManController : MonoBehaviour, IAgent
         if (player == null) return false;
         if (playerController.CurrentState == PlayerController.State.Training) return false;
         if (playerController.CurrentState == PlayerController.State.Fighting) return false;
+        if (playerController.CurrentSecurityZone != null) return false;
         if (wasBeaten) return false;
+        if (GameManager.Instance.CurrentScore < 10 && hasInsulted) return false;
 
         Vector3 toPlayer = player.position - transform.position;
         float distanceToPlayer = toPlayer.magnitude;
@@ -418,7 +416,16 @@ public class ManController : MonoBehaviour, IAgent
         CurrentFallDirection = nextDirection;
     }
 
-    public void OnDefeatAnimationFinished() //_______________ animation event via Relay
+    public void OnThrowFinished() //_______________ animation event via Relay
+    {
+        if (CurrentState != State.Fighting) return;
+        if (CurrentFightPhase != FightPhase.Attack) return;
+
+        ChangeFightPhase(FightPhase.None);
+    }
+
+
+    public void OnDefeat() //_______________ animation event via Relay
     {
         if (CurrentState != State.Fighting) return;
         if (CurrentFightPhase != FightPhase.Defeat) return;

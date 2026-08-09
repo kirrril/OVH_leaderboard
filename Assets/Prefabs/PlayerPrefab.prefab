@@ -186,8 +186,8 @@ Transform:
   m_GameObject: {fileID: 1694626677272804896}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0.7071068, z: 0, w: 0.7071068}
-  m_LocalPosition: {x: -0.00122, y: 0.00127, z: 0.00025}
-  m_LocalScale: {x: 0.001, y: 0.0025, z: 0.0005}
+  m_LocalPosition: {x: -0.00122, y: 0.00094, z: 0.00025}
+  m_LocalScale: {x: 0.001, y: 0.002, z: 0.0005}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 8009676204977336129}
@@ -343,8 +343,8 @@ Transform:
   m_GameObject: {fileID: 5038433693663044226}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0, y: 0.00127, z: -0.00071}
-  m_LocalScale: {x: 0.001, y: 0.0025, z: 0.0005}
+  m_LocalPosition: {x: -0, y: 0.00103, z: -0.00071}
+  m_LocalScale: {x: 0.001, y: 0.002, z: 0.0005}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 8009676204977336129}
@@ -723,8 +723,8 @@ Transform:
   m_GameObject: {fileID: 6709601283617019225}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0, y: 0.00127, z: 0.00126}
-  m_LocalScale: {x: 0.001, y: 0.0025, z: 0.0005}
+  m_LocalPosition: {x: -0, y: 0.00094, z: 0.00126}
+  m_LocalScale: {x: 0.001, y: 0.002, z: 0.0005}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 8009676204977336129}
@@ -1053,6 +1053,14 @@ MonoBehaviour:
         m_CallState: 2
     m_ActionId: 90051994-b315-4ca2-99ac-ec4b6dd2f90e
     m_ActionName: 'Player/AttackSideRight[/Keyboard/d]'
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: eaaa268e-d74e-4e37-b08a-af736a4564c5
+    m_ActionName: 'Player/DuckDown[/Keyboard/s]'
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 0c62efea-8467-4cc4-91bc-ec82b793cbb0
+    m_ActionName: 'Player/AttackHead[/Keyboard/w]'
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: Keyboard&Mouse
   m_DefaultActionMap: Player
@@ -1090,9 +1098,11 @@ MonoBehaviour:
   - {fileID: 6349939771914431056}
   - {fileID: 6342917711692251781}
   isThrowing: 0
-  playerFightAttack: 0
-  playerFightLeft: 0
-  playerFightRight: 0
+  playerDuckDown: 0
+  playerBlockLeft: 0
+  playerBlockRight: 0
+  playerAttackChest: 0
+  playerAttackHead: 0
 --- !u!114 &8888472643783258362
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1202,8 +1212,8 @@ Transform:
   m_GameObject: {fileID: 8216234991217970754}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0.7071068, z: 0, w: 0.7071068}
-  m_LocalPosition: {x: 0.00111, y: 0.00127, z: 0.00025}
-  m_LocalScale: {x: 0.001, y: 0.0025, z: 0.0005}
+  m_LocalPosition: {x: 0.00111, y: 0.00094, z: 0.00025}
+  m_LocalScale: {x: 0.001, y: 0.002, z: 0.0005}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 8009676204977336129}

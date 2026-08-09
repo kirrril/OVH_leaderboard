@@ -78,6 +78,7 @@ public class PlayerController : MonoBehaviour
 
     [SerializeField] Collider[] fightColliders;
     public FightZone CurrentFightZone { get; private set; }
+    public SecurityZone CurrentSecurityZone { get; private set; }
     public enum FightPhase { None, DuckDown, BlockLeft, BlockRight, AttackChest, AttackHeadLeft, AttackHeadRight, Victory, Defeat }
     public FightPhase CurrentFightPhase { get; private set; }
     public enum FallDirection { Front, Back, Left, Right }
@@ -923,6 +924,17 @@ public class PlayerController : MonoBehaviour
         playerMovement = Vector2.zero;
     }
 
+    public void EnterSecurityZone(SecurityZone zone)
+    {
+        CurrentSecurityZone = zone;
+    }
+
+    public void ExitSecurityZone(SecurityZone zone)
+    {
+        if (CurrentSecurityZone != zone) return;
+        CurrentSecurityZone = null;
+    }
+
     public void ChangeFightPhase(FightPhase nextPhase)
     {
         if (CurrentFightPhase == nextPhase) return;
@@ -936,6 +948,7 @@ public class PlayerController : MonoBehaviour
 
         if (CurrentFightPhase == FightPhase.Defeat)
         {
+            AdjustDefeatRotationAwayFromMan();
             DefeatCameraPlace();
         }
     }
@@ -1035,6 +1048,28 @@ public class PlayerController : MonoBehaviour
                         break;
                 }
                 break;
+        }
+    }
+
+    private void AdjustDefeatRotationAwayFromMan() // ___ correction angle de chute vers l'avant
+    {
+        if (CurrentFallDirection != FallDirection.Front) return;
+        if (CurrentFightZone == null) return;
+
+        Vector3 toMan = CurrentFightZone.transform.position - transform.position;
+        toMan.y = 0f;
+
+        if (toMan.sqrMagnitude < 0.001f) return;
+
+        float signedAngle = Vector3.SignedAngle(transform.forward, toMan.normalized, Vector3.up);
+
+        if (signedAngle >= 0f && signedAngle < 10f)
+        {
+            rb.rotation = Quaternion.Euler(0f, 10f, 0f) * rb.rotation;
+        }
+        else if (signedAngle <= 0f && signedAngle > -10f)
+        {
+            rb.rotation = Quaternion.Euler(0f, -10f, 0f) * rb.rotation;
         }
     }
 
