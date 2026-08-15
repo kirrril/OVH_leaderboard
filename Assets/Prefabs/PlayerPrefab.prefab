@@ -832,6 +832,7 @@ GameObject:
   - component: {fileID: 7132400585949813493}
   - component: {fileID: 775626146835990690}
   - component: {fileID: 8888472643783258362}
+  - component: {fileID: 9180227078599525005}
   - component: {fileID: 1825947116902778187}
   - component: {fileID: 8948382738235279479}
   - component: {fileID: 6656972172204561236}
@@ -1061,6 +1062,22 @@ MonoBehaviour:
       m_Calls: []
     m_ActionId: 0c62efea-8467-4cc4-91bc-ec82b793cbb0
     m_ActionName: 'Player/AttackHead[/Keyboard/w]'
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 9180227078599525005}
+        m_TargetAssemblyTypeName: CursorAndPauseController, Assembly-CSharp
+        m_MethodName: OnPause
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: 95a1f407-8ec6-4673-85db-df8126050aea
+    m_ActionName: 'Session/Pause[/Keyboard/escape]'
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: Keyboard&Mouse
   m_DefaultActionMap: Player
@@ -1117,6 +1134,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PlayerAnimationController
   playerController: {fileID: 775626146835990690}
   animator: {fileID: 5196658078557779710}
+--- !u!114 &9180227078599525005
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8118313448260642084}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e289750ed9adbb446a02598a723e7f11, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CursorAndPauseController
+  playerController: {fileID: 775626146835990690}
 --- !u!54 &1825947116902778187
 Rigidbody:
   m_ObjectHideFlags: 0

@@ -152,7 +152,6 @@ public class PlayerController : MonoBehaviour
 
     public void OnMove(InputAction.CallbackContext ctx)
     {
-        // if (CurrentFightZone != null) return;
         playerMovement = ctx.ReadValue<Vector2>();
     }
 
@@ -258,15 +257,11 @@ public class PlayerController : MonoBehaviour
         RotatePlayer();
         MoveCameraTarget();
         ChangeWalkingPhase(CheckIfWalking() ? WalkingPhase.Walking : WalkingPhase.Idle);
-        // Cursor.lockState = CursorLockMode.Locked;
-        Cursor.visible = false;
         stopTrainingControl.SetActive(false);
     }
 
     private void HandleTraining()
     {
-        // Cursor.lockState = CursorLockMode.Locked;
-        Cursor.visible = true;
         stopTrainingControl.SetActive(true);
     }
 
@@ -440,7 +435,6 @@ public class PlayerController : MonoBehaviour
 
     private void AbortCurrentContextForDeath()
     {
-        Cursor.visible = false;
         stopTrainingControl.SetActive(false);
 
         if (CurrentTrainingData != null)
@@ -599,12 +593,10 @@ public class PlayerController : MonoBehaviour
         SetTrainingType(data.playerTrainingType);
         ChangeState(State.Training);
         GameManager.Instance.TrainingStarted(data.playerTrainingType);
-        Cursor.visible = true;
     }
 
     public void StopTraining()
     {
-        Cursor.visible = false;
         transform.position = CurrentTrainingData.exitPos.position;
         transform.rotation = CurrentTrainingData.exitPos.rotation;
         GameManager.Instance.TrainingStopped();

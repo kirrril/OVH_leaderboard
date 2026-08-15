@@ -6948,7 +6948,7 @@ GameObject:
   - component: {fileID: 702514481}
   - component: {fileID: 702514480}
   m_Layer: 5
-  m_Name: Pause
+  m_Name: SessionMenu
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -9254,15 +9254,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6992477434287819084, guid: f379125323592f34395f41efe94744f5, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 6.1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6992477434287819084, guid: f379125323592f34395f41efe94744f5, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -7.4
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6992477434287819084, guid: f379125323592f34395f41efe94744f5, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 75.8
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6992477434287819084, guid: f379125323592f34395f41efe94744f5, type: 3}
       propertyPath: m_LocalRotation.w
@@ -9294,7 +9294,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7132400585949813493, guid: f379125323592f34395f41efe94744f5, type: 3}
       propertyPath: m_ActionEvents.Array.size
-      value: 20
+      value: 21
       objectReference: {fileID: 0}
     - target: {fileID: 7132400585949813493, guid: f379125323592f34395f41efe94744f5, type: 3}
       propertyPath: m_ActionEvents.Array.data[18].m_ActionId
@@ -9305,12 +9305,20 @@ PrefabInstance:
       value: 0c62efea-8467-4cc4-91bc-ec82b793cbb0
       objectReference: {fileID: 0}
     - target: {fileID: 7132400585949813493, guid: f379125323592f34395f41efe94744f5, type: 3}
+      propertyPath: m_ActionEvents.Array.data[20].m_ActionId
+      value: 95a1f407-8ec6-4673-85db-df8126050aea
+      objectReference: {fileID: 0}
+    - target: {fileID: 7132400585949813493, guid: f379125323592f34395f41efe94744f5, type: 3}
       propertyPath: m_ActionEvents.Array.data[18].m_ActionName
       value: 'Player/DuckDown[/Keyboard/s]'
       objectReference: {fileID: 0}
     - target: {fileID: 7132400585949813493, guid: f379125323592f34395f41efe94744f5, type: 3}
       propertyPath: m_ActionEvents.Array.data[19].m_ActionName
       value: 'Player/AttackHead[/Keyboard/w]'
+      objectReference: {fileID: 0}
+    - target: {fileID: 7132400585949813493, guid: f379125323592f34395f41efe94744f5, type: 3}
+      propertyPath: m_ActionEvents.Array.data[20].m_ActionName
+      value: 'Session/Pause[/Keyboard/escape]'
       objectReference: {fileID: 0}
     - target: {fileID: 7132400585949813493, guid: f379125323592f34395f41efe94744f5, type: 3}
       propertyPath: m_ActionEvents.Array.data[18].m_PersistentCalls.m_Calls.Array.size
@@ -9384,6 +9392,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: PlayerPrefab
       objectReference: {fileID: 0}
+    - target: {fileID: 9180227078599525005, guid: f379125323592f34395f41efe94744f5, type: 3}
+      propertyPath: sessionMenu
+      value: 
+      objectReference: {fileID: 702514478}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -12506,15 +12518,15 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 6168489333896916984, guid: 0732271f651f1ed49aa8ca1e76673d95, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 6.1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6168489333896916984, guid: 0732271f651f1ed49aa8ca1e76673d95, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -5.5
+      value: 1.9
       objectReference: {fileID: 0}
     - target: {fileID: 6168489333896916984, guid: 0732271f651f1ed49aa8ca1e76673d95, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 74.8
+      value: -1
       objectReference: {fileID: 0}
     - target: {fileID: 6168489333896916984, guid: 0732271f651f1ed49aa8ca1e76673d95, type: 3}
       propertyPath: m_LocalRotation.w
@@ -22397,15 +22409,15 @@ PrefabInstance:
       objectReference: {fileID: 890705115}
     - target: {fileID: 2433607490093625532, guid: e4625428ae9d54247a9d2004651aa8eb, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 6.1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2433607490093625532, guid: e4625428ae9d54247a9d2004651aa8eb, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -5.5
+      value: 1.9
       objectReference: {fileID: 0}
     - target: {fileID: 2433607490093625532, guid: e4625428ae9d54247a9d2004651aa8eb, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 74.8
+      value: -1
       objectReference: {fileID: 0}
     - target: {fileID: 2433607490093625532, guid: e4625428ae9d54247a9d2004651aa8eb, type: 3}
       propertyPath: m_LocalRotation.w
