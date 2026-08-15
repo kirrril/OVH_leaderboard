@@ -4,7 +4,6 @@ using UnityEngine;
 public class WeightPlate : MonoBehaviour
 {
     private bool hasLanded;
-    [SerializeField] private LayerMask groundMask;
     public Coroutine currentDespawnCoroutine;
 
 
@@ -19,7 +18,7 @@ public class WeightPlate : MonoBehaviour
             GameManager.Instance.RequestDeath(GameManager.DeathReason.BarbellWeight);
         }
 
-        if (collision.collider.name == "PlatformBack")
+        if (collision.collider.name == "PlatformBackFloor")
         {
             hasLanded = true;
             currentDespawnCoroutine = StartCoroutine(DespawnCoroutine());
@@ -30,9 +29,9 @@ public class WeightPlate : MonoBehaviour
     {
         float randomDelay = Random.Range(3f, 10f);
         yield return new WaitForSeconds(randomDelay);
+        currentDespawnCoroutine = null;
         hasLanded = false;
         gameObject.SetActive(false);
-        currentDespawnCoroutine = null;
     }
 
 }
