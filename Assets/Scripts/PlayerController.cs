@@ -372,6 +372,10 @@ public class PlayerController : MonoBehaviour
             ReinitCameraTargetAndPlace();
             SwitchFightColliders(false);
         }
+
+        playerMovement = Vector2.zero;
+        mouseDelta = Vector2.zero;
+        rb.angularVelocity = Vector3.zero;
     }
 
     private void ResetSubStatesLeavingState(State state)
@@ -472,6 +476,9 @@ public class PlayerController : MonoBehaviour
         playerAttackChest = false;
         playerAttackHead = false;
         playerMovement = Vector2.zero;
+        mouseDelta = Vector2.zero;
+        rb.linearVelocity = Vector3.zero;
+        rb.angularVelocity = Vector3.zero;
     }
 
     public void RespawnAtEntryPoint()
@@ -481,11 +488,13 @@ public class PlayerController : MonoBehaviour
 
         ChangeState(State.Walking);
 
-        rb.linearVelocity = Vector3.zero;
-        rb.angularVelocity = Vector3.zero;
-
         rb.position = entryPoint.position;
         rb.rotation = entryPoint.rotation;
+
+        playerMovement = Vector2.zero;
+        mouseDelta = Vector2.zero;
+        rb.linearVelocity = Vector3.zero;
+        rb.angularVelocity = Vector3.zero;
     }
 
     // CAMERA ////////////////////////////////////////////////////////////////////////
