@@ -77,6 +77,10 @@ public class GameSceneHUD : MonoBehaviour
     [SerializeField] private GameObject contextMessage;
     [SerializeField] private TMP_Text contextMessageText;
 
+    [SerializeField] private GameObject sessionMenu;
+    [SerializeField] private TMP_Text sessionMenuHintText;
+    [SerializeField] private Image sessionMenuHintBg;
+
     [SerializeField] private Image deathScreen;
 
     private float waterAlertTimer;
@@ -95,6 +99,7 @@ public class GameSceneHUD : MonoBehaviour
         HighlightProgressBar();
         DisplayContextMessage();
         UpdateJumpChargeProgress();
+        SetSessionMenuHintText();
     }
 
     private void UpdateCurrentScoreValue()
@@ -561,4 +566,11 @@ public class GameSceneHUD : MonoBehaviour
         deathScreen.color = color;
         deathScreen.gameObject.SetActive(false);
     }
+
+    private void SetSessionMenuHintText()
+    {
+        sessionMenuHintText.text = sessionMenu.activeSelf ? "ESC to close menu" : "ESC for menu";
+        sessionMenuHintBg.color = sessionMenu.activeSelf ? new Color (0, 0, 0, 1) : new Color (1, 1, 1, 0.1f);
+    }
+
 }

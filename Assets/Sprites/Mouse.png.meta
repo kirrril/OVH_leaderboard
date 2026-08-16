@@ -3,17 +3,17 @@ guid: f6ae03c5c801f4d43af976361bf2a4b5
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 2348497106968948862
-    second: Asset 23@4x_0
+      213: -357421434760999972
+    second: Mouse_0
   - first:
-      213: -2562522682699921955
-    second: Asset 23@4x_1
+      213: 1506059532727745469
+    second: Mouse_1
   - first:
-      213: -2270365891821729704
-    second: Asset 23@4x_2
+      213: 6951863735662602030
+    second: Mouse_2
   - first:
-      213: 4155428074630750849
-    second: Asset 23@4x_3
+      213: -5248880233624170229
+    second: Mouse_3
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -148,7 +148,7 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Asset 23@4x_0
+      name: Mouse_0
       rect:
         serializedVersion: 2
         x: 0
@@ -163,14 +163,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: e70bae80da9879020800000000000000
-      internalID: 2348497106968948862
+      spriteID: cdbc5f9491f2a0bf0800000000000000
+      internalID: -357421434760999972
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Asset 23@4x_1
+      name: Mouse_1
       rect:
         serializedVersion: 2
         x: 204
@@ -185,14 +185,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: dd54ac86237107cd0800000000000000
-      internalID: -2562522682699921955
+      spriteID: dbbf3d26a2996e410800000000000000
+      internalID: 1506059532727745469
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Asset 23@4x_2
+      name: Mouse_2
       rect:
         serializedVersion: 2
         x: 912
@@ -207,14 +207,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 8588dc3104a0e70e0800000000000000
-      internalID: -2270365891821729704
+      spriteID: e27e61b2c3bf97060800000000000000
+      internalID: 6951863735662602030
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Asset 23@4x_3
+      name: Mouse_3
       rect:
         serializedVersion: 2
         x: 166
@@ -229,8 +229,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 1822d0641db0ba930800000000000000
-      internalID: 4155428074630750849
+      spriteID: b01134ebc3b3827b0800000000000000
+      internalID: -5248880233624170229
       vertices: []
       indices: 
       edges: []
@@ -249,10 +249,10 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      Asset 23@4x_0: 2348497106968948862
-      Asset 23@4x_1: -2562522682699921955
-      Asset 23@4x_2: -2270365891821729704
-      Asset 23@4x_3: 4155428074630750849
+      Mouse_0: -357421434760999972
+      Mouse_1: 1506059532727745469
+      Mouse_2: 6951863735662602030
+      Mouse_3: -5248880233624170229
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
