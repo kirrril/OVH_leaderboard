@@ -14,7 +14,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!4 &920663926624615144
 Transform:
@@ -109,6 +109,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: PlatformChestFloor
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 8a27887d22fc492498620f71cf9d0b53, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -157,6 +161,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 920663926624615144}
     m_Modifications:
+    - target: {fileID: 1698303475765361141, guid: 611cf7f1a2bbf3a4e9145fe7b9972742, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
     - target: {fileID: 1723409857653977982, guid: 611cf7f1a2bbf3a4e9145fe7b9972742, type: 3}
       propertyPath: m_LocalPosition.x
       value: 5.7
@@ -200,6 +208,10 @@ PrefabInstance:
     - target: {fileID: 3670207896086348496, guid: 611cf7f1a2bbf3a4e9145fe7b9972742, type: 3}
       propertyPath: m_Name
       value: TrainingPad2Prefab2
+      objectReference: {fileID: 0}
+    - target: {fileID: 3670207896086348496, guid: 611cf7f1a2bbf3a4e9145fe7b9972742, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
       objectReference: {fileID: 0}
     - target: {fileID: 5931144527867031061, guid: 611cf7f1a2bbf3a4e9145fe7b9972742, type: 3}
       propertyPath: trainingType
@@ -267,6 +279,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: PlatformChest
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 034783bfd2db3b44d9b544d1214be6fb, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects:
@@ -291,6 +307,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 920663926624615144}
     m_Modifications:
+    - target: {fileID: 1677121642345634768, guid: 7d9c16911cd12ed4c87852ec6d99e466, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
     - target: {fileID: 3770439598256044907, guid: 7d9c16911cd12ed4c87852ec6d99e466, type: 3}
       propertyPath: trainingType
       value: 6
@@ -338,6 +358,10 @@ PrefabInstance:
     - target: {fileID: 8606377509772262492, guid: 7d9c16911cd12ed4c87852ec6d99e466, type: 3}
       propertyPath: m_Name
       value: TrainingPad1Prefab2
+      objectReference: {fileID: 0}
+    - target: {fileID: 8606377509772262492, guid: 7d9c16911cd12ed4c87852ec6d99e466, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -409,6 +433,10 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 7
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 66a4f5bc7c21fc1479306f6d4060e93b, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -457,6 +485,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 920663926624615144}
     m_Modifications:
+    - target: {fileID: 1677121642345634768, guid: 7d9c16911cd12ed4c87852ec6d99e466, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
     - target: {fileID: 3770439598256044907, guid: 7d9c16911cd12ed4c87852ec6d99e466, type: 3}
       propertyPath: trainingType
       value: 7
@@ -504,6 +536,10 @@ PrefabInstance:
     - target: {fileID: 8606377509772262492, guid: 7d9c16911cd12ed4c87852ec6d99e466, type: 3}
       propertyPath: m_Name
       value: TrainingPad1Prefab1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8606377509772262492, guid: 7d9c16911cd12ed4c87852ec6d99e466, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -579,6 +615,10 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: b676d3b3ae6598545a2e11d0c860c75c, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -627,9 +667,69 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 920663926624615144}
     m_Modifications:
+    - target: {fileID: 266380023818838450, guid: eea91fc9c856f184381197125a766ab2, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
+    - target: {fileID: 627837903402370686, guid: eea91fc9c856f184381197125a766ab2, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
+    - target: {fileID: 918743196594304561, guid: eea91fc9c856f184381197125a766ab2, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
+    - target: {fileID: 1131588822823915595, guid: eea91fc9c856f184381197125a766ab2, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
+    - target: {fileID: 1475886227041990065, guid: eea91fc9c856f184381197125a766ab2, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
+    - target: {fileID: 1813659522428402021, guid: eea91fc9c856f184381197125a766ab2, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
+    - target: {fileID: 2796747799587266702, guid: eea91fc9c856f184381197125a766ab2, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
+    - target: {fileID: 3946990373247727332, guid: eea91fc9c856f184381197125a766ab2, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
+    - target: {fileID: 4144146169364443875, guid: eea91fc9c856f184381197125a766ab2, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
+    - target: {fileID: 4899331529581195229, guid: eea91fc9c856f184381197125a766ab2, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
+    - target: {fileID: 5370524071521735820, guid: eea91fc9c856f184381197125a766ab2, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
+    - target: {fileID: 5745223650575897473, guid: eea91fc9c856f184381197125a766ab2, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
+    - target: {fileID: 6602920791145051786, guid: eea91fc9c856f184381197125a766ab2, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
+    - target: {fileID: 8064705543916549744, guid: eea91fc9c856f184381197125a766ab2, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
     - target: {fileID: 8086329107165284555, guid: eea91fc9c856f184381197125a766ab2, type: 3}
       propertyPath: m_Name
       value: Door
+      objectReference: {fileID: 0}
+    - target: {fileID: 8086329107165284555, guid: eea91fc9c856f184381197125a766ab2, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
       objectReference: {fileID: 0}
     - target: {fileID: 8549556248036774263, guid: eea91fc9c856f184381197125a766ab2, type: 3}
       propertyPath: m_LocalPosition.x
@@ -670,6 +770,10 @@ PrefabInstance:
     - target: {fileID: 8549556248036774263, guid: eea91fc9c856f184381197125a766ab2, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8788858437706528100, guid: eea91fc9c856f184381197125a766ab2, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
       objectReference: {fileID: 0}
     - target: {fileID: 8846196979419364917, guid: eea91fc9c856f184381197125a766ab2, type: 3}
       propertyPath: m_LocalPosition.x
@@ -890,6 +994,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Balcony
       objectReference: {fileID: 0}
+    - target: {fileID: 5725505930302582140, guid: 57006135a68703d45ac7534c75db19f0, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
     - target: {fileID: 7250281169089713918, guid: 57006135a68703d45ac7534c75db19f0, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0.029999733
@@ -1008,6 +1116,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: PlatformChestWall
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 9cdec925890194a48ae87ba0a6aff1f2, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -1056,6 +1168,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 920663926624615144}
     m_Modifications:
+    - target: {fileID: 1698303475765361141, guid: 611cf7f1a2bbf3a4e9145fe7b9972742, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
     - target: {fileID: 1723409857653977982, guid: 611cf7f1a2bbf3a4e9145fe7b9972742, type: 3}
       propertyPath: m_LocalPosition.x
       value: 5.7
@@ -1099,6 +1215,10 @@ PrefabInstance:
     - target: {fileID: 3670207896086348496, guid: 611cf7f1a2bbf3a4e9145fe7b9972742, type: 3}
       propertyPath: m_Name
       value: TrainingPad2Prefab1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3670207896086348496, guid: 611cf7f1a2bbf3a4e9145fe7b9972742, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
       objectReference: {fileID: 0}
     - target: {fileID: 5931144527867031061, guid: 611cf7f1a2bbf3a4e9145fe7b9972742, type: 3}
       propertyPath: trainingType

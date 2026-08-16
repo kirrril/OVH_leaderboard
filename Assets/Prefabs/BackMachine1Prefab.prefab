@@ -198,14 +198,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e4beeac904d17834c8be1210c7cc750e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TrainingData
-  trainingType: 8
-  agentAnimatorBool: isPullingBackMachine1
+  playerTrainingType: 8
+  manTrainingType: 13
+  girlTrainingType: 0
   cameraTarget: {fileID: 6956291555162315616}
   cameraPlace: {fileID: 839385130340544055}
   trainingPos: {fileID: 3666492681060963533}
   exitPos: {fileID: 4185813705756274346}
   trainingDuration: 10
-  selfAnimatorBool: backMachine1IsMoving
 --- !u!114 &5956104333673986472
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -218,7 +218,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 83ce90be8c066c745b60e62c8a30d28e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TrainingLogic
-  excludedUserKind: 2
   selfAnimator: {fileID: 5880716752538649602}
   accessObstacle: {fileID: 7943119738030412406}
   occupiedObstacle: {fileID: 3978356301661529422}

@@ -71,14 +71,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e4beeac904d17834c8be1210c7cc750e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TrainingData
-  trainingType: 0
-  agentAnimatorBool: isShowingOff
-  cameraTargetLocalPosition: {x: 0, y: 0, z: 0}
-  cameraPlaceLocalPosition: {x: 0, y: 0, z: 0}
+  playerTrainingType: 0
+  manTrainingType: 1
+  girlTrainingType: 1
+  cameraTarget: {fileID: 0}
+  cameraPlace: {fileID: 0}
   trainingPos: {fileID: 8811430229268957851}
   exitPos: {fileID: 5277561831851594472}
   trainingDuration: 3
-  selfAnimatorBool: 
 --- !u!114 &3093609288123490242
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -91,7 +91,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 83ce90be8c066c745b60e62c8a30d28e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TrainingLogic
-  excludedUserKind: 5
   selfAnimator: {fileID: 0}
   accessObstacle: {fileID: 4873718334886980101}
   occupiedObstacle: {fileID: 3597075947730963134}

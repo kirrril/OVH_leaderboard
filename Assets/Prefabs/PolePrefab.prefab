@@ -14,7 +14,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!4 &4068261423458187646
 Transform:
@@ -46,7 +46,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!4 &6273786496153735376
 Transform:
@@ -78,6 +78,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Pole
   climbingPos: {fileID: 4068261423458187646}
+  cameraPlace: {fileID: 0}
   playerController: {fileID: 0}
 --- !u!1001 &9113490299194269275
 PrefabInstance:
@@ -130,6 +131,10 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: 960cbfdd18155e340822fe59bbb25cbc, type: 3}
       propertyPath: m_Name
       value: Pole
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 960cbfdd18155e340822fe59bbb25cbc, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

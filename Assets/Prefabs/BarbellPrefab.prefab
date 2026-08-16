@@ -146,14 +146,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e4beeac904d17834c8be1210c7cc750e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TrainingSpot
-  trainingType: 4
-  agentAnimatorBool: isPushingBarbell
+  playerTrainingType: 4
+  manTrainingType: 8
+  girlTrainingType: 0
   cameraTarget: {fileID: 7742489914327963383}
   cameraPlace: {fileID: 322527884308827970}
   trainingPos: {fileID: 6647283452495301521}
   exitPos: {fileID: 2746227072507549097}
   trainingDuration: 10
-  selfAnimatorBool: barbellIsMoving
 --- !u!114 &3274133748253008472
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -166,7 +166,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 83ce90be8c066c745b60e62c8a30d28e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TrainingLogic
-  excludedUserKind: 2
   selfAnimator: {fileID: 9049511634360366351}
   accessObstacle: {fileID: 6913772103715876535}
   occupiedObstacle: {fileID: 8887650785164795560}

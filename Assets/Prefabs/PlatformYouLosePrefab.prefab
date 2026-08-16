@@ -14,7 +14,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!4 &4779847694257349947
 Transform:
@@ -89,6 +89,10 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: 44daf17d8108aca40960e64ab9f68772, type: 3}
       propertyPath: m_Name
       value: PlatformYouLoose
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 44daf17d8108aca40960e64ab9f68772, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -190,6 +194,10 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 7
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: b69295064e2f2004897f4fa9ef82c977, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -238,6 +246,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 4779847694257349947}
     m_Modifications:
+    - target: {fileID: 367677311040024179, guid: 14b61f3000c940140905cd81f25ab24a, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
     - target: {fileID: 1823955295840370279, guid: 14b61f3000c940140905cd81f25ab24a, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -318,9 +330,17 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2649531305123746181, guid: 14b61f3000c940140905cd81f25ab24a, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
     - target: {fileID: 5504566543311425136, guid: 14b61f3000c940140905cd81f25ab24a, type: 3}
       propertyPath: m_Name
       value: LetteringYouLosePlatform
+      objectReference: {fileID: 0}
+    - target: {fileID: 5504566543311425136, guid: 14b61f3000c940140905cd81f25ab24a, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

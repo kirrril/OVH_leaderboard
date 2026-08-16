@@ -634,14 +634,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e4beeac904d17834c8be1210c7cc750e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TrainingData
-  trainingType: 0
-  agentAnimatorBool: isLiftnigDumbbells4
-  cameraTargetLocalPosition: {x: 0, y: 0, z: 0}
-  cameraPlaceLocalPosition: {x: 0, y: 0, z: 0}
+  playerTrainingType: 0
+  manTrainingType: 11
+  girlTrainingType: 0
+  cameraTarget: {fileID: 0}
+  cameraPlace: {fileID: 0}
   trainingPos: {fileID: 6475883306630985468}
   exitPos: {fileID: 179663563642082033}
   trainingDuration: 10
-  selfAnimatorBool: Dumbbells2AreMoving
 --- !u!114 &2439861193815185808
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -654,7 +654,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 83ce90be8c066c745b60e62c8a30d28e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TrainingLogic
-  excludedUserKind: 5
   selfAnimator: {fileID: 2196083815165934382}
   accessObstacle: {fileID: 5050402922753447793}
   occupiedObstacle: {fileID: 7105854475950001805}
