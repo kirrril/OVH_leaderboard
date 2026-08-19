@@ -1437,7 +1437,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4827813645866493499, guid: 08f79c2618c0ee14482eda7a79f136aa, type: 3}
       propertyPath: m_Name
-      value: LetteringLegs
+      value: LegZoneBanner
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

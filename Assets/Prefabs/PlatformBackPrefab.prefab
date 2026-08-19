@@ -461,7 +461,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8308600126267230241, guid: 2f604f826758f78468d0a0b0b23f7908, type: 3}
       propertyPath: m_Name
-      value: LetteringBack
+      value: BackZoneBanner
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

@@ -890,7 +890,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5991026521612697519, guid: 13f556d2e42dcd44dbadc5d79f21b856, type: 3}
       propertyPath: m_Name
-      value: LettteringChestPlatform
+      value: ChestZoneBanner
       objectReference: {fileID: 0}
     - target: {fileID: 6443599025845062116, guid: 13f556d2e42dcd44dbadc5d79f21b856, type: 3}
       propertyPath: m_Pivot.x
