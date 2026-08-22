@@ -491,7 +491,7 @@ public class GameSceneHUD : MonoBehaviour
                 return new Color(0f, 0f, 0f, 1f);
 
             case GameManager.DeathReason.Fight:
-                return new Color(0.4f, 0f, 0f, 1f);
+                return new Color(0.2f, 0f, 0f, 1f);
 
             case GameManager.DeathReason.BarbellWeight:
                 return new Color(0.2f, 0f, 0f, 1f);

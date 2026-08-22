@@ -3,33 +3,37 @@ using UnityEngine;
 
 public class WeightPlateSpawner : MonoBehaviour
 {
-    [SerializeField] private BoxCollider[] spawnZones;
-    [SerializeField] private WeightPlate orangeWeightPlate;
-    [SerializeField] private WeightPlate redWeightPlate;
-    [SerializeField] private WeightPlate yellowWeightPlate;
+    [SerializeField] private PlayerController playerController;
+    [SerializeField] private BoxCollider spawnZone;
+    [SerializeField] private WeightPlate weightPlate;
+    [SerializeField] private MeshRenderer weightPlateMeshRenderer;
+    [SerializeField] private Material[] weightPlateMeshMaterials;
     private Coroutine currentSpawnCoroutine;
 
     void Update()
     {
-        SpawnWeightPlate(orangeWeightPlate);
-        SpawnWeightPlate(redWeightPlate);
-        SpawnWeightPlate(yellowWeightPlate);
+        SpawnWeightPlate();
     }
 
-    public void SpawnWeightPlate(WeightPlate weightPlate)
+    public void SpawnWeightPlate()
     {
-        if (GameManager.Instance.CurrentLevel != CurrentLevelZone.Back) return;
+        
+        if (playerController.CurrentWeightPlateDangerZone == null) return;
         if (GameManager.Instance.BackTraining < 0.3f) return;
+        transform.position = playerController.transform.position + new Vector3(0, 6, 0);
         if (currentSpawnCoroutine != null) return;
         if (weightPlate.currentDespawnCoroutine != null) return;
-        if (weightPlate.gameObject.activeSelf) return;
+        
+        if (weightPlate.gameObject.activeSelf) return;        
+        
+        weightPlateMeshRenderer.material = weightPlateMeshMaterials[Random.Range(0, weightPlateMeshMaterials.Length)];
         currentSpawnCoroutine = StartCoroutine(SpawnCoroutine(weightPlate));
 
     }
 
-    private Vector3 SetSpawnPoint(BoxCollider zone)
+    private Vector3 SetSpawnPoint()
     {
-        Bounds bounds = zone.bounds;
+        Bounds bounds = spawnZone.bounds;
 
         float x = Random.Range(bounds.min.x, bounds.max.x);
         float z = Random.Range(bounds.min.z, bounds.max.z);
@@ -42,9 +46,10 @@ public class WeightPlateSpawner : MonoBehaviour
     {
         float randomDelay = Random.Range(0f, 5f);
         yield return new WaitForSeconds(randomDelay);
-        Vector3 spawnPoint = SetSpawnPoint(spawnZones[Random.Range(0, spawnZones.Length)]);
+        Vector3 spawnPoint = SetSpawnPoint();
         weightPlate.transform.position = spawnPoint;
         weightPlate.gameObject.SetActive(true);
+        weightPlate.gameObject.transform.rotation = Quaternion.Euler(60, 0, 0);
         currentSpawnCoroutine = null;
     }
 }

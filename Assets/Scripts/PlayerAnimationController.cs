@@ -56,6 +56,7 @@ public class PlayerAnimationController : MonoBehaviour
         animator.SetBool("isPushingTheDoor", state == PlayerController.State.PushingTheDoor);
         animator.SetBool("isClimbing", state == PlayerController.State.ClimbingThePole);
         animator.SetBool("isFighting", state == PlayerController.State.Fighting);
+        animator.SetBool("isHitByWeightPlate", state == PlayerController.State.HitByWeightPlate);
     }
 
     private void SyncMoveBlend()

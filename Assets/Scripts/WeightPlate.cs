@@ -15,7 +15,7 @@ public class WeightPlate : MonoBehaviour
 
         if (playerController != null)
         {
-            GameManager.Instance.RequestDeath(GameManager.DeathReason.BarbellWeight);
+            playerController.DieHitByWeightPlate();
         }
 
         if (collision.collider.name == "PlatformBackFloor")

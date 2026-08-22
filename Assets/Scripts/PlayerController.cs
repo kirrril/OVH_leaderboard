@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -23,7 +24,7 @@ public class PlayerController : MonoBehaviour
     public enum State
     {
         Walking, Training, Jumping, Falling, PushingTheDoor, ClimbingThePole,
-        Fighting, MakingDoubleSelfie, Gaming
+        Fighting, MakingDoubleSelfie, Gaming, HitByWeightPlate
     };
     public State CurrentState { get; private set; } = State.Walking;
 
@@ -94,6 +95,11 @@ public class PlayerController : MonoBehaviour
     public bool isThrowing;
 
 
+    // HitByWeightPlate _________________________________________________________________
+
+    public WeightPlateDangerZone CurrentWeightPlateDangerZone { get; private set; }
+
+
     // CallbackContext __________________________________________________________________
 
     public bool playerDuckDown;
@@ -142,6 +148,9 @@ public class PlayerController : MonoBehaviour
                 break;
             case State.Gaming:
                 HandleGaming();
+                break;
+            case State.HitByWeightPlate:
+                HandleHitByWeightPlate();
                 break;
         }
 
@@ -356,6 +365,15 @@ public class PlayerController : MonoBehaviour
 
     }
 
+    private void HandleHitByWeightPlate()
+    {
+        playerMovement = Vector2.zero;
+        mouseDelta = Vector2.zero;
+        rb.linearVelocity = Vector3.zero;
+        rb.angularVelocity = Vector3.zero;
+        HitByWeightPlateCamera();
+    }
+
 
     // TRANSITIONS /////////////////////////////////////////////////////////////////////
 
@@ -432,6 +450,9 @@ public class PlayerController : MonoBehaviour
                 rb.isKinematic = true;
                 break;
             case State.MakingDoubleSelfie:
+                rb.isKinematic = false;
+                break;
+            case State.HitByWeightPlate:
                 rb.isKinematic = false;
                 break;
         }
@@ -539,6 +560,11 @@ public class PlayerController : MonoBehaviour
         Vector3 targetPosition = new Vector3(0, 1.04f, 0.6f);
         await Awaitable.WaitForSecondsAsync(3);
         // cameraPlace.localPosition = targetPosition;
+    }
+
+    private void HitByWeightPlateCamera()
+    {
+        playerCameraPlace.localPosition += new Vector3(0f, 1.5f * Time.fixedDeltaTime, 0.2f * Time.fixedDeltaTime);
     }
 
 
@@ -1089,5 +1115,34 @@ public class PlayerController : MonoBehaviour
         if (CurrentFightPhase != FightPhase.Defeat) return;
 
         GameManager.Instance.RequestDeath(GameManager.DeathReason.Fight);
+    }
+
+
+    // HitByWeightPlate ________________________________________________________________________
+
+    public void EnterWeightPlateDangerZone(WeightPlateDangerZone zone)
+    {
+        CurrentWeightPlateDangerZone = zone;
+    }
+
+    public void ExitWeightPlateDangerZone(WeightPlateDangerZone zone)
+    {
+        if (CurrentWeightPlateDangerZone != zone) return;
+        CurrentWeightPlateDangerZone = null;
+    }
+
+    public void DieHitByWeightPlate()
+    {
+        if (CurrentState == State.HitByWeightPlate) return;
+
+        AbortCurrentContextForDeath();
+        ChangeState(State.HitByWeightPlate);
+        StartCoroutine(WaitBeforeRequestDeath());
+    }
+
+    private IEnumerator WaitBeforeRequestDeath()
+    {
+        yield return new WaitForSeconds(2f);
+        GameManager.Instance.RequestDeath(GameManager.DeathReason.BarbellWeight);
     }
 }
