@@ -4,6 +4,7 @@ using UnityEngine.SceneManagement;
 
 public class CursorAndSessionMenuController : MonoBehaviour
 {
+    /////////////////////////////// GAME SCENE UNIQUEMENT ///////////////////////////////
     private bool isPaused;
     [SerializeField] private PlayerController playerController;
     [SerializeField] private GameObject sessionOverlay;

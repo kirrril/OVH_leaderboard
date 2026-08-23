@@ -100,6 +100,13 @@ public class PlayerController : MonoBehaviour
     public WeightPlateDangerZone CurrentWeightPlateDangerZone { get; private set; }
 
 
+    // Gaming ___________________________________________________________________________
+
+    public Desk CurrentDesk { get; private set; }
+    public enum GamingPhase { None, Typing, LookingAtScreen }
+    public GamingPhase CurrentGamingPhase { get; private set; }
+    private float gamingTimer;
+
     // CallbackContext __________________________________________________________________
 
     public bool playerDuckDown;
@@ -246,6 +253,7 @@ public class PlayerController : MonoBehaviour
     {
         string tag = other.tag;
 
+        // if (tag == "Desk") return;
         if (tag == "Water") return;
         if (tag == "Protein") return;
         if (tag == "Level") return;
@@ -254,8 +262,6 @@ public class PlayerController : MonoBehaviour
             BeginVoidFall();
             return;
         }
-
-        if (tag == "Desk") PlaceCameraLookingAtSreen();
     }
 
     // HANDLERS //////////////////////////////////////////////////////////////////////
@@ -266,12 +272,12 @@ public class PlayerController : MonoBehaviour
         RotatePlayer();
         MoveCameraTarget();
         ChangeWalkingPhase(CheckIfWalking() ? WalkingPhase.Walking : WalkingPhase.Idle);
-        stopTrainingControl.SetActive(false);
     }
 
     private void HandleTraining()
     {
-        stopTrainingControl.SetActive(true);
+        playerMovement = Vector2.zero;
+        mouseDelta = Vector2.zero;
     }
 
     private void HandleJumping()
@@ -362,7 +368,10 @@ public class PlayerController : MonoBehaviour
 
     private void HandleGaming()
     {
+        playerMovement = Vector2.zero;
+        mouseDelta = Vector2.zero;
 
+        WaitAndLookAtTheScreen();
     }
 
     private void HandleHitByWeightPlate()
@@ -389,11 +398,17 @@ public class PlayerController : MonoBehaviour
         {
             ReinitCameraTargetAndPlace();
             SwitchFightColliders(false);
+            if (stopTrainingControl != null) stopTrainingControl.SetActive(false);
+        }
+
+        if (CurrentState == State.Training)
+        {
+            SwitchFightColliders(false);
+            if (stopTrainingControl != null) stopTrainingControl.SetActive(true);
         }
 
         playerMovement = Vector2.zero;
         mouseDelta = Vector2.zero;
-        rb.angularVelocity = Vector3.zero;
     }
 
     private void ResetSubStatesLeavingState(State state)
@@ -455,12 +470,15 @@ public class PlayerController : MonoBehaviour
             case State.HitByWeightPlate:
                 rb.isKinematic = false;
                 break;
+            case State.Gaming:
+                rb.isKinematic = true;
+                break;
         }
     }
 
     private void AbortCurrentContextForDeath()
     {
-        stopTrainingControl.SetActive(false);
+        if (stopTrainingControl != null) stopTrainingControl.SetActive(false);
 
         if (CurrentTrainingData != null)
         {
@@ -555,16 +573,24 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    private async void PlaceCameraLookingAtSreen()
-    {
-        Vector3 targetPosition = new Vector3(0, 1.04f, 0.6f);
-        await Awaitable.WaitForSecondsAsync(3);
-        // cameraPlace.localPosition = targetPosition;
-    }
-
     private void HitByWeightPlateCamera()
     {
         playerCameraPlace.localPosition += new Vector3(0f, 1.5f * Time.fixedDeltaTime, 0.2f * Time.fixedDeltaTime);
+    }
+
+    private void WaitAndLookAtTheScreen()
+    {
+        if (gamingTimer < 0f) return;
+
+        gamingTimer -= Time.fixedDeltaTime;
+
+        if (gamingTimer <= 1) CurrentGamingPhase = GamingPhase.LookingAtScreen;
+
+        if (gamingTimer <= 0)
+        {
+            gamingTimer = -1f;
+            CurrentDesk.ShowAuthentificationScreen();
+        }
     }
 
 
@@ -1144,5 +1170,26 @@ public class PlayerController : MonoBehaviour
     {
         yield return new WaitForSeconds(2f);
         GameManager.Instance.RequestDeath(GameManager.DeathReason.BarbellWeight);
+    }
+
+
+    // Gaming _______________________________________________________________________
+
+    public void StartGaming(Desk desk)
+    {
+        CurrentDesk = desk;
+        transform.position = CurrentDesk.gamingPos.position;
+        transform.rotation = CurrentDesk.gamingPos.rotation;
+        CurrentGamingPhase = GamingPhase.Typing;
+        gamingTimer = 3f;
+        ChangeState(State.Gaming);
+    }
+
+    public void StopGaming()
+    {
+        transform.position = CurrentDesk.exitPos.position;
+        transform.rotation = CurrentDesk.exitPos.rotation;
+        ChangeState(State.Walking);
+        CurrentDesk = null;
     }
 }

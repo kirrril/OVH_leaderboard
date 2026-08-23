@@ -1,5 +1,36 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &289186497357526069
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5546134346605213830}
+  m_Layer: 0
+  m_Name: ExitPos
+  m_TagString: Desk
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 2147483647
+  m_IsActive: 1
+--- !u!4 &5546134346605213830
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 289186497357526069}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -1.91, y: 0, z: -1.93}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 6053233165578693244}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &704492373567508376
 GameObject:
   m_ObjectHideFlags: 0
@@ -127,6 +158,130 @@ MonoBehaviour:
   m_ShadowLayerMask: 1
   m_RenderingLayers: 1
   m_ShadowRenderingLayers: 1
+--- !u!1 &3639311399180633418
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6207226889425320145}
+  m_Layer: 0
+  m_Name: TypingCameraPlace
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6207226889425320145
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3639311399180633418}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -1.403, y: 1.001, z: 0.241}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 6053233165578693244}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &3649347087172210829
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7887921112260074759}
+  m_Layer: 0
+  m_Name: TypingCameraTarget
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &7887921112260074759
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3649347087172210829}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 1.001, z: 0.904}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 6053233165578693244}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &5326560553716825365
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1215370046467408567}
+  m_Layer: 0
+  m_Name: ScreenCameraPlace
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1215370046467408567
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5326560553716825365}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 1.001, z: 0.241}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 6053233165578693244}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &7240561563066200146
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8973512101549720646}
+  m_Layer: 0
+  m_Name: ScreenCameraTarget
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &8973512101549720646
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7240561563066200146}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 1.001, z: 0.904}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 6053233165578693244}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &7961232073533632133
 GameObject:
   m_ObjectHideFlags: 0
@@ -137,7 +292,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1244205801647499386}
   m_Layer: 0
-  m_Name: TrainingPos
+  m_Name: GamingPos
   m_TagString: Desk
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -168,8 +323,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6053233165578693244}
   - component: {fileID: 5393831414950159796}
-  - component: {fileID: 1709664366852682714}
-  - component: {fileID: 7961749108940865764}
+  - component: {fileID: 1412204274626103119}
   m_Layer: 0
   m_Name: DeskPrefab
   m_TagString: Desk
@@ -193,8 +347,13 @@ Transform:
   - {fileID: 5263752805926434232}
   - {fileID: 7184676246560909177}
   - {fileID: 1244205801647499386}
+  - {fileID: 5546134346605213830}
   - {fileID: 4188248839302399196}
   - {fileID: 3876100179278746864}
+  - {fileID: 7887921112260074759}
+  - {fileID: 6207226889425320145}
+  - {fileID: 8973512101549720646}
+  - {fileID: 1215370046467408567}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!65 &5393831414950159796
@@ -218,7 +377,7 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 2, y: 1, z: 2}
   m_Center: {x: 0, y: 0.5, z: 0}
---- !u!114 &1709664366852682714
+--- !u!114 &1412204274626103119
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -227,33 +386,16 @@ MonoBehaviour:
   m_GameObject: {fileID: 8684853781709179577}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e4beeac904d17834c8be1210c7cc750e, type: 3}
+  m_Script: {fileID: 11500000, guid: 6a7bc9760e68d504cac00efe3d05f8c9, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::TrainingSpot
-  playerTrainingType: 0
-  manTrainingType: 0
-  girlTrainingType: 0
-  cameraTarget: {fileID: 0}
-  cameraPlace: {fileID: 0}
-  trainingPos: {fileID: 1244205801647499386}
-  exitPos: {fileID: 0}
-  trainingDuration: 0
---- !u!114 &7961749108940865764
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8684853781709179577}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 83ce90be8c066c745b60e62c8a30d28e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::TrainingLogic
-  selfAnimator: {fileID: 0}
-  accessObstacle: {fileID: 0}
-  occupiedObstacle: {fileID: 0}
-  trainingData: {fileID: 1709664366852682714}
+  m_EditorClassIdentifier: Assembly-CSharp::Desk
+  typingCameraTarget: {fileID: 7887921112260074759}
+  typingCameraPlace: {fileID: 6207226889425320145}
+  screenCameraTarget: {fileID: 8973512101549720646}
+  screenCameraPlace: {fileID: 1215370046467408567}
+  gamingPos: {fileID: 1244205801647499386}
+  exitPos: {fileID: 5546134346605213830}
+  playerController: {fileID: 0}
 --- !u!1 &8947871940796759102
 GameObject:
   m_ObjectHideFlags: 0
